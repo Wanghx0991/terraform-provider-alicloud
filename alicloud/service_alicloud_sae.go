@@ -119,15 +119,15 @@ func (s *SaeService) DescribeApplicationStatus(id string) (object map[string]int
 	if err != nil {
 		return nil, WrapError(err)
 	}
-	action := "DescribeApplicationStatus"
-	request := map[string]interface{}{
-		"AppId": id,
+	action := "/pop/v1/sam/app/describeApplicationStatus"
+	request := map[string]*string{
+		"AppId": StringPointer(id),
 	}
 	runtime := util.RuntimeOptions{}
 	runtime.SetAutoretry(true)
 	wait := incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
-		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), request, nil, &runtime)
+		response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("GET"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 		if err != nil {
 			if NeedRetry(err) {
 				wait()
@@ -158,15 +158,15 @@ func (s *SaeService) DescribeSaeApplication(id string) (object map[string]interf
 	if err != nil {
 		return nil, WrapError(err)
 	}
-	action := "DescribeApplicationConfig"
-	request := map[string]interface{}{
-		"AppId": id,
+	action := "/pop/v1/sam/app/describeApplicationConfig"
+	request := map[string]*string{
+		"AppId": StringPointer(id),
 	}
 	runtime := util.RuntimeOptions{}
 	runtime.SetAutoretry(true)
 	wait := incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
-		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), request, nil, &runtime)
+		response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("GET"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 		if err != nil {
 			if NeedRetry(err) {
 				wait()
@@ -196,15 +196,15 @@ func (s *SaeService) DescribeApplicationConfig(id string) (object map[string]int
 	if err != nil {
 		return nil, WrapError(err)
 	}
-	action := "DescribeApplicationConfig"
-	request := map[string]interface{}{
-		"AppId": id,
+	action := "/pop/v1/sam/app/describeApplicationConfig"
+	request := map[string]*string{
+		"AppId": StringPointer(id),
 	}
 	runtime := util.RuntimeOptions{}
 	runtime.SetAutoretry(true)
 	wait := incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
-		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), request, nil, &runtime)
+		response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("GET"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 		if err != nil {
 			if NeedRetry(err) {
 				wait()
@@ -234,15 +234,15 @@ func (s *SaeService) DescribeApplicationImage(id string) (object map[string]inte
 	if err != nil {
 		return nil, WrapError(err)
 	}
-	action := "DescribeApplicationImage"
-	request := map[string]interface{}{
-		"AppId": id,
+	action := "/pop/v1/sam/container/describeApplicationImage"
+	request := map[string]*string{
+		"AppId": StringPointer(id),
 	}
 	runtime := util.RuntimeOptions{}
 	runtime.SetAutoretry(true)
 	wait := incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
-		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), request, nil, &runtime)
+		response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("GET"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 		if err != nil {
 			if NeedRetry(err) {
 				wait()

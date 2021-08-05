@@ -255,7 +255,7 @@ func resourceAlicloudSaeApplication() *schema.Resource {
 func resourceAlicloudSaeApplicationCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*connectivity.AliyunClient)
 	var response map[string]interface{}
-	action := "CreateApplication"
+	action := "/pop/v1/sam/app/createApplication"
 	request := make(map[string]interface{})
 	conn, err := client.NewServerlessClient()
 	if err != nil {
@@ -393,7 +393,7 @@ func resourceAlicloudSaeApplicationCreate(d *schema.ResourceData, meta interface
 	}
 	wait := incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("POST"), StringPointer("2019-05-06"), StringPointer("AK"), nil, request, &util.RuntimeOptions{})
+		response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("POST"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 		if err != nil {
 			if NeedRetry(err) {
 				wait()
@@ -491,6 +491,9 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	saeService := SaeService{client}
 	var response map[string]interface{}
 	d.Partial(true)
+	request := map[string]*string{
+		"AppId": StringPointer(d.Id()),
+	}
 
 	if !d.IsNewResource() && d.HasChange("security_group_id") {
 		request := map[string]interface{}{
@@ -507,7 +510,7 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	}
 	wait := incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
-		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), request, nil, &util.RuntimeOptions{})
+		response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("PUT"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 		if err != nil {
 			if NeedRetry(err) {
 				wait()
