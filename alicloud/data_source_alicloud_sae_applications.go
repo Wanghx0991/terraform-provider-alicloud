@@ -1,7 +1,9 @@
 package alicloud
 
 import (
+	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/PaesslerAG/jsonpath"
@@ -272,25 +274,25 @@ func dataSourceAlicloudSaeApplications() *schema.Resource {
 func dataSourceAlicloudSaeApplicationsRead(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*connectivity.AliyunClient)
 
-	action := "ListApplications"
-	request := make(map[string]interface{})
+	action := "/pop/v1/sam/app/listApplications"
+	request := make(map[string]*string)
 	if v, ok := d.GetOk("app_name"); ok {
-		request["AppName"] = v
+		request["AppName"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("field_type"); ok {
-		request["FieldType"] = v
+		request["FieldType"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("field_value"); ok {
-		request["FieldValue"] = v
+		request["FieldValue"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("namespace_id"); ok {
-		request["NamespaceId"] = v
+		request["NamespaceId"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("order_by"); ok {
-		request["OrderBy"] = v
+		request["OrderBy"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOkExists("reverse"); ok {
-		request["Reverse"] = v
+		request["Reverse"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("tags"); ok {
 		tags := make([]map[string]interface{}, 0)
@@ -300,10 +302,14 @@ func dataSourceAlicloudSaeApplicationsRead(d *schema.ResourceData, meta interfac
 				"Value": value.(string),
 			})
 		}
-		request["Tags"] = tags
+		ser_tag,err := json.Marshal(tags)
+		if err != nil{
+			return WrapError(err)
+		}
+		request["Tags"] = StringPointer(string(ser_tag))
 	}
-	request["PageSize"] = PageSizeLarge
-	request["CurrentPage"] = 1
+	request["PageSize"] = StringPointer(strconv.Itoa(PageSizeLarge))
+	request["CurrentPage"] = StringPointer("1")
 	var objects []map[string]interface{}
 
 	idsMap := make(map[string]string)
@@ -326,7 +332,7 @@ func dataSourceAlicloudSaeApplicationsRead(d *schema.ResourceData, meta interfac
 		runtime.SetAutoretry(true)
 		wait := incrementalWait(3*time.Second, 3*time.Second)
 		err = resource.Retry(5*time.Minute, func() *resource.RetryError {
-			response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), request, nil, &runtime)
+			response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("GET"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 			if err != nil {
 				if NeedRetry(err) {
 					wait()
@@ -360,7 +366,8 @@ func dataSourceAlicloudSaeApplicationsRead(d *schema.ResourceData, meta interfac
 		if len(result) < PageSizeLarge {
 			break
 		}
-		request["CurrentPage"] = request["CurrentPage"].(int) + 1
+		request["PageSize"] = StringPointer(strconv.Itoa(PageSizeLarge))
+		request["CurrentPage"] = StringPointer("1")
 	}
 	ids := make([]string, 0)
 	s := make([]map[string]interface{}, 0)
@@ -433,13 +440,13 @@ func dataSourceAlicloudSaeApplicationsRead(d *schema.ResourceData, meta interfac
 		mapping["vpc_id"] = getResp["VpcId"]
 		mapping["war_start_options"] = getResp["WarStartOptions"]
 		mapping["web_container"] = getResp["WebContainer"]
-		saeService := SaeService{client}
-		getResp1, err := saeService.DescribeApplicationImage(id)
+		saeService = SaeService{client}
+		_, err = saeService.DescribeApplicationImage(id)
 		if err != nil {
 			return WrapError(err)
 		}
 
-		saeService := SaeService{client}
+		saeService = SaeService{client}
 		getResp2, err := saeService.DescribeApplicationStatus(id)
 		if err != nil {
 			return WrapError(err)
@@ -462,7 +469,10 @@ func dataSourceAlicloudSaeApplicationsRead(d *schema.ResourceData, meta interfac
 		return WrapError(err)
 	}
 	if output, ok := d.GetOk("output_file"); ok && output.(string) != "" {
-		writeToFile(output.(string), s)
+		err := writeToFile(output.(string), s)
+		if err != nil{
+			return WrapError(err)
+		}
 	}
 
 	return nil

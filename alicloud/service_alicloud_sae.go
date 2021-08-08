@@ -190,6 +190,7 @@ func (s *SaeService) DescribeSaeApplication(id string) (object map[string]interf
 	object = v.(map[string]interface{})
 	return object, nil
 }
+
 func (s *SaeService) DescribeApplicationConfig(id string) (object map[string]interface{}, err error) {
 	var response map[string]interface{}
 	conn, err := s.client.NewServerlessClient()
@@ -228,6 +229,7 @@ func (s *SaeService) DescribeApplicationConfig(id string) (object map[string]int
 	object = v.(map[string]interface{})
 	return object, nil
 }
+
 func (s *SaeService) DescribeApplicationImage(id string) (object map[string]interface{}, err error) {
 	var response map[string]interface{}
 	conn, err := s.client.NewServerlessClient()

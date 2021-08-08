@@ -256,130 +256,130 @@ func resourceAlicloudSaeApplicationCreate(d *schema.ResourceData, meta interface
 	client := meta.(*connectivity.AliyunClient)
 	var response map[string]interface{}
 	action := "/pop/v1/sam/app/createApplication"
-	request := make(map[string]interface{})
+	request := make(map[string]*string)
 	conn, err := client.NewServerlessClient()
 	if err != nil {
 		return WrapError(err)
 	}
 	if v, ok := d.GetOk("acr_assume_role_arn"); ok {
-		request["AcrAssumeRoleArn"] = v
+		request["AcrAssumeRoleArn"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("app_description"); ok {
-		request["AppDescription"] = v
+		request["AppDescription"] = StringPointer(v.(string))
 	}
-	request["AppName"] = d.Get("app_name")
+	request["AppName"] = StringPointer(d.Get("app_name").(string))
 	if v, ok := d.GetOkExists("auto_config"); ok {
-		request["AutoConfig"] = v
+		request["AutoConfig"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("command"); ok {
-		request["Command"] = v
+		request["Command"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("command_args"); ok {
-		request["CommandArgs"] = v
+		request["CommandArgs"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("config_map_mount_desc"); ok {
-		request["ConfigMapMountDesc"] = v
+		request["ConfigMapMountDesc"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("cpu"); ok {
-		request["Cpu"] = v
+		request["Cpu"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("custom_host_alias"); ok {
-		request["CustomHostAlias"] = v
+		request["CustomHostAlias"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOkExists("deploy"); ok {
-		request["Deploy"] = v
+		request["Deploy"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("edas_container_version"); ok {
-		request["EdasContainerVersion"] = v
+		request["EdasContainerVersion"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("envs"); ok {
-		request["Envs"] = v
+		request["Envs"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("image_url"); ok {
-		request["ImageUrl"] = v
+		request["ImageUrl"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("jar_start_args"); ok {
-		request["JarStartArgs"] = v
+		request["JarStartArgs"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("jar_start_options"); ok {
-		request["JarStartOptions"] = v
+		request["JarStartOptions"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("jdk"); ok {
-		request["Jdk"] = v
+		request["Jdk"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("liveness"); ok {
-		request["Liveness"] = v
+		request["Liveness"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("memory"); ok {
-		request["Memory"] = v
+		request["Memory"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("mount_desc"); ok {
-		request["MountDesc"] = v
+		request["MountDesc"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("mount_host"); ok {
-		request["MountHost"] = v
+		request["MountHost"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("namespace_id"); ok {
-		request["NamespaceId"] = v
+		request["NamespaceId"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("nas_id"); ok {
-		request["NasId"] = v
+		request["NasId"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("oss_ak_id"); ok {
-		request["OssAkId"] = v
+		request["OssAkId"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("oss_ak_secret"); ok {
-		request["OssAkSecret"] = v
+		request["OssAkSecret"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("oss_mount_descs"); ok {
-		request["OssMountDescs"] = v
+		request["OssMountDescs"] =  StringPointer(v.(string))
 	}
-	request["PackageType"] = d.Get("package_type")
+	request["PackageType"] = StringPointer(d.Get("package_type").(string))
 	if v, ok := d.GetOk("package_url"); ok {
-		request["PackageUrl"] = v
+		request["PackageUrl"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("package_version"); ok {
-		request["PackageVersion"] = v
+		request["PackageVersion"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("php_arms_config_location"); ok {
-		request["PhpArmsConfigLocation"] = v
+		request["PhpArmsConfigLocation"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("php_config"); ok {
-		request["PhpConfig"] = v
+		request["PhpConfig"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("php_config_location"); ok {
-		request["PhpConfigLocation"] = v
+		request["PhpConfigLocation"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("post_start"); ok {
-		request["PostStart"] = v
+		request["PostStart"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("pre_stop"); ok {
-		request["PreStop"] = v
+		request["PreStop"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("readiness"); ok {
-		request["Readiness"] = v
+		request["Readiness"] = StringPointer(v.(string))
 	}
-	request["Replicas"] = d.Get("replicas")
+	request["Replicas"] = StringPointer(d.Get("replicas").(string))
 	if v, ok := d.GetOk("security_group_id"); ok {
-		request["SecurityGroupId"] = v
+		request["SecurityGroupId"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("sls_configs"); ok {
-		request["SlsConfigs"] = v
+		request["SlsConfigs"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("termination_grace_period_seconds"); ok {
-		request["TerminationGracePeriodSeconds"] = v
+		request["TerminationGracePeriodSeconds"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("timezone"); ok {
-		request["Timezone"] = v
+		request["Timezone"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("tomcat_config"); ok {
-		request["TomcatConfig"] = v
+		request["TomcatConfig"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("war_start_options"); ok {
-		request["WarStartOptions"] = v
+		request["WarStartOptions"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("web_container"); ok {
-		request["WebContainer"] = v
+		request["WebContainer"] = StringPointer(v.(string))
 	}
 	vswitchId := Trim(d.Get("vswitch_id").(string))
 	if vswitchId != "" {
@@ -388,8 +388,8 @@ func resourceAlicloudSaeApplicationCreate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return WrapError(err)
 		}
-		request["VpcId"] = vsw["VpcId"]
-		request["VSwitchId"] = vswitchId
+		request["VpcId"] = StringPointer(vsw["VpcId"].(string))
+		request["VSwitchId"] = StringPointer(vswitchId)
 	}
 	wait := incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
@@ -538,17 +538,17 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	}
 	if !d.IsNewResource() && d.HasChange("memory") {
 		if v, ok := d.GetOk("memory"); ok {
-			request["Memory"] = v
+			request["Memory"] = StringPointer(v.(string))
 		}
 	}
-	action := "RescaleApplicationVertically"
-	conn, err := client.NewServerlessClient()
+	action = "/pop/v1/sam/app/rescaleApplicationVertically"
+	conn, err = client.NewServerlessClient()
 	if err != nil {
 		return WrapError(err)
 	}
-	wait := incrementalWait(3*time.Second, 3*time.Second)
+	wait = incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
-		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("POST"), StringPointer("2019-05-06"), StringPointer("AK"), nil, request, &util.RuntimeOptions{})
+		response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("POST"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 		if err != nil {
 			if NeedRetry(err) {
 				wait()
@@ -577,185 +577,185 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	}
 	if !d.IsNewResource() && d.HasChange("command") {
 		if v, ok := d.GetOk("command"); ok {
-			request["Command"] = v
+			request["Command"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("command_args") {
 		if v, ok := d.GetOk("command_args"); ok {
-			request["CommandArgs"] = v
+			request["CommandArgs"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("config_map_mount_desc") {
 		if v, ok := d.GetOk("config_map_mount_desc"); ok {
-			request["ConfigMapMountDesc"] = v
+			request["ConfigMapMountDesc"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("custom_host_alias") {
 		if v, ok := d.GetOk("custom_host_alias"); ok {
-			request["CustomHostAlias"] = v
+			request["CustomHostAlias"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("edas_container_version") {
 		if v, ok := d.GetOk("edas_container_version"); ok {
-			request["EdasContainerVersion"] = v
+			request["EdasContainerVersion"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("envs") {
 		if v, ok := d.GetOk("envs"); ok {
-			request["Envs"] = v
+			request["Envs"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("image_url") {
 		if v, ok := d.GetOk("image_url"); ok {
-			request["ImageUrl"] = v
+			request["ImageUrl"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("jar_start_args") {
 		if v, ok := d.GetOk("jar_start_args"); ok {
-			request["JarStartArgs"] = v
+			request["JarStartArgs"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("jar_start_options") {
 		if v, ok := d.GetOk("jar_start_options"); ok {
-			request["JarStartOptions"] = v
+			request["JarStartOptions"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("jdk") {
 		if v, ok := d.GetOk("jdk"); ok {
-			request["Jdk"] = v
+			request["Jdk"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("liveness") {
 		if v, ok := d.GetOk("liveness"); ok {
-			request["Liveness"] = v
+			request["Liveness"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("mount_desc") {
 		if v, ok := d.GetOk("mount_desc"); ok {
-			request["MountDesc"] = v
+			request["MountDesc"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("mount_host") {
 		if v, ok := d.GetOk("mount_host"); ok {
-			request["MountHost"] = v
+			request["MountHost"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("nas_id") {
 		if v, ok := d.GetOk("nas_id"); ok {
-			request["NasId"] = v
+			request["NasId"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("oss_ak_id") {
 		if v, ok := d.GetOk("oss_ak_id"); ok {
-			request["OssAkId"] = v
+			request["OssAkId"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("oss_ak_secret") {
 		if v, ok := d.GetOk("oss_ak_secret"); ok {
-			request["OssAkSecret"] = v
+			request["OssAkSecret"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("oss_mount_descs") {
 		if v, ok := d.GetOk("oss_mount_descs"); ok {
-			request["OssMountDescs"] = v
+			request["OssMountDescs"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("package_url") {
 		if v, ok := d.GetOk("package_url"); ok {
-			request["PackageUrl"] = v
+			request["PackageUrl"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("package_version") {
 		if v, ok := d.GetOk("package_version"); ok {
-			request["PackageVersion"] = v
+			request["PackageVersion"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("php_arms_config_location") {
 		if v, ok := d.GetOk("php_arms_config_location"); ok {
-			request["PhpArmsConfigLocation"] = v
+			request["PhpArmsConfigLocation"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("php_config") {
 		if v, ok := d.GetOk("php_config"); ok {
-			request["PhpConfig"] = v
+			request["PhpConfig"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("php_config_location") {
 		if v, ok := d.GetOk("php_config_location"); ok {
-			request["PhpConfigLocation"] = v
+			request["PhpConfigLocation"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("post_start") {
 		if v, ok := d.GetOk("post_start"); ok {
-			request["PostStart"] = v
+			request["PostStart"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("pre_stop") {
 		if v, ok := d.GetOk("pre_stop"); ok {
-			request["PreStop"] = v
+			request["PreStop"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("readiness") {
 		if v, ok := d.GetOk("readiness"); ok {
-			request["Readiness"] = v
+			request["Readiness"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("sls_configs") {
 		if v, ok := d.GetOk("sls_configs"); ok {
-			request["SlsConfigs"] = v
+			request["SlsConfigs"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("termination_grace_period_seconds") {
 		if v, ok := d.GetOk("termination_grace_period_seconds"); ok {
-			request["TerminationGracePeriodSeconds"] = v
+			request["TerminationGracePeriodSeconds"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("timezone") {
 		if v, ok := d.GetOk("timezone"); ok {
-			request["Timezone"] = v
+			request["Timezone"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("tomcat_config") {
 		if v, ok := d.GetOk("tomcat_config"); ok {
-			request["TomcatConfig"] = v
+			request["TomcatConfig"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("war_start_options") {
 		if v, ok := d.GetOk("war_start_options"); ok {
-			request["WarStartOptions"] = v
+			request["WarStartOptions"] = StringPointer(v.(string))
 		}
 	}
 	if !d.IsNewResource() && d.HasChange("web_container") {
 		if v, ok := d.GetOk("web_container"); ok {
-			request["WebContainer"] = v
+			request["WebContainer"] = StringPointer(v.(string))
 		}
 	}
 	if v, ok := d.GetOkExists("auto_enable_application_scaling_rule"); ok {
-		request["AutoEnableApplicationScalingRule"] = v
+		request["AutoEnableApplicationScalingRule"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("batch_wait_time"); ok {
-		request["BatchWaitTime"] = v
+		request["BatchWaitTime"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("change_order_desc"); ok {
-		request["ChangeOrderDesc"] = v
+		request["ChangeOrderDesc"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("enable_ahas"); ok {
-		request["EnableAhas"] = v
+		request["EnableAhas"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOkExists("enable_grey_tag_route"); ok {
-		request["EnableGreyTagRoute"] = v
+		request["EnableGreyTagRoute"] = StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("update_strategy"); ok {
-		request["UpdateStrategy"] = v
+		request["UpdateStrategy"] = StringPointer(v.(string))
 	}
-	action := "DeployApplication"
-	conn, err := client.NewServerlessClient()
+	action = "DeployApplication"
+	conn, err = client.NewServerlessClient()
 	if err != nil {
 		return WrapError(err)
 	}
-	wait := incrementalWait(3*time.Second, 3*time.Second)
+	wait = incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
-		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("POST"), StringPointer("2019-05-06"), StringPointer("AK"), nil, request, &util.RuntimeOptions{})
+		response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("POST"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 		if err != nil {
 			if NeedRetry(err) {
 				wait()
@@ -812,8 +812,8 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 		target := d.Get("status").(string)
 		if object[""].(string) != target {
 			if target == "RUNNING" {
-				request := map[string]interface{}{
-					"AppId": d.Id(),
+				request := map[string]*string{
+					"AppId": StringPointer(d.Id()),
 				}
 				action := "StartApplication"
 				conn, err := client.NewServerlessClient()
@@ -822,7 +822,7 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 				}
 				wait := incrementalWait(3*time.Second, 3*time.Second)
 				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
-					response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), request, nil, &util.RuntimeOptions{})
+					response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("GET"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 					if err != nil {
 						if NeedRetry(err) {
 							wait()
@@ -841,8 +841,8 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 				}
 			}
 			if target == "STOPPED" {
-				request := map[string]interface{}{
-					"AppId": d.Id(),
+				request := map[string]*string{
+					"AppId": StringPointer(d.Id()),
 				}
 				action := "StopApplication"
 				conn, err := client.NewServerlessClient()
@@ -851,7 +851,7 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 				}
 				wait := incrementalWait(3*time.Second, 3*time.Second)
 				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
-					response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), request, nil, &util.RuntimeOptions{})
+					response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("GET"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 					if err != nil {
 						if NeedRetry(err) {
 							wait()
@@ -875,8 +875,9 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	d.Partial(false)
 	if d.HasChange("MinReadyInstances") {
 		oldMinReadyInstances, newMinReadyInstances := d.GetChange("MinReadyInstances")
-
-		if added.Len() > 0 {
+		fmt.Println(oldMinReadyInstances)
+		added := newMinReadyInstances.(map[string]interface{})
+		if len(added) > 0 {
 			rescaleapplicationrequest := map[string]interface{}{
 				"AppId": d.Id(),
 			}
@@ -885,14 +886,14 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 			if _, ok := d.GetOkExists("auto_enable_application_scaling_rule"); ok {
 				rescaleapplicationrequest["AutoEnableApplicationScalingRule"] = d.Get("auto_enable_application_scaling_rule")
 			}
-			action := "RescaleApplication"
+			action := "/pop/v1/sam/app/rescaleApplication"
 			conn, err := client.NewServerlessClient()
 			if err != nil {
 				return WrapError(err)
 			}
 			wait := incrementalWait(3*time.Second, 3*time.Second)
 			err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
-				response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), rescaleapplicationrequest, nil, &util.RuntimeOptions{})
+				response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("PUT"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 				if err != nil {
 					if NeedRetry(err) {
 						wait()
@@ -918,19 +919,19 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 }
 func resourceAlicloudSaeApplicationDelete(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*connectivity.AliyunClient)
-	action := "DeleteApplication"
+	action := "/pop/v1/sam/app/deleteApplication"
 	var response map[string]interface{}
 	conn, err := client.NewServerlessClient()
 	if err != nil {
 		return WrapError(err)
 	}
-	request := map[string]interface{}{
-		"AppId": d.Id(),
+	request := map[string]*string{
+		"AppId": StringPointer(d.Id()),
 	}
 
 	wait := incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
-		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2019-05-06"), StringPointer("AK"), request, nil, &util.RuntimeOptions{})
+		response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("DELETE"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 		if err != nil {
 			if NeedRetry(err) {
 				wait()
