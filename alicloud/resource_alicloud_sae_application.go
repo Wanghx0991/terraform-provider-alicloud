@@ -3,6 +3,7 @@ package alicloud
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	util "github.com/alibabacloud-go/tea-utils/service"
@@ -281,7 +282,7 @@ func resourceAlicloudSaeApplicationCreate(d *schema.ResourceData, meta interface
 		request["ConfigMapMountDesc"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("cpu"); ok {
-		request["Cpu"] =  StringPointer(v.(string))
+		request["Cpu"] =  StringPointer(strconv.Itoa(v.(int)))
 	}
 	if v, ok := d.GetOk("custom_host_alias"); ok {
 		request["CustomHostAlias"] =  StringPointer(v.(string))
@@ -311,7 +312,7 @@ func resourceAlicloudSaeApplicationCreate(d *schema.ResourceData, meta interface
 		request["Liveness"] =  StringPointer(v.(string))
 	}
 	if v, ok := d.GetOk("memory"); ok {
-		request["Memory"] =  StringPointer(v.(string))
+		request["Memory"] = StringPointer(strconv.Itoa(v.(int)))
 	}
 	if v, ok := d.GetOk("mount_desc"); ok {
 		request["MountDesc"] =  StringPointer(v.(string))
@@ -359,7 +360,7 @@ func resourceAlicloudSaeApplicationCreate(d *schema.ResourceData, meta interface
 	if v, ok := d.GetOk("readiness"); ok {
 		request["Readiness"] = StringPointer(v.(string))
 	}
-	request["Replicas"] = StringPointer(d.Get("replicas").(string))
+	request["Replicas"] = StringPointer(strconv.Itoa(d.Get("replicas").(int)))
 	if v, ok := d.GetOk("security_group_id"); ok {
 		request["SecurityGroupId"] = StringPointer(v.(string))
 	}
@@ -381,15 +382,17 @@ func resourceAlicloudSaeApplicationCreate(d *schema.ResourceData, meta interface
 	if v, ok := d.GetOk("web_container"); ok {
 		request["WebContainer"] = StringPointer(v.(string))
 	}
-	vswitchId := Trim(d.Get("vswitch_id").(string))
-	if vswitchId != "" {
-		vpcService := VpcService{client}
-		vsw, err := vpcService.DescribeVSwitchWithTeadsl(vswitchId)
-		if err != nil {
-			return WrapError(err)
+	if v, ok := d.GetOk("vswitch_id"); ok {
+		vswitchId := Trim(v.(string))
+		if vswitchId != "" {
+			vpcService := VpcService{client}
+			vsw, err := vpcService.DescribeVSwitchWithTeadsl(vswitchId)
+			if err != nil {
+				return WrapError(err)
+			}
+			request["VpcId"] = StringPointer(vsw["VpcId"].(string))
+			request["VSwitchId"] = StringPointer(vswitchId)
 		}
-		request["VpcId"] = StringPointer(vsw["VpcId"].(string))
-		request["VSwitchId"] = StringPointer(vswitchId)
 	}
 	wait := incrementalWait(3*time.Second, 3*time.Second)
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
@@ -405,10 +408,20 @@ func resourceAlicloudSaeApplicationCreate(d *schema.ResourceData, meta interface
 	})
 	addDebug(action, response, request)
 	if err != nil {
-		return WrapErrorf(err, DefaultErrorMsg, "alicloud_sae_application", action, AlibabaCloudSdkGoERROR)
+		return WrapErrorf(err, DefaultErrorMsg, "alicloud_sae_application","POST " + action, AlibabaCloudSdkGoERROR)
+	}
+	if respBody, isExist := response["body"]; isExist {
+		response = respBody.(map[string]interface{})
+	} else {
+		return WrapError(fmt.Errorf("%s failed, response: %v", "POST "+action, response))
 	}
 	if fmt.Sprint(response["Success"]) == "false" {
 		return WrapError(fmt.Errorf("%s failed, response: %v", action, response))
+	}
+	if respBody, isExist := response["body"]; isExist {
+		response = respBody.(map[string]interface{})
+	} else {
+		return WrapError(fmt.Errorf("%s failed, response: %v", "POST "+action, response))
 	}
 	responseData := response["Data"].(map[string]interface{})
 	d.SetId(fmt.Sprint(responseData["AppId"]))
@@ -496,14 +509,16 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if !d.IsNewResource() && d.HasChange("security_group_id") {
-		request := map[string]interface{}{
-			"AppId": d.Id(),
+		//request = map[string]*string{
+		request := map[string]*string{
+			"AppId": StringPointer(d.Id()),
 		}
 		if v, ok := d.GetOk("security_group_id"); ok {
-			request["SecurityGroupId"] = v
+			request["SecurityGroupId"] = StringPointer(v.(string))
 		}
 	}
-	action := "UpdateAppSecurityGroup"
+	//更新应用安全组
+	action := "/pop/v1/sam/app/updateAppSecurityGroup"
 	conn, err := client.NewServerlessClient()
 	if err != nil {
 		return WrapError(err)
@@ -524,6 +539,11 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	if err != nil {
 		return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, AlibabaCloudSdkGoERROR)
 	}
+	if respBody, isExist := response["body"]; isExist {
+		response = respBody.(map[string]interface{})
+	} else {
+		return WrapError(fmt.Errorf("%s failed, response: %v", "PUT "+action, response))
+	}
 	if fmt.Sprint(response["Success"]) == "false" {
 		return WrapError(fmt.Errorf("%s failed, response: %v", action, response))
 	}
@@ -541,6 +561,7 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 			request["Memory"] = StringPointer(v.(string))
 		}
 	}
+	//更改应用实例规格
 	action = "/pop/v1/sam/app/rescaleApplicationVertically"
 	conn, err = client.NewServerlessClient()
 	if err != nil {
@@ -561,6 +582,11 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	addDebug(action, response, request)
 	if err != nil {
 		return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, AlibabaCloudSdkGoERROR)
+	}
+	if respBody, isExist := response["body"]; isExist {
+		response = respBody.(map[string]interface{})
+	} else {
+		return WrapError(fmt.Errorf("%s failed, response: %v", "POST "+action, response))
 	}
 	if fmt.Sprint(response["Success"]) == "false" {
 		return WrapError(fmt.Errorf("%s failed, response: %v", action, response))
@@ -748,7 +774,8 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	if v, ok := d.GetOk("update_strategy"); ok {
 		request["UpdateStrategy"] = StringPointer(v.(string))
 	}
-	action = "DeployApplication"
+	//部署应用
+	action = "/pop/v1/sam/app/deployApplication"
 	conn, err = client.NewServerlessClient()
 	if err != nil {
 		return WrapError(err)
@@ -768,6 +795,11 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 	addDebug(action, response, request)
 	if err != nil {
 		return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, AlibabaCloudSdkGoERROR)
+	}
+	if respBody, isExist := response["body"]; isExist {
+		response = respBody.(map[string]interface{})
+	} else {
+		return WrapError(fmt.Errorf("%s failed, response: %v", "POST "+action, response))
 	}
 	if fmt.Sprint(response["Success"]) == "false" {
 		return WrapError(fmt.Errorf("%s failed, response: %v", action, response))
@@ -815,14 +847,14 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 				request := map[string]*string{
 					"AppId": StringPointer(d.Id()),
 				}
-				action := "StartApplication"
+				action := "/pop/v1/sam/app/startApplication"
 				conn, err := client.NewServerlessClient()
 				if err != nil {
 					return WrapError(err)
 				}
 				wait := incrementalWait(3*time.Second, 3*time.Second)
 				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
-					response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("GET"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
+					response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("PUT"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 					if err != nil {
 						if NeedRetry(err) {
 							wait()
@@ -835,6 +867,11 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 				addDebug(action, response, request)
 				if err != nil {
 					return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, AlibabaCloudSdkGoERROR)
+				}
+				if respBody, isExist := response["body"]; isExist {
+					response = respBody.(map[string]interface{})
+				} else {
+					return WrapError(fmt.Errorf("%s failed, response: %v", "POST "+action, response))
 				}
 				if fmt.Sprint(response["Success"]) == "false" {
 					return WrapError(fmt.Errorf("%s failed, response: %v", action, response))
@@ -844,14 +881,14 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 				request := map[string]*string{
 					"AppId": StringPointer(d.Id()),
 				}
-				action := "StopApplication"
+				action := "/pop/v1/sam/app/stopApplication"
 				conn, err := client.NewServerlessClient()
 				if err != nil {
 					return WrapError(err)
 				}
 				wait := incrementalWait(3*time.Second, 3*time.Second)
 				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
-					response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("GET"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
+					response, err = conn.DoRequest(StringPointer("2019-05-06"), nil, StringPointer("PUT"), StringPointer("AK"), StringPointer(action), request, nil, nil, &util.RuntimeOptions{})
 					if err != nil {
 						if NeedRetry(err) {
 							wait()
@@ -864,6 +901,11 @@ func resourceAlicloudSaeApplicationUpdate(d *schema.ResourceData, meta interface
 				addDebug(action, response, request)
 				if err != nil {
 					return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, AlibabaCloudSdkGoERROR)
+				}
+				if respBody, isExist := response["body"]; isExist {
+					response = respBody.(map[string]interface{})
+				} else {
+					return WrapError(fmt.Errorf("%s failed, response: %v", "POST "+action, response))
 				}
 				if fmt.Sprint(response["Success"]) == "false" {
 					return WrapError(fmt.Errorf("%s failed, response: %v", action, response))
