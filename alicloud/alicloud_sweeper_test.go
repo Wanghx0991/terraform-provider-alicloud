@@ -79,3 +79,6 @@ func sharedClientForRegion(region string) (interface{}, error) {
 	return client, nil
 }
 
+func test()  {
+
+}
