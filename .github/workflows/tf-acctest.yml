@@ -1,33 +1,27 @@
-name: Test Process
+name: Terrafrom Test Process
 on:
   push:
     paths:
-      - .github/workflows/ci_test.yml
+      - .github/workflows/tf-acctest.yml
       - .go-version
       - alicloud/*_test.go
-      #- scripts/validate-terraform.sh
-      - tools/go.mod
     branches:
       - master
   pull_request:
     paths:
-      - .github/workflows/ci_test.yml
-      - .go-version
+      - .github/workflows/tf-acctest.yml
       - alicloud/*_test.go
-      #- scripts/validate-terraform.sh
-      - tools/go.mod
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go 1.x
+      - uses: actions/checkout@v2
+      - name: Set up Go Version
         uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8
         with:
           go-version: ^1.16
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
 
       - name: Get dependencies
         run: |
