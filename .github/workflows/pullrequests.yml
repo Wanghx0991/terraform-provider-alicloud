@@ -1,6 +1,10 @@
 name: Pull Request Process
 
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - .github/workflows/tf-acctest.yml
+      - alicloud/*_test.go
 
 jobs:
   labeler:
