@@ -911,7 +911,7 @@ func computePeriodByUnit(createTime, endTime interface{}, currentPeriod int, per
 	if period > 12 {
 		period = 12
 	}
-	// period can not be modified and if the new period is changed, using the previous one.
+	// period can  not be modified and if the new period is changed, using the previous one.
 	if currentPeriod > 0 && currentPeriod != period {
 		period = currentPeriod
 	}
