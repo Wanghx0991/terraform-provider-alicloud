@@ -982,7 +982,7 @@ func convertArrayObjectToJsonString(src interface{}) (string, error) {
 	return string(res), nil
 }
 
-func convertArrayObjectToJsonString2(src interface{}) (string, error) {
+func convertArrayObjectToJsonStrin(src interface{}) (string, error) {
 	res, err := json.Marshal(&src)
 	if err != nil {
 		return "", err
