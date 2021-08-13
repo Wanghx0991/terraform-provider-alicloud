@@ -3,14 +3,13 @@ on:
   push:
     paths:
       - .github/workflows/tf-acctest.yml
-      - .go-version
-      - alicloud/*_test.go
+      - alicloud/*.go
     branches:
       - master
   pull_request:
     paths:
       - .github/workflows/tf-acctest.yml
-      - alicloud/*_test.go
+      - alicloud/*.go
 
 jobs:
   build:
