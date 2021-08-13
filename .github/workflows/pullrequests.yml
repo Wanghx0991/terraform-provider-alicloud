@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/tf-acctest.yml
-      - alicloud/*_test.go
+      - alicloud/*.go
 
 jobs:
   labeler:
@@ -17,9 +17,9 @@ jobs:
           xs_max_size: '30'
           s_max_size: '60'
           m_max_size: '150'
-          l_max_size: '1000'
+          l_max_size: '1500'
           fail_if_xl: 'false'
           message_if_xl: >
-            'This PR exceeds the recommended size of 1000 lines.
+            'This PR exceeds the recommended size of 1500 lines.
             Please make sure you are NOT addressing multiple issues with one PR.
             Note this PR might be rejected due to its size.’
