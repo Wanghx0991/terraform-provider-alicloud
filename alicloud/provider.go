@@ -509,6 +509,7 @@ func Provider() terraform.ResourceProvider {
 			"alicloud_vpc_dhcp_options_sets":                       dataSourceAlicloudVpcDhcpOptionsSets(),
 			"alicloud_alb_health_check_templates":                  dataSourceAlicloudAlbHealthCheckTemplates(),
 			"alicloud_cdn_real_time_log_deliveries":                dataSourceAlicloudCdnRealTimeLogDeliveries(),
+			"alicloud_realtime_compute_clusters":                   dataSourceAlicloudRealtimeComputeClusters(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"alicloud_instance":                           resourceAliyunInstance(),
@@ -914,6 +915,7 @@ func Provider() terraform.ResourceProvider {
 			"alicloud_alb_health_check_template":                  resourceAlicloudAlbHealthCheckTemplate(),
 			"alicloud_cdn_real_time_log_delivery":                 resourceAlicloudCdnRealTimeLogDelivery(),
 			"alicloud_bastionhost_user_attachment":                resourceAlicloudBastionhostUserAttachment(),
+			"alicloud_realtime_compute_cluster":                   resourceAlicloudRealtimeComputeCluster(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -1093,6 +1095,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		config.IotEndpoint = strings.TrimSpace(endpoints["iot"].(string))
 		config.ImmEndpoint = strings.TrimSpace(endpoints["imm"].(string))
 		config.ClickhouseEndpoint = strings.TrimSpace(endpoints["clickhouse"].(string))
+		config.FoasconsoleEndpoint = strings.TrimSpace(endpoints["foasconsole"].(string))
 		if endpoint, ok := endpoints["alidns"]; ok {
 			config.AlidnsEndpoint = strings.TrimSpace(endpoint.(string))
 		} else {
@@ -1362,6 +1365,8 @@ func init() {
 		"imm_endpoint": "Use this to override the default endpoint URL constructed from the `region`. It's typically used to connect to custom imm endpoints.",
 
 		"clickhouse_endpoint": "Use this to override the default endpoint URL constructed from the `region`. It's typically used to connect to custom clickhouse endpoints.",
+
+		"foasconsole_endpoint": "Use this to override the default endpoint URL constructed from the `region`. It's typically used to connect to custom foasconsole endpoints.",
 	}
 }
 
@@ -1406,6 +1411,13 @@ func endpointsSchema() *schema.Schema {
 		Optional: true,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
+				"foasconsole": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Default:     "",
+					Description: descriptions["foasconsole_endpoint"],
+				},
+
 				"iot": {
 					Type:        schema.TypeString,
 					Optional:    true,
@@ -2076,6 +2088,7 @@ func endpointsToHash(v interface{}) int {
 	buf.WriteString(fmt.Sprintf("%s-", m["iot"].(string)))
 	buf.WriteString(fmt.Sprintf("%s-", m["imm"].(string)))
 	buf.WriteString(fmt.Sprintf("%s-", m["clickhouse"].(string)))
+	buf.WriteString(fmt.Sprintf("%s-", m["foasconsole"].(string)))
 	return hashcode.String(buf.String())
 }
 
