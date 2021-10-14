@@ -1,20 +1,166 @@
-name: go-lint
+name: golangci-lint
 on:
   pull_request:
-    branches:
-      - go-1.11
+    paths:
+      - .github/workflows/pull_requests.yml
+      - alicloud/*.go
 jobs:
-  golangci:
+  golangci-lint:
+    name: runner / golangci-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: ./
+        with:
+          github_token: ${{ secrets.github_token }}
+          level: warning
+          golangci_lint_flags: "--config=.github/.workflows/acctest-terraform-lint.yml ./alicloud"
+
+  golangci-lint-platform:
+    name: runner / golangci-lint-platform
     strategy:
+      fail-fast: false
       matrix:
-        go-version: [1.16.x]
-        os: [macos-latest,ubuntu-latest]
-    name: lint
-    runs-on: ${{ matrix.os }}
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+      - name: golangci-lint (platform)
+        uses: ./
         with:
-          version: v1.29
-          only-new-issues: true
+          github_token: ${{ secrets.github_token }}
+          tool_name: golangci-lint-${{ matrix.platform }}
+          level: warning
+          golangci_lint_flags: "--config=.github/.workflows/acctest-terraform-lint.yml ./alicloud"
+
+  golangci-lint-github-pr-review:
+    name: runner / golangci-lint (github-pr-review)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: golangci-lint w/ github-pr-review
+        uses: ./
+        with:
+          golangci_lint_flags: "./alicloud"
+          tool_name: "golangci-lint-github-pr-review"
+          reporter: "github-pr-review"
+
+  golangci-lint-github-check:
+    name: runner / golangci-lint (github-check)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: golangci-lint w/ github-check
+        uses: ./
+        with:
+          golangci_lint_flags: "./alicloud"
+          tool_name: "golangci-lint-github-check"
+          level: warning
+          reporter: "github-check"
+
+  golangci-lint-workdir:
+    name: runner / golangci-lint (workdir)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint (workdir)
+        uses: ./
+        with:
+          workdir: "./alicloud"
+          golangci_lint_flags: ""
+          tool_name: "golangci-lint-workdir"
+          level: warning
+          reporter: "github-check"
+          filter_mode: "file"
+
+  golangci-lint-all-in-one:
+    name: runner / golangci-lint-all-in-one
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: golangci-lint (All-In-One config)
+        uses: ./
+        with:
+          github_token: ${{ secrets.github_token }}
+          tool_name: "golangci-lint-all-in-one"
+          level: warning
+          golangci_lint_flags: "--enable-all --exclude-use-default=false ./alicloud"
+
+  govet:
+    name: runner / govet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: govet
+        uses: ./
+        with:
+          github_token: ${{ secrets.github_token }}
+          golangci_lint_flags: "--disable-all -E govet ./alicloud"
+          tool_name: govet
+
+  staticcheck:
+    name: runner / staticcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: staticcheck
+        uses: ./
+        with:
+          github_token: ${{ secrets.github_token }}
+          golangci_lint_flags: "--disable-all -E staticcheck ./alicloud"
+          tool_name: staticcheck
+
+  golint:
+    name: runner / golint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: golint
+        uses: ./
+        with:
+          github_token: ${{ secrets.github_token }}
+          golangci_lint_flags: "--disable-all -E golint ./alicloud"
+          tool_name: golint
+          level: warning
+
+  errcheck:
+    name: runner / errcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: errcheck
+        uses: ./
+        with:
+          github_token: ${{ secrets.github_token }}
+          golangci_lint_flags: "--disable-all -E errcheck ./alicloud"
+          tool_name: errcheck
+          level: warning
+
+  misspell:
+    name: runner / misspell
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: misspell
+        uses: ./
+        with:
+          github_token: ${{ secrets.github_token }}
+          golangci_lint_flags: "--disable-all -E misspell ./alicloud"
+          tool_name: misspell
+          level: info
+
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: reviewdog/action-actionlint@v1
