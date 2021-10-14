@@ -47,4 +47,3 @@ jobs:
           skip-go-installation: true
           skip-pkg-cache: true
           skip-build-cache: true
-          
