@@ -35,7 +35,7 @@ jobs:
             Please make sure you are NOT addressing multiple issues with one PR.
             Note this PR might be rejected due to its size.’
   golangci:
-    name: lint
+    name: golangci-lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -44,7 +44,7 @@ jobs:
         with:
           version: v1.29
           working-directory: ./alicloud
-          only-new-issues: true
+          only-new-issues: false
           skip-go-installation: true
           skip-pkg-cache: true
           skip-build-cache: true
