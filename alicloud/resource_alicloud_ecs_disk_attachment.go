@@ -158,9 +158,9 @@ func resourceAlicloudEcsDiskAttachmentCreate(d *schema.ResourceData, meta interf
 }
 func resourceAlicloudEcsDiskAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*connectivity.AliyunClient)
+	client = meta.(*connectivity.AliyunClient)
 	ecsService := EcsService{client}
 	disk, err := ecsService.DescribeEcsDiskAttachment(d.Id())
-
 	if err != nil {
 		if NotFoundError(err) {
 			d.SetId("")
