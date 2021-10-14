@@ -2092,11 +2092,11 @@ func (s *EcsService) DescribeEcsDisk(id string) (object map[string]interface{}, 
 	if len(v.([]interface{})) < 1 {
 		return object, WrapErrorf(Error(GetNotFoundMessage("ECS", id)), NotFoundWithResponse, response)
 	} else {
-		if v.([]interface{})[0].(map[string]interface{})["DiskId"].(string) != id {
+							if v.([]interface{})[0].(map[string]interface{})["DiskId"].(string) != id {
 			return object, WrapErrorf(Error(GetNotFoundMessage("ECS", id)), NotFoundWithResponse, response)
 		}
 	}
-	object = v.([]interface{})[0].(map[string]interface{})
+	object = 					v.([]interface{})[0].(map[string]interface{})
 	return object, nil
 }
 
