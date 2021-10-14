@@ -2042,7 +2042,7 @@ func (s *EcsService) DescribeEcsAutoSnapshotPolicyAttachment(id string) (object 
 		err = WrapErrorf(err, DefaultErrorMsg, id, action, AlibabaCloudSdkGoERROR)
 		return object, err
 	}
-	v, err := jsonpath.Get("$.Disks.Disk", response)
+	v, err :=            jsonpath.Get("$.Disks.Disk", response)
 	if err != nil {
 		return object, WrapErrorf(err, FailedGetAttributeMsg, id, "$.Disks.Disk", response)
 	}
