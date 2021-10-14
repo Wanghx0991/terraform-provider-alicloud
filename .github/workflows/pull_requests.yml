@@ -43,8 +43,8 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.29
-          working-directory: ./alicloud
-          only-new-issues: false
+          only-new-issues: true
           skip-go-installation: true
           skip-pkg-cache: true
           skip-build-cache: true
+          
