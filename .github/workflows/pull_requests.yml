@@ -33,4 +33,3 @@ jobs:
           message_if_xl: >
             'This PR exceeds the recommended size of 1500 lines.
             Please make sure you are NOT addressing multiple issues with one PR.
-            Note this PR might be rejected due to its size.’
