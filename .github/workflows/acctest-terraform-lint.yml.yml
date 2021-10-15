@@ -40,21 +40,20 @@ jobs:
           # Can pass --config flag to change golangci-lint behavior and target
           # directory.
           golangci_lint_flags: '--timeout=25m ./alicloud'
-#          workdir: alicloud
 
 
 
-  # You can add more and more supported linters with different config.
-#  errcheck:
-#    name: runner / errcheck
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Check out code into the Go module directory
-#        uses: actions/checkout@v2
-#      - name: errcheck
-#        uses: reviewdog/action-golangci-lint@v2
-#        with:
-#          golangci_lint_flags: '--disable-all -E errcheck'
-#          tool_name: errcheck
-#          level: info
+#   You can add more and more supported linters with different config.
+  errcheck:
+    name: runner / errcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: errcheck
+        uses: reviewdog/action-golangci-lint@v2
+        with:
+          golangci_lint_flags: '--timeout=25m --disable-all -E errcheck'
+          tool_name: errcheck
+          level: info
 
