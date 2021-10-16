@@ -132,8 +132,18 @@ func dataSourceAlicloudAlbAclsRead(d *schema.ResourceData, meta interface{}) err
 	}
 	if v, ok := d.GetOk("acl_name"); ok {
 		AclNames := []string{v.(string)}
+
+
+
+
 		request["AclNames"] = AclNames
+
+
+
 	}
+
+
+
 
 	if v, ok := d.GetOk("resource_group_id"); ok {
 		request["ResourceGroupId"] = v
