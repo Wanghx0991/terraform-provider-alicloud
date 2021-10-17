@@ -11,6 +11,7 @@ func dataSourceAlicloudAccount() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceAlicloudAccountRead,
 
+
 		Schema: map[string]*schema.Schema{
 			// Computed values
 			"id": {
