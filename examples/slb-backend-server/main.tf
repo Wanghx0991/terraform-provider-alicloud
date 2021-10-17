@@ -54,8 +54,8 @@ resource "alicloud_instance" "instance" {
 }
 
 resource "alicloud_slb_load_balancer" "instance" {
-  load_balancer_name          = var.name
-  vswitch_id    = alicloud_vswitch.main.id
+  load_balancer_name = var.name
+  vswitch_id         = alicloud_vswitch.main.id
   load_balancer_spec = "slb.s2.small"
 }
 

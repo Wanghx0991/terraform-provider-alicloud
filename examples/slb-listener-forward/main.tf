@@ -1,5 +1,5 @@
 resource "alicloud_slb_load_balancer" "instance" {
-  load_balancer_name                 = "tf-testAccSlbListenerHttp"
+  load_balancer_name   = "tf-testAccSlbListenerHttp"
   internet_charge_type = "PayByTraffic"
   internet             = true
 }

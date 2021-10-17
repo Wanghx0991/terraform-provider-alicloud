@@ -50,8 +50,8 @@ resource "alicloud_instance" "default" {
 }
 
 resource "alicloud_slb_load_balancer" "default" {
-  load_balancer_name       = var.name
-  vswitch_id = alicloud_vswitch.default.id
+  load_balancer_name = var.name
+  vswitch_id         = alicloud_vswitch.default.id
 }
 
 resource "alicloud_slb_listener" "default" {

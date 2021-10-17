@@ -5,7 +5,7 @@ resource "alicloud_slb_server_certificate" "foo" {
 }
 
 resource "alicloud_slb_load_balancer" "instance" {
-  load_balancer_name                 = var.slb_name
+  load_balancer_name   = var.slb_name
   internet_charge_type = var.internet_charge_type
   address_type         = var.address_type
 }

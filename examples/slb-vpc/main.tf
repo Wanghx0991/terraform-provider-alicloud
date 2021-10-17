@@ -13,7 +13,7 @@ resource "alicloud_vswitch" "main" {
 }
 
 resource "alicloud_slb_load_balancer" "instance" {
-  load_balancer_name                 = var.name
+  load_balancer_name   = var.name
   vswitch_id           = alicloud_vswitch.main[0].id
   internet_charge_type = var.internet_charge_type
 }
