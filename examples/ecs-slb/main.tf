@@ -61,7 +61,7 @@ resource "alicloud_instance" "instance" {
 }
 
 resource "alicloud_slb_load_balancer" "instance" {
-  load_balancer_name                 = var.slb_name
+  load_balancer_name   = var.slb_name
   internet_charge_type = var.slb_internet_charge_type
   internet             = var.internet
 }
