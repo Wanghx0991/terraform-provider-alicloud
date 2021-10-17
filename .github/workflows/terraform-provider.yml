@@ -1,8 +1,8 @@
 name: Check terraform file formatting
 on:
-  push:
-    branches:
-      - .github/workflows/pull_requests.yml
+  pull_request:
+    paths:
+      - .github/workflows/terraform-provider.yml
       - alicloud/*.go
 
 jobs:
@@ -16,4 +16,4 @@ jobs:
       - name: terraform fmt
         uses: dflook/terraform-fmt-check@v1
         with:
-          path: website/docs
+          path: website/docs/r
