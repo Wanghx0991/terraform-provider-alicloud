@@ -1,4 +1,3 @@
-
-```release-note:new-resource
-resource/alicloud_api_gateway_api support API replay attacks
+```release-note:bug
+resource/aws_codedeploy_deployment_group: Correctly update `deployment_group_name` argument
 ```
