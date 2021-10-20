@@ -24,11 +24,11 @@ require (
 	github.com/gogap/stack v0.0.0-20150131034635-fef68dddd4f8 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.1.2
+	github.com/hashicorp/go-changelog v0.0.0-20211005220746-de58f3600ffd // indirect
 	github.com/hashicorp/go-uuid v1.0.1
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk v1.4.0
 	github.com/hashicorp/vault v0.10.4
-	github.com/imdario/mergo v0.3.8 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 	github.com/keybase/go-crypto v0.0.0-20190416182011-b785b22cc757 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect

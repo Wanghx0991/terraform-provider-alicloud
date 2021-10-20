@@ -1,0 +1,3 @@
+```release-note:new-resource
+resource/alicloud_api_gateway_api support API replay attacks
+```
