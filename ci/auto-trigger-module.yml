@@ -42,7 +42,7 @@ jobs:
             type: registry-image
             source: {repository: golang, tag: 1.16.0}
           inputs:
-          - name: terraform-provider-alicloudvalid
+          - name: terraform-provider-alicloud
           - name: terraform_module_test
           params:
             ALICLOUD_ACCESS_KEY: ""
