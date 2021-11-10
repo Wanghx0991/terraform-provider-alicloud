@@ -17,6 +17,7 @@ resources:
       branch: master
       paths:
         - alicloud/*
+        - ci/*
         - vendor/*
         - go.mod
         - main.go
