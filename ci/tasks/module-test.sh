@@ -16,7 +16,7 @@ echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
 wget "https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip" || exit 1
-unzip -o terraform_"${terraform_version}"_linux_amd64.zip -d /usr/bin || exit 1
+tar zxvf terraform_"${terraform_version}"_linux_amd64.zip -C /usr/bin || exit 1
 ls /usr/bin/
 
 cd ./terraform=provider-alicloud
