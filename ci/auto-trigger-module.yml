@@ -44,6 +44,11 @@ jobs:
           inputs:
           - name: terraform-provider-alicloudvalid
           - name: terraform_module_test
+          params:
+            ALICLOUD_ACCESS_KEY: ""
+            ALICLOUD_SECRET_KEY: ""
+            ALICLOUD_REGION: ""
+            terraform_version: ""
           run:
             path: sh
             args:
@@ -51,5 +56,5 @@ jobs:
               - |
                 ls -al
                 cd terraform-provider-alicloud
-                ./ci/tasks/module-test.sh "0.13.7"
+                ./ci/tasks/module-test.sh
 
