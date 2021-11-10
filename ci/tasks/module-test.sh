@@ -15,6 +15,10 @@ echo "ALICLOUD_ACCESS_KEY=${ALICLOUD_ACCESS_KEY}"
 echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
+wget "https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip" || exit 1
+unzip -o terraform_"${terraform_version}"_linux_amd64.zip -d /usr/bin || exit 1
+ls /usr/bin/
+
 cd ./terraform=provider-alicloud
 provider_dir="$(pwd)"
 diffFiles=$(git diff --name-only HEAD~ HEAD)
@@ -22,8 +26,7 @@ rm -rf ./terraform_test
 git clone https://github.com/Wanghx0991/terraform_test
 test_dir="$( cd ./terraform_test && pwd )"
 
-wget "https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip" || exit 1
-unzip -o terraform_"${terraform_version}"_linux_amd64.zip -d /usr/bin || exit 1
+
 
 terraform init || exit 1
 
