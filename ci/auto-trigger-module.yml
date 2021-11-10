@@ -15,11 +15,11 @@ resources:
     source:
       uri: https://github.com/Wanghx0991/terraform-provider-alicloud.git
       branch: master
-      paths:
-        - alicloud/*
-        - ci/*
-        - go.mod
-        - main.go
+#      paths:
+#        - alicloud/*
+#        - ci/*
+#        - go.mod
+#        - main.go
 
   - name: terraform_module_test
     type: git
