@@ -27,6 +27,7 @@ unzip -o terraform_"${terraform_version}"_linux_amd64.zip -d /usr/bin || exit 1
 terraform init || exit 1
 
 
+
 for fileName in ${diffFiles[*]};
 do
   if [[ ${fileName} == "alicloud/resource_alicloud"* || ${fileName} == "alicloud/data_source_alicloud"* ]];then
