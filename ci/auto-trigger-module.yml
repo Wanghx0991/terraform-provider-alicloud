@@ -1,13 +1,8 @@
 ---
-platform: linux
-image_resource:
-  type: registry-image
-  source: {repository: golang, tag: 1.16.0}
 groups:
   - name: All
     jobs:
       - point-to-module-test
-
 
 resources:
   - name: terraform-provider-alicloud
@@ -15,11 +10,6 @@ resources:
     source:
       uri: https://github.com/Wanghx0991/terraform-provider-alicloud.git
       branch: master
-#      paths:
-#        - alicloud/*
-#        - ci/*
-#        - go.mod
-#        - main.go
 
   - name: terraform_module_test
     type: git
@@ -27,34 +17,31 @@ resources:
       uri: https://github.com/Wanghx0991/terraform_test.git
       branch: master
 
+
+shared:
+- &validate
+  task: validate
+  file: terraform-provider-alicloud/ci/tasks/module-test.yml
+  params: &validate-params
+    ALICLOUD_ACCESS_KEY: {{alicloud_access_key}}
+    ALICLOUD_SECRET_KEY: {{alicloud_secret_key}}
+    ALICLOUD_REGION: {{alicloud_region}}
+    terraform_version: {{terraform_version}}
+
+
 jobs:
   - name: point-to-module-test
-#    serial: true
+    serial: true
     plan:
       - get: terraform-provider-alicloud
         trigger: true
+        resource: terraform-provider-alicloud
       - get: terraform_module_test
         trigger: false
-      - task: point-to-module-ci-test
-        config:
-          platform: linux
-          image_resource:
-            type: registry-image
-            source: {repository: golang, tag: 1.16.0}
-          inputs:
-          - name: terraform-provider-alicloud
-          - name: terraform_module_test
-          params:
-            ALICLOUD_ACCESS_KEY: ""
-            ALICLOUD_SECRET_KEY: ""
-            ALICLOUD_REGION: ""
-            terraform_version: ""
-          run:
-            path: sh
-            args:
-              - -cx
-              - |
-                ls -al
-                cd terraform-provider-alicloud
-                ./ci/tasks/module-test.sh
+        resource: terraform_module_test
+      - <<: *validate
+        params:
+          <<: *validate-params
+          terraform_version: "0.13.7"
+
 
