@@ -15,6 +15,7 @@ echo "ALICLOUD_ACCESS_KEY=${ALICLOUD_ACCESS_KEY}"
 echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
+cd ./terraform=provider-alicloud
 provider_dir="$(pwd)"
 diffFiles=$(git diff --name-only HEAD~ HEAD)
 rm -rf ./terraform_test
