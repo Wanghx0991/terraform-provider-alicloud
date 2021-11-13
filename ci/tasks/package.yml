@@ -7,4 +7,10 @@ image_resource:
 inputs:
   - name: terraform-provider-alicloud
 run:
-  path: terraform-provider-alicloud/ci/tasks/package.sh
+  path: sh
+  args:
+    - -cx
+    - |
+      chmod +rx terraform-provider-alicloud/ci/tasks/package.sh
+      terraform-provider-alicloud/ci/tasks/package.sh
+
