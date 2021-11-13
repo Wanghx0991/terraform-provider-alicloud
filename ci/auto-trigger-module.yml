@@ -19,14 +19,17 @@ resources:
 
 
 shared:
-- &validate
-  task: validate
-  file: terraform-provider-alicloud/ci/tasks/module-test.yml
-  params: &validate-params
-    ALICLOUD_ACCESS_KEY: {{alicloud_access_key}}
-    ALICLOUD_SECRET_KEY: {{alicloud_secret_key}}
-    ALICLOUD_REGION: {{alicloud_region}}
-    terraform_version: {{terraform_version}}
+  - &pack-terraform
+    - task: package
+              - file: terraform-provider-alicloud/ci/tasks/package.yml
+  - &validate
+    task: validate
+    file: terraform-provider-alicloud/ci/tasks/module-test.yml
+    params: &validate-params
+      ALICLOUD_ACCESS_KEY: {{alicloud_access_key}}
+      ALICLOUD_SECRET_KEY: {{alicloud_secret_key}}
+      ALICLOUD_REGION: {{alicloud_region}}
+      terraform_version: {{terraform_version}}
 
 
 jobs:
@@ -39,6 +42,7 @@ jobs:
       - get: terraform_module_test
         trigger: false
         resource: terraform_module_test
+      - <<: *pack-terraform
       - <<: *validate
         params:
           <<: *validate-params
