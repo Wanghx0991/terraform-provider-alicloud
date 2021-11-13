@@ -2,6 +2,7 @@
 groups:
   - name: All
     jobs:
+      - build-terraform-provider-package
       - point-to-module-test
 
 resources:
@@ -18,7 +19,27 @@ resources:
       branch: master
 
 
+
 shared:
+- &clone-provider
+    get: terraform-provider-alicloud
+    resource: terraform-provider-alicloud
+    trigger: true
+- &clone-module-test
+  get: terraform_module_test
+  resource: terraform_module_test
+  trigger: true
+
+
+- &build
+  task: build
+  file: terraform-provider-alicloud/ci/tasks/build-package.yml
+  params:
+    terraform_provider_access_key: {{alicloud_access_key}}
+    terraform_provider_secret_key: {{alicloud_secret_key}}
+    terraform_provider_bucket_name: {{terraform_provider_bucket_name}}
+    terraform_provider_bucket_region: {{terraform_provider_bucket_region}}
+
 - &validate
   task: validate
   file: terraform-provider-alicloud/ci/tasks/module-test.yml
@@ -30,15 +51,28 @@ shared:
 
 
 jobs:
+  - name: build-terraform-provider-package
+    serial: true
+    plan:
+      - <<: *clone-provider
+      - <<: *clone-module-test
+#      - aggregate:
+#          - *get-aliyun-cli
+      - <<: *build
+
   - name: point-to-module-test
     serial: true
     plan:
       - get: terraform-provider-alicloud
-        trigger: true
         resource: terraform-provider-alicloud
+        trigger: true
+        passed: [ build-terraform-provider-package ]
       - get: terraform_module_test
         trigger: false
         resource: terraform_module_test
+        passed: [ build-terraform-provider-package ]
+#      - aggregate:
+#          - *get-aliyun-cli
       - <<: *validate
         params:
           <<: *validate-params
