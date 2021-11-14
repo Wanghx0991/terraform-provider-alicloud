@@ -8,6 +8,6 @@ go get golang.org/x/tools/cmd/goimports
 echo "Starting Go mod tidy"
 go mod tidy
 echo "Ending Go mod tidy"
-GOOS=linux  GOARCH=amd64  go build -o bin/terraform-provider-alicloud
+make devlinux
 cd bin/
 ls -al
