@@ -21,7 +21,7 @@ resources:
 shared:
   - &pack-terraform
     task: package
-    file: terraform-provider-alicloud/ci/tasks/package.yml
+    file: terraform-provider-alicloud/ci/tasks/build-provider-next.yml
   - &validate
     task: validate
     file: terraform-provider-alicloud/ci/tasks/module-test.yml
