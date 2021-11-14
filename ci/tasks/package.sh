@@ -5,6 +5,8 @@ cd terraform-provider-alicloud
 go get golang.org/x/tools/cmd/goimports
 #go env -w GOPROXY=https://goproxy.cn,direct
 #GOOS=linux GOARCH=amd64 go build -o bin/terraform-provider-alicloud
+go mod tidy
+go mod vendor
 GOOS=linux  GOARCH=amd64  go build -o bin/terraform-provider-alicloud
 cd bin/
 ls -al
