@@ -340,6 +340,16 @@ func TestAccAlicloudKmsSecret_SecretType(t *testing.T) {
 	resourceId := "alicloud_kms_secret.default"
 	rand := acctest.RandIntRange(1000000, 9999999)
 	name := fmt.Sprintf("acs/ecs/tf_testaccKmsSecret_%d", rand)
+	secretData, _ := convertMaptoJsonString(map[string]interface{}{
+		"UserName": "UserName",
+		"Password": "Password",
+	})
+	extendedConfig, _ := convertMaptoJsonString(map[string]interface{}{
+		"SecretSubType": "Password",
+		"InstanceId":    "${data.alicloud_instances.default.id}",
+		"RegionId":      os.Getenv("ALICLOUD_REGION"),
+		"CustomData":    "",
+	})
 	ra := resourceAttrInit(resourceId, map[string]string{
 		"arn":              CHECKSET,
 		"description":      "",
@@ -355,7 +365,7 @@ func TestAccAlicloudKmsSecret_SecretType(t *testing.T) {
 	rac := resourceAttrCheckInit(rc, ra)
 
 	testAccCheck := rac.resourceAttrMapUpdateSet()
-	testAccConfig := resourceTestAccConfigFunc(resourceId, name, resourceKmsSecretConfigDependence)
+	testAccConfig := resourceTestAccConfigFunc(resourceId, name, resourceKmsSecretWithSecretTypeDependence)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -369,25 +379,21 @@ func TestAccAlicloudKmsSecret_SecretType(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccConfig(map[string]interface{}{
-					"secret_data_type": "text",
-					"secret_type":      "ECS",
-					"secret_data":      `{\"UserName\":\"TFTEST\",\"Password\": \"TFTEST123\"}`,
-					"extended_config":  `{\"SecretSubType\":\"Password\",\"InstanceId\":\"rm-bp1b3dd3a506e****\",\"RegionId\":\"cn-shanghai\",\"CustomData\":{}}`,
-					"secret_name": convertMaptoJsonString(map[string]interface{}{
-						"SecretSubType": "Password",
-						"InstanceId":    "",
-						"RegionId":      os.Getenv("ALICLOUD_REGION"),
-						"CustomData":    "",
-					}),
+					"secret_data_type":              "text",
+					"secret_type":                   "ECS",
+					"secret_data":                   "jsonencode({allowedLocations = { value =" + secretData + "}})",
+					"extended_config":               "jsonencode({allowedLocations = { value =" + extendedConfig + "}})",
+					"secret_name":                   name,
 					"version_id":                    "00001",
 					"force_delete_without_recovery": "true",
 				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheck(map[string]string{
-						"secret_data": name,
-						"secret_name": name,
-						"version_id":  "00001",
-						"secret_type": CHECKSET,
+						"secret_data":     CHECKSET,
+						"secret_name":     name,
+						"version_id":      "00001",
+						"extended_config": CHECKSET,
+						"secret_type":     "ECS",
 					}),
 				),
 			},
@@ -410,5 +416,16 @@ func resourceKmsSecretWithKeyConfigDependence(name string) string {
 			description = var.name
 			pending_window_in_days = 7
 		}
+`, name)
+}
+
+func resourceKmsSecretWithSecretTypeDependence(name string) string {
+	return fmt.Sprintf(`
+		variable "name" {
+			default = "%s"
+		}
+		data "alicloud_instances" "default" {
+		}
+
 `, name)
 }
