@@ -93,6 +93,15 @@ func resourceAlicloudKmsSecret() *schema.Resource {
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"secret_type":{
+				Type: schema.TypeString,
+				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{"Generic", "Rds","RAMCredentials","ECS"}, false),
+			},
+			"extended_config":{
+				Type: schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -141,6 +150,12 @@ func resourceAlicloudKmsSecretCreate(d *schema.ResourceData, meta interface{}) e
 			return WrapError(err)
 		}
 		request["Tags"] = string(tags)
+	}
+	if v,ok := d.GetOk("secret_type");ok{
+		request["SecretType"] = v
+	}
+	if v,ok := d.GetOk("extended_config");ok{
+		request["ExtendedConfig"] = v
 	}
 	request["VersionId"] = d.Get("version_id")
 	wait := incrementalWait(3*time.Second, 1*time.Second)
@@ -194,6 +209,8 @@ func resourceAlicloudKmsSecretRead(d *schema.ResourceData, meta interface{}) err
 	d.Set("secret_data_type", getSecretValueObject["SecretDataType"])
 	d.Set("version_id", getSecretValueObject["VersionId"])
 	d.Set("version_stages", getSecretValueObject["VersionStages"].(map[string]interface{})["VersionStage"])
+	d.Set("secret_type",getSecretValueObject["SecretType"])
+	d.Set("extended_config",getSecretValueObject["ExtendedConfig"])
 	return nil
 }
 func resourceAlicloudKmsSecretUpdate(d *schema.ResourceData, meta interface{}) error {
