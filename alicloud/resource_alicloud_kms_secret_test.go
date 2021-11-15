@@ -6,6 +6,7 @@ import (
 	"github.com/aliyun/terraform-provider-alicloud/alicloud/connectivity"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"os"
 
 	"fmt"
 	"strings"
@@ -338,7 +339,7 @@ func TestAccAlicloudKmsSecret_SecretType(t *testing.T) {
 
 	resourceId := "alicloud_kms_secret.default"
 	rand := acctest.RandIntRange(1000000, 9999999)
-	name := fmt.Sprintf("tf_testaccKmsSecret_%d", rand)
+	name := fmt.Sprintf("acs/ecs/tf_testaccKmsSecret_%d", rand)
 	ra := resourceAttrInit(resourceId, map[string]string{
 		"arn":              CHECKSET,
 		"description":      "",
@@ -368,25 +369,25 @@ func TestAccAlicloudKmsSecret_SecretType(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccConfig(map[string]interface{}{
-					"secret_data":                   name,
-					"secret_data_type":              "text",
-					"secret_name":                   name,
+					"secret_data_type": "text",
+					"secret_type":      "ECS",
+					"secret_data":      `{\"UserName\":\"TFTEST\",\"Password\": \"TFTEST123\"}`,
+					"extended_config":  `{\"SecretSubType\":\"Password\",\"InstanceId\":\"rm-bp1b3dd3a506e****\",\"RegionId\":\"cn-shanghai\",\"CustomData\":{}}`,
+					"secret_name": convertMaptoJsonString(map[string]interface{}{
+						"SecretSubType": "Password",
+						"InstanceId":    "",
+						"RegionId":      os.Getenv("ALICLOUD_REGION"),
+						"CustomData":    "",
+					}),
 					"version_id":                    "00001",
 					"force_delete_without_recovery": "true",
-					//"recovery_window_in_days": "7",
-					"tags": map[string]string{
-						"Created": "TF",
-						"usage":   "acceptanceTest",
-					},
 				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheck(map[string]string{
-						"secret_data":  name,
-						"secret_name":  name,
-						"version_id":   "00001",
-						"tags.%":       "2",
-						"tags.Created": "TF",
-						"tags.usage":   "acceptanceTest",
+						"secret_data": name,
+						"secret_name": name,
+						"version_id":  "00001",
+						"secret_type": CHECKSET,
 					}),
 				),
 			},
@@ -394,70 +395,7 @@ func TestAccAlicloudKmsSecret_SecretType(t *testing.T) {
 				ResourceName:            resourceId,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_delete_without_recovery", "recovery_window_in_days"},
-			},
-			{
-				Config: testAccConfig(map[string]interface{}{
-					"description": name,
-				}),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheck(map[string]string{
-						"description": name,
-					}),
-				),
-			},
-			{
-				Config: testAccConfig(map[string]interface{}{
-					"tags": map[string]string{
-						"Created": "TF",
-						"Name":    name,
-					},
-				}),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheck(map[string]string{
-						"tags.%":       "2",
-						"tags.usage":   REMOVEKEY,
-						"tags.Created": "TF",
-						"tags.Name":    name,
-					}),
-				),
-			},
-			{
-				Config: testAccConfig(map[string]interface{}{
-					"secret_data": name + "update",
-					"version_id":  "00002",
-				}),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheck(map[string]string{
-						"secret_data": name + "update",
-						"version_id":  "00002",
-					}),
-				),
-			},
-			{
-				Config: testAccConfig(map[string]interface{}{
-					"description":    name + "update",
-					"secret_data":    name,
-					"version_id":     "00003",
-					"version_stages": []string{"ACSCurrent", "UStage1"},
-					"tags": map[string]string{
-						"Description": name,
-						"usage":       "acceptanceTest",
-					},
-				}),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheck(map[string]string{
-						"description":      name + "update",
-						"secret_data":      name,
-						"version_id":       "00003",
-						"version_stages.#": "2",
-						"tags.%":           "2",
-						"tags.Description": name,
-						"tags.usage":       "acceptanceTest",
-						"tags.Created":     REMOVEKEY,
-						"tags.Name":        REMOVEKEY,
-					}),
-				),
+				ImportStateVerifyIgnore: []string{},
 			},
 		},
 	})
