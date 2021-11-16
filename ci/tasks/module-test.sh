@@ -15,6 +15,8 @@ echo "ALICLOUD_ACCESS_KEY=${ALICLOUD_ACCESS_KEY}"
 echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
+echo "${PWD}
+cd ./terraform-provider-alicloud
 echo "${PWD}"
 ls -al
 mv bin/terraform-provider-alicloud /usr/bin/
