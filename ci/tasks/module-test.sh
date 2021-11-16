@@ -16,6 +16,7 @@ echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
 echo "${PWD}"
+cd terraform-provider-alicloud
 make devlinux
 ls -al bin/
 mv bin/terraform-provider-alicloud /usr/bin/
