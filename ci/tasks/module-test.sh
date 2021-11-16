@@ -16,13 +16,10 @@ echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
 echo "${PWD}"
-ls -al 
-echo "${PWD}"
-cd ./terraform-provider-alicloud
-echo "${PWD}"
-ls -al
+make devlinux
+ls -al bin/
 mv bin/terraform-provider-alicloud /usr/bin/
-echo "${PWD}"
+
 
 provider_dir="$(pwd)"
 diffFiles=$(git diff --name-only HEAD~ HEAD)
