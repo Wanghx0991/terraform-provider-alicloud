@@ -15,7 +15,8 @@ echo "ALICLOUD_ACCESS_KEY=${ALICLOUD_ACCESS_KEY}"
 echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
-terraform -v
+echo "${PWD}"
+ls -al 
 echo "${PWD}"
 cd ./terraform-provider-alicloud
 echo "${PWD}"
