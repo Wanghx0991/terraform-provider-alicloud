@@ -14,7 +14,7 @@ resources:
   - name: terraform_module_test
     type: git
     source:
-      uri: https://github.com/Wanghx0991/terraform_test.git
+      uri: https://gitlab.alibaba-inc.com/wanghaoxin.whx/terraform_test.git
       branch: master
 
 
