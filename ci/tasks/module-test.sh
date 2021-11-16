@@ -32,7 +32,7 @@ test_dir="$( cd ./terraform_test && pwd )"
 
 
 
-terraform init || exit 1
+./bin/terraform init || exit 1
 
 
 
