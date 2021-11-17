@@ -121,6 +121,7 @@ func resourceAlicloudVpcCreate(d *schema.ResourceData, meta interface{}) error {
 		return WrapError(err)
 	}
 	if v, ok := d.GetOk("cidr_block"); ok {
+		action = "CreateVpc"
 		request["CidrBlock"] = v
 	}
 
