@@ -35,8 +35,8 @@ wget -qN https://releases.hashicorp.com/terraform/${terraform_version}/terraform
 unzip -o terraform_${terraform_version}_linux_amd64.zip -d /usr/bin
 
 pushd ${TERRAFORM_SOURCE_PATH}
-cp "${TERRAFORM_TEST_PATH}/*" ${TERRAFORM_SOURCE_PATH}
-ls -al
+cp "${TERRAFORM_TEST_PATH}" ${TERRAFORM_SOURCE_PATH}
+ls -al ${TERRAFORM_SOURCE_PATH}
 diffFiles=$(git diff --name-only HEAD~ HEAD)
 
 
