@@ -19,9 +19,6 @@ resources:
 
 
 shared:
-  - &pack-terraform
-    task: package
-    file: terraform-provider-alicloud/ci/tasks/build-provider-next.yml
   - &validate
     task: validate
     file: terraform-provider-alicloud/ci/tasks/module-test.yml
@@ -42,7 +39,8 @@ jobs:
       - get: terraform_module_test
         trigger: false
         resource: terraform_module_test
-      - <<: *pack-terraform
+      - task: build-next-provider
+        file: terraform-provider-alicloud/ci/tasks/build-provider-next.yml
       - <<: *validate
         params:
           <<: *validate-params

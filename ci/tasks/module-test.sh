@@ -15,9 +15,12 @@ echo "ALICLOUD_ACCESS_KEY=${ALICLOUD_ACCESS_KEY}"
 echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
-echo "${PWD}"
-mv bin/terraform-provider-alicloud /usr/bin/
-echo "${PWD}"
+cd ./terraform-provider-alicloud
+rm -rf bin/*
+GOOS=linux GOARCH=amd64 go build -o bin/terraform-provider-alicloud
+cd bin
+ls -al
+mv terraform-provider-alicloud /usr/bin/
 
 provider_dir="$(pwd)"
 diffFiles=$(git diff --name-only HEAD~ HEAD)
