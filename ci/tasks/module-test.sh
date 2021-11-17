@@ -40,10 +40,6 @@ ls -al ${TERRAFORM_SOURCE_PATH}
 diffFiles=$(git diff --name-only HEAD~ HEAD)
 
 
-terraform init || exit 1
-terraform apply --auto-approve
-
-
 for fileName in ${diffFiles[*]};
 do
   if [[ ${fileName} == "alicloud/resource_alicloud"* || ${fileName} == "alicloud/data_source_alicloud"* ]];then
