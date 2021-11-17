@@ -17,9 +17,9 @@ echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
 echo "${PWD}"
 cd terraform-provider-alicloud
-go get golang.org/x/tools/cmd/goimports
-rm -rf bin/*
-GOOS=linux GOARCH=amd64 go build -o bin/terraform-provider-alicloud
+#go get golang.org/x/tools/cmd/goimports
+#rm -rf bin/*
+#GOOS=linux GOARCH=amd64 go build -o bin/terraform-provider-alicloud
 ls -al bin/
 mv bin/terraform-provider-alicloud /usr/bin/
 
@@ -54,4 +54,3 @@ do
     ./bin/terraform_test  module_test -r="${checkResourceName}" || exit
   fi
 done
-
