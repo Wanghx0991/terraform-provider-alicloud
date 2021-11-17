@@ -15,12 +15,14 @@ echo "ALICLOUD_ACCESS_KEY=${ALICLOUD_ACCESS_KEY}"
 echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 echo "ALICLOUD_REGION=${ALICLOUD_REGION}"
 
-cd ./terraform-provider-alicloud
-rm -rf bin/*
-GOOS=linux GOARCH=amd64 go build -o bin/terraform-provider-alicloud
-cd bin
-ls -al
-mv terraform-provider-alicloud /usr/bin/
+echo "${PWD}"
+cd terraform-provider-alicloud
+#go get golang.org/x/tools/cmd/goimports
+#rm -rf bin/*
+#GOOS=linux GOARCH=amd64 go build -o bin/terraform-provider-alicloud
+ls -al bin/
+mv bin/terraform-provider-alicloud /usr/bin/
+
 
 provider_dir="$(pwd)"
 diffFiles=$(git diff --name-only HEAD~ HEAD)
@@ -30,7 +32,7 @@ test_dir="$( cd ./terraform_test && pwd )"
 
 
 
-terraform init || exit 1
+./bin/terraform init || exit 1
 
 
 
@@ -52,4 +54,3 @@ do
     ./bin/terraform_test  module_test -r="${checkResourceName}" || exit
   fi
 done
-
