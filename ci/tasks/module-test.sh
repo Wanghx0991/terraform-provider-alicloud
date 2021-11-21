@@ -36,7 +36,7 @@ unzip -o terraform_${terraform_version}_linux_amd64.zip -d /usr/bin
 pushd ${TERRAFORM_SOURCE_PATH}
 ls -al
 echo "=========Start ========="
-cp ${TERRAFORM_TEST_PATH} ${TERRAFORM_SOURCE_PATH}
+cp -r ${TERRAFORM_TEST_PATH} ${TERRAFORM_SOURCE_PATH}
 echo "=========Start1 ========="
 ls -al
 echo "=========Start2 ========="
