@@ -414,7 +414,7 @@ func resourceAliyunInstanceCreate(d *schema.ResourceData, meta interface{}) erro
 	client := meta.(*connectivity.AliyunClient)
 	ecsService := EcsService{client}
 
-	// Ensure instance_type is valid
+	//// Ensure instance_type is valid
 	//zoneId, validZones, requestId, err := ecsService.DescribeAvailableResources(d, meta, InstanceTypeResource)
 	//if err != nil {
 	//	return WrapError(err)
