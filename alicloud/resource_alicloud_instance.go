@@ -474,6 +474,7 @@ func resourceAliyunInstanceCreate(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceAliyunInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	fmt.Println("xx")
 	client := meta.(*connectivity.AliyunClient)
 	ecsService := EcsService{client}
 
