@@ -25,6 +25,9 @@ TERRAFORM_SOURCE_PATH=$CURRENT_PATH/terraform-provider-alicloud
 TERRAFORM_TEST_PATH=$CURRENT_PATH/terraform_module_test
 TF_NEXT_PROVIDER=$CURRENT_PATH/next-provider/terraform-provider-alicloud
 
+echo "TERRAFORM_SOURCE_PATH = ${TERRAFORM_SOURCE_PATH}"
+echo "TERRAFORM_TEST_PATH = ${TERRAFORM_TEST_PATH}"
+echo "TF_NEXT_PROVIDER = ${TF_NEXT_PROVIDER}"
 
 apt-get update && apt-get install -y zip
 wget -qN https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
@@ -33,6 +36,8 @@ unzip -o terraform_${terraform_version}_linux_amd64.zip -d /usr/bin
 pushd ${TERRAFORM_SOURCE_PATH}
 cp "${TERRAFORM_TEST_PATH}" ${TERRAFORM_SOURCE_PATH}
 ls -al
+echo "cp -r"
+cp -r "${TERRAFORM_TEST_PATH}" ${TERRAFORM_SOURCE_PATH}
 diffFiles=$(git diff --name-only HEAD~ HEAD)
 
 
