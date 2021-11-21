@@ -35,15 +35,15 @@ unzip -o terraform_${terraform_version}_linux_amd64.zip -d /usr/bin
 
 pushd ${TERRAFORM_SOURCE_PATH}
 ls -al
-cp "${TERRAFORM_TEST_PATH}" ${TERRAFORM_SOURCE_PATH}
+echo "=========Start ========="
+cp ${TERRAFORM_TEST_PATH} ${TERRAFORM_SOURCE_PATH}
+echo "=========Start1 ========="
 ls -al
-echo "cp -r"
-cp -r "${TERRAFORM_TEST_PATH}" ${TERRAFORM_SOURCE_PATH}
+echo "=========Start2 ========="
+
+
 diffFiles=$(git diff --name-only HEAD~ HEAD)
-
-
 terraform init || exit 1
-
 
 
 for fileName in ${diffFiles[*]};
