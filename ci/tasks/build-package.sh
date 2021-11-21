@@ -7,10 +7,10 @@ release_dir="$( cd ${my_dir} && cd ../.. && pwd )"
 
 source ${release_dir}/ci/tasks/utils.sh
 
-#: ${terraform_provider_bucket_name:?}
-#: ${terraform_provider_bucket_region:?}
-#: ${terraform_provider_access_key:?}
-#: ${terraform_provider_secret_key:?}
+: ${terraform_provider_bucket_name:?}
+: ${terraform_provider_bucket_region:?}
+: ${terraform_provider_access_key:?}
+: ${terraform_provider_secret_key:?}
 
 ls -la
 provider="terraform-provider-alicloud"
