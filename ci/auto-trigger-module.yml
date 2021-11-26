@@ -35,26 +35,28 @@ jobs:
   - name: verify-terraform-prev
     serial: true
     plan:
+      # 通过Github合码触发
       - get: terraform-provider-alicloud
         trigger: true
         resource: terraform-provider-alicloud
+      # 用aliyun-cli 从远端去拉上一个版本的provider
       - get: aliyun-cli
         trigger: false
         resource: aliyun-cli
-      - task: build-next-provider
-        file: terraform-provider-alicloud/ci/tasks/build-provider-next.yml
+#        用上一个版本的provider去跑module
       - <<: *validate
         params:
           <<: *validate-params
-          terraform_version: "0.13.7"
-          CONCOURSE_TARGET_TRIGGER_PIPELINE_JOB_NAME: "certify-terraform-v13"
+
   - name: verify-terraform-next
     serial: true
     plan:
+#     通过Github合码触发
       - get: terraform-provider-alicloud
         trigger: true
         resource: terraform-provider-alicloud
         passed: [verify-terraform-prev]
+#     通过aliyun-cli把当前版本上传至oss
       - get: aliyun-cli
         trigger: false
         resource: aliyun-cli
@@ -63,5 +65,7 @@ jobs:
       - <<: *validate
         params:
           <<: *validate-params
-          terraform_version: "0.14.11"
-          CONCOURSE_TARGET_TRIGGER_PIPELINE_JOB_NAME: "certify-terraform-v14"
+
+      # 上传本次provider
+      - task: build-next-provider
+        file: terraform-provider-alicloud/ci/tasks/build-package.yml
