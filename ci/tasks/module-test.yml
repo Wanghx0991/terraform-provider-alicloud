@@ -7,8 +7,8 @@ image_resource:
 
 inputs:
   - name: terraform-provider-alicloud
-  - name: terraform_module_test
   - name: next-provider
+  - name: aliyun-cli
 
 
 run:
@@ -20,3 +20,4 @@ params:
   ALICLOUD_REGION: ""
   terraform_version: ""
   BUCKET_REGION: "cn-beijing"
+  Stage: ""

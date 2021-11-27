@@ -32,27 +32,9 @@ jobs:
       - <<: *validate
         params:
           <<: *validate-params
+          Stage: "prev"
 
-#  - name: verify-terraform-next
-#    serial: true
-#    plan:
-##     通过Github合码触发
-#      - get: terraform-provider-alicloud
-#        trigger: true
-#        resource: terraform-provider-alicloud
-#        passed: [verify-terraform-prev]
-##     通过aliyun-cli把当前版本上传至oss
-#      - get: aliyun-cli
-#        trigger: false
-#        resource: aliyun-cli
-#      - task: build-next-provider
-#        file: terraform-provider-alicloud/ci/tasks/build-provider-next.yml
-#      - <<: *validate
-#        params:
-#          <<: *validate-params
-#      # 上传本次provider
-#      - task: build-next-provider
-#        file: terraform-provider-alicloud/ci/tasks/build-package.yml
+
 
 
 
