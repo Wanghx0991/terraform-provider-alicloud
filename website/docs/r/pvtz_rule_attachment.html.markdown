@@ -3,8 +3,7 @@ subcategory: "Private Zone"
 layout: "alicloud"
 page_title: "Alicloud: alicloud_pvtz_rule_attachment"
 sidebar_current: "docs-alicloud-resource-pvtz-rule-attachment"
-description: |- 
-  Provides a Alicloud Private Zone Rule Attachment resource.
+  description: |- Provides a Alicloud Private Zone Rule Attachment resource.
 ---
 
 # alicloud\_pvtz\_rule\_attachment

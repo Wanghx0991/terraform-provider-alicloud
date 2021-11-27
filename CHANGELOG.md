@@ -1,35 +1,4 @@
-## 1.145.0 (Unreleased)
-## 1.144.0 (November 21, 2021)
-
-- **New Resource:** `alicloud_direct_mail_tag` ([#4178](https://github.com/aliyun/terraform-provider-alicloud/issues/4178))
-- **New Resource:** `alicloud_ecd_desktop` ([#4199](https://github.com/aliyun/terraform-provider-alicloud/issues/4199))
-- **New Resource:** `alicloud_cloud_storage_gateway_gateway_cache_disk` ([#4217](https://github.com/aliyun/terraform-provider-alicloud/issues/4217))
-- **New Resource:** `alicloud_cloud_storage_gateway_gateway_logging` ([#4227](https://github.com/aliyun/terraform-provider-alicloud/issues/4227))
-- **New Resource:** `alicloud_cloud_storage_gateway_gateway_file_share` ([#4231](https://github.com/aliyun/terraform-provider-alicloud/issues/4231))
-- **New Resource:** `alicloud_cloud_storage_gateway_gateway_block_volume` ([#4234](https://github.com/aliyun/terraform-provider-alicloud/issues/4234))
-- **New Resource:** `alicloud_cloud_storage_gateway_express_sync` ([#4239](https://github.com/aliyun/terraform-provider-alicloud/issues/4239))
-- **New Resource:** `alicloud_cloud_storage_gateway_express_sync_share_attachment` ([#4239](https://github.com/aliyun/terraform-provider-alicloud/issues/4239))
-- **New Data Source:** `alicloud_direct_mail_tags` ([#4178](https://github.com/aliyun/terraform-provider-alicloud/issues/4178))
-- **New Data Source:** `alicloud_ecd_desktops` ([#4199](https://github.com/aliyun/terraform-provider-alicloud/issues/4199))
-- **New Data Source:** `alicloud_cloud_storage_gateway_gateway_cache_disks` ([#4217](https://github.com/aliyun/terraform-provider-alicloud/issues/4217))
-- **New Data Source:** `data_source_alicloud_cloud_storage_gateway_stocks` ([#4224](https://github.com/aliyun/terraform-provider-alicloud/issues/4224)) 
-- **New Data Source:** `alicloud_cloud_storage_gateway_gateway_file_shares` ([#4231](https://github.com/aliyun/terraform-provider-alicloud/issues/4231))
-- **New Data Source:** `alicloud_cloud_storage_gateway_gateway_block_volumes` ([#4234](https://github.com/aliyun/terraform-provider-alicloud/issues/4234))
-- **New Data Source:** `alicloud_cloud_storage_gateway_express_syncs` ([#4239](https://github.com/aliyun/terraform-provider-alicloud/issues/4239))
-
-ENHANCEMENTS:
-
-- resource/alicloud_ram_role: Support updating the filed description ([#4212](https://github.com/aliyun/terraform-provider-alicloud/issues/4212))
-- resource/alicloud_instance: Support configuring the filed hpc_cluster_id ([#4214](https://github.com/aliyun/terraform-provider-alicloud/issues/4214))
-- resource/alicloud_msc_sub_contact: Support setting Chinese contact name,Change position to take Others to Other ([#4221](https://github.com/aliyun/terraform-provider-alicloud/issues/4221))
-- resource/alicloud_instance: Supports configuring the secondary_private_ips for primary network interface ([#4223](https://github.com/aliyun/terraform-provider-alicloud/issues/4223))
-- resource/alicloud_instance: Support the secondary_private_ips 's retry process ([#4228](https://github.com/aliyun/terraform-provider-alicloud/issues/4228))
-- docs: Improves the Config's available region in the documentation ([#4238](https://github.com/aliyun/terraform-provider-alicloud/issues/4238))
-
-BUG FIXES:
-
-- resource/alicloud_slb_listener: Fixes the importing diff error caused by delete_protection_validation and health_check_http_code default value ([#4240](https://github.com/aliyun/terraform-provider-alicloud/issues/4240))
-
+## 1.144.0 (Unreleased)
 ## 1.143.0 (November 14, 2021)
 
 - **New Resource:** `alicloud_vpc_ipv6_internet_bandwidth` ([#4176](https://github.com/aliyun/terraform-provider-alicloud/issues/4176))
@@ -50,7 +19,6 @@ BUG FIXES:
 - **New Data Source:** `alicloud_simple_application_server_custom_images` ([#4205](https://github.com/aliyun/terraform-provider-alicloud/issues/4205))
 
 ENHANCEMENTS:
-
 - resource/alicloud_ess_scalingconfiguration: Adds new attributes host_name ([#4180](https://github.com/aliyun/terraform-provider-alicloud/issues/4180))
 - resource/alicloud_cloud_sso_access_configuration: add regular check resource/alicloud_cloud_sso_directory : add regular check, Support separate update of saml_identity_provider_configuration property ([#4193](https://github.com/aliyun/terraform-provider-alicloud/issues/4193))
 - resource/alicloud_cloud_sso_group: add regular check resource/alicloud_cloud_sso_user: add regular chec ([#4193](https://github.com/aliyun/terraform-provider-alicloud/issues/4193))

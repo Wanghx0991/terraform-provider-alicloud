@@ -3,8 +3,7 @@ subcategory: "Cloud Storage Gateway"
 layout: "alicloud"
 page_title: "Alicloud: alicloud_cloud_storage_gateway_gateway_cache_disk"
 sidebar_current: "docs-alicloud-resource-cloud-storage-gateway-gateway-cache-disk"
-description: |-
-  Provides a Alicloud Cloud Storage Gateway Gateway Cache Disk resource.
+description: |- Provides a Alicloud Cloud Storage Gateway Gateway Cache Disk resource.
 ---
 
 # alicloud\_cloud\_storage\_gateway\_gateway\_cache\_disk

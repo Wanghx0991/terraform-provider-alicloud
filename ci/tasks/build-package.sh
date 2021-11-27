@@ -18,7 +18,7 @@ echo "tar ${provider} ..."
 tar -czvf ${provider}.tgz ${provider}
 
 echo -e "Uploading ${provider}.tgz ..."
-aliyun oss cp ${provider}.tgz oss://${terraform_provider_bucket_name}/${provider}.tgz -f --access-key-id ${terraform_provider_access_key} --access-key-secret ${terraform_provider_secret_key} --region ${terraform_provider_bucket_region}
+#aliyun oss cp ${provider}.tgz oss://${terraform_provider_bucket_name}/${provider}.tgz -f --access-key-id ${terraform_provider_access_key} --access-key-secret ${terraform_provider_secret_key} --region ${terraform_provider_bucket_region}
 
 echo -e "Upload Finished!"
 ls -l ${output_path}
