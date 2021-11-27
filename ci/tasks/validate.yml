@@ -8,7 +8,7 @@ image_resource:
 inputs:
   - name: terraform-provider-alicloud
   - name: aliyun-cli
-  - name: next-provider
+#  - name: next-provider
 
 run:
   path: terraform-provider-alicloud/ci/tasks/validate.sh
