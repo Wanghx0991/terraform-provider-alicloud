@@ -258,7 +258,7 @@ func dataSourceAlicloudAlbAclsRead(d *schema.ResourceData, meta interface{}) err
 		}
 		mapping["acl_entries"] = aclEntries
 		s = append(s, mapping)
-		fmt.Println("Test")
+		fmt.Println("Test1")
 	}
 
 	d.SetId(dataResourceIdHash(ids))
