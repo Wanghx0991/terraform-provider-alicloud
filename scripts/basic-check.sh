@@ -9,6 +9,7 @@ do
   category=$(basename "$dirname")
   case "$category" in
     "d" | "r")
+      echo "doc = ${doc}"
       grep "https://help.aliyun.com/)\.$" "$doc" > /dev/null
       if [[ "$?" == "0" ]]; then
         echo -e "\033[31mDoc :${doc}: Please filled the file with the correct cloud product link! \033[0m"
