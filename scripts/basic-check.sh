@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-diffFiles=$(git diff --name-only HEAD~ HEAD)
+diffFiles=$(git diff --name-only HEAD^ HEAD)
 error=false
 
 for doc in ${diffFiles[@]};
