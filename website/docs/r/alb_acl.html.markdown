@@ -21,7 +21,7 @@ Basic Usage
 
 ```terraform
 resource "alicloud_alb_acl" "example" {
-  acl_name          = "example_value"
+  acl_name = "example_value"
 }
 
 ```
