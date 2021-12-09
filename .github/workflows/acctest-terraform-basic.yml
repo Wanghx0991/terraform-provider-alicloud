@@ -24,7 +24,6 @@ jobs:
 
       - name: Get dependencies
         run: |
-          export GOPATH=/root/go
           sudo make dependency
           go get golang.org/x/tools/cmd/goimports
           go mod tidy
