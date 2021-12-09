@@ -25,6 +25,7 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk v1.4.0
 	github.com/hashicorp/vault v0.10.4
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
+	github.com/katbyte/terrafmt v0.3.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1

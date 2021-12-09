@@ -17,7 +17,11 @@ do
         echo -e "\033[31mDoc :${doc}: Please input the exact link. Currently it is https://help.aliyun.com/. \033[0m"
         error=true
       fi
-      terrafmt diff ./website --check --pattern '*.markdown'
+      terrafmt diff "$doc" -c
+      if [[ "$?" != "0" ]]; then
+        echo -e "\033[31mDoc :${doc}: Please correct the terraform example \033[0m"
+        error=true
+      fi
       ;;
     "alicloud")
       grep "fmt.Println" "$doc" > /dev/null

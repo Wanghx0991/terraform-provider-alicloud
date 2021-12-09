@@ -42,16 +42,17 @@ jobs:
           locale: "US"
           path: ./website/docs
 
-  terrafmt:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: echo "GO_VERSION=$(cat .go-version)" >> $GITHUB_ENV
-      - uses: actions/setup-go@v2
-        with:
-          go-version: ${{ env.GO_VERSION }}
-      - name: terrafmt
-        run: |
+#  terrafmt:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - run: echo "GO_VERSION=$(cat .go-version)" >> $GITHUB_ENV
+#      - uses: actions/setup-go@v2
+#        with:
+#          go-version: ${{ env.GO_VERSION }}
+#      - name: terrafmt
+#        run: |
+#          bash scripts/basic-check.sh
 
 
 #          sudo mkdir -p "/root/go/src/github.com/aliyun"
