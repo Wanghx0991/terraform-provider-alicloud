@@ -24,7 +24,7 @@ jobs:
 
       - name: Get dependencies
         run: |
-          go env
+          export GOPATH=/home/runner/go
           echo "current = $(pwd)"
           echo "GOPATH = ${GOPATH}"
           sudo make dependency
