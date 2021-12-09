@@ -27,6 +27,7 @@ jobs:
           export GOPATH=/home/runner/go
           echo "current = $(pwd)"
           echo "GOPATH = ${GOPATH}"
+          echo "==="
           sudo make dependency
           go get golang.org/x/tools/cmd/goimports
           go mod tidy
