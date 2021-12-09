@@ -3,6 +3,9 @@
 diffFiles=$(git diff --name-only HEAD^ HEAD)
 error=false
 
+export PATH=$PATH:$(go env GOPATH)/bin
+go get -t github.com/katbyte/terrafmt
+
 for doc in ${diffFiles[@]};
 do
   dirname=$(dirname "$doc")
@@ -14,6 +17,7 @@ do
         echo -e "\033[31mDoc :${doc}: Please input the exact link. Currently it is https://help.aliyun.com/. \033[0m"
         error=true
       fi
+      terrafmt diff ./website --check --pattern '*.markdown'
       ;;
     "alicloud")
       grep "fmt.Println" "$doc" > /dev/null
