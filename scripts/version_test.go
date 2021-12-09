@@ -39,12 +39,10 @@ func TestFieldCheck(t *testing.T) {
 		if oldField.Optional && newField.Required {
 			log.Errorf("Resource: %s, Field: %s Field incompatible has occurred in the current version,Please Check the Optional/Required type", *resourceName, fieldName)
 			t.Fatal()
-			//t.Errorf("Resource: %s, Field: %s Field incompatible c`hanges have occurred in the current version,Please Check the Optional/Required type",resourceName,fieldName)
 		}
 		if !oldField.ForceNew && newField.ForceNew {
 			log.Errorf("Resource: %s, Field: %s Field incompatible c`hanges have occurred in the current version,Please Check the Field type", *resourceName, fieldName)
 			t.Fatal()
-			//t.Errorf("Resource: %s, Field: %s Field incompatible c`hanges have occurred in the current version,Please Check the Field type",resourceName,fieldName)
 		}
 		if oldField.Type != newField.Type {
 			log.Errorf("Resource: %s, Field: %s Field incompatible c`hanges have occurred in the current version,Please Check the Field type", *resourceName, fieldName)
