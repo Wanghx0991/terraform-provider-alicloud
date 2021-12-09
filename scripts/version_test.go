@@ -2,12 +2,13 @@ package scripts
 
 import (
 	"flag"
+	"os"
+	"testing"
+
 	old "github.com/aliyun/terraform-provider-alicloud-prev/alicloud"
 	"github.com/aliyun/terraform-provider-alicloud/alicloud"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	log "github.com/sirupsen/logrus"
-	"os"
-	"testing"
 )
 
 func init() {
@@ -36,7 +37,7 @@ func TestFieldCheck(t *testing.T) {
 	for fieldName, newField := range n {
 		oldField := oldObj[fieldName]
 		if oldField.Optional && newField.Required {
-			log.Errorf("Resource: %s, Field: %s Field incompatible c`hanges have occurred in the current version,Please Check the Optional/Required type", *resourceName, fieldName)
+			log.Errorf("Resource: %s, Field: %s Field incompatible has occurred in the current version,Please Check the Optional/Required type", *resourceName, fieldName)
 			t.Fatal()
 			//t.Errorf("Resource: %s, Field: %s Field incompatible c`hanges have occurred in the current version,Please Check the Optional/Required type",resourceName,fieldName)
 		}

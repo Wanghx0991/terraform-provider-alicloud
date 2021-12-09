@@ -24,7 +24,7 @@ jobs:
 
       - name: Get dependencies
         run: |
-          make dependency
+          sudo make dependency
           go get golang.org/x/tools/cmd/goimports
           go mod tidy
 

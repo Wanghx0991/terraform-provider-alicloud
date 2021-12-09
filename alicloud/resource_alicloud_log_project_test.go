@@ -2,10 +2,11 @@ package alicloud
 
 import (
 	"fmt"
-	"github.com/denverdino/aliyungo/cs"
 	"log"
 	"strings"
 	"testing"
+
+	"github.com/denverdino/aliyungo/cs"
 
 	"github.com/denverdino/aliyungo/cs"
 
