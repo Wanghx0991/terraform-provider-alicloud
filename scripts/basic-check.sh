@@ -1,11 +1,30 @@
 #!/usr/bin/env bash
+CurrentPath="$(pwd)"
+PrevPath="${GOPATH}/src/github.com/aliyun/terraform-provider-alicloud-prev"
+
+rm -rf "${PrevPath}"
+if [ ! -d "${GOPATH}/src/github.com/aliyun" ]; then
+  mkdir -p "${GOPATH}/src/github.com/aliyun"
+fi
+
+function removed() {
+  go mod edit -dropreplace=github.com/aliyun/terraform-provider-alicloud-prev
+  go mod edit -droprequire=github.com/aliyun/terraform-provider-alicloud-prev
+}
+
+trap removed EXIT
+
+git clone "https://github.com/aliyun/terraform-provider-alicloud" "${PrevPath}"
+pushd "${CurrentPath}"
+
+go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
+go mod edit -replace github.com/aliyun/terraform-provider-alicloud-prev="${PrevPath}"
+export PATH=$PATH:$(go env GOPATH)/bin
+go get -t github.com/katbyte/terrafmt
+go mod tidy
 
 diffFiles=$(git diff --name-only HEAD^ HEAD)
 error=false
-
-export PATH=$PATH:$(go env GOPATH)/bin
-go get -t github.com/katbyte/terrafmt
-
 for doc in ${diffFiles[@]};
 do
   dirname=$(dirname "$doc")
