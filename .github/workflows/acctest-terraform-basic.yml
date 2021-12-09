@@ -24,32 +24,31 @@ jobs:
 
       - name: Get dependencies
         run: |
-          whoami
-          sudo mkdir -p "/root/go/src/github.com/aliyun"
+          mkdir -p "/root/go/src/github.com/aliyun"
           sudo git clone "https://github.com/aliyun/terraform-provider-alicloud" /root/go/src/github.com/aliyun/terraform-provider-alicloud-prev
-          sudo go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
-          sudo go mod edit -replace github.com/aliyun/terraform-provider-alicloud-prev=/root/go/src/github.com/aliyun/terraform-provider-alicloud-prev
-          sudo go mod tidy
-          sudo go mod vendor
-          sudo go get golang.org/x/tools/cmd/goimports
-          sudo go mod tidy
-          sudo go mod vendor
+          go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
+          go mod edit -replace github.com/aliyun/terraform-provider-alicloud-prev=/root/go/src/github.com/aliyun/terraform-provider-alicloud-prev
+          go mod tidy
+          go mod vendor
+          go get golang.org/x/tools/cmd/goimports
+          go mod tidy
+          go mod vendor
 
       - name: vet
         run: |
-          sudo make vet
+          make vet
 
       - name: fmt
         run: |
-          sudo make fmt
+          make fmt
 
       - name: test
         run: |
-          sudo make test
+          make test
 
       - name: fmtcheck
         run: |
-          sudo make fmtcheck
+          make fmtcheck
 
 
 
