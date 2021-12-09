@@ -99,6 +99,7 @@ linux:
 	rm -rf bin/terraform-provider-alicloud
 
 dependency:
+	echo "PrevPath = ${PrevPath}"
 	rm -rf ${PrevPath}
 	echo ${GOPATH}
 	mkdir -p ${GOPATH}/src/github.com/aliyun
