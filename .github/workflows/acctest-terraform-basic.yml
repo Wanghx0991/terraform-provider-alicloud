@@ -24,8 +24,10 @@ jobs:
 
       - name: Get dependencies
         run: |
+          go env
+          echo "current = $(pwd)"
           echo "GOPATH = ${GOPATH}"
-          make dependency
+          sudo make dependency
           go get golang.org/x/tools/cmd/goimports
           go mod tidy
           go mod vendor
