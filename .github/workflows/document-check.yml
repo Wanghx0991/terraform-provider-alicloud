@@ -52,6 +52,7 @@ jobs:
         with:
           go-version: '1.16.7'
       - name: Basic Check
+#        including terrafmt && some document check
         run: |
           sudo bash scripts/basic-check.sh
 

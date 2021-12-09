@@ -55,5 +55,5 @@ done
 if $error; then
   exit 1
 fi
-
+echo -e "\033[32m The Basic Check is Success! \033[0m"
 exit 0
