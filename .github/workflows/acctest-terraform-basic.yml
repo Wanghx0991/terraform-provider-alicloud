@@ -38,7 +38,7 @@ jobs:
 
       - name: fmt
         run: |
-          make fmt
+          sudo make fmt
 
       - name: test
         run: |
