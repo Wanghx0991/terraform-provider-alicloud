@@ -31,7 +31,7 @@ func resourceAliyunApigatewayApp() *schema.Resource {
 
 			"description": {
 				Type:     schema.TypeString,
-				Optional: true,
+				ForceNew: true,
 			},
 			"tags": tagsSchema(),
 		},

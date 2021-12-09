@@ -54,7 +54,10 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: '1.16.7'
-      - run: |
+      - name: mkdir
+        run: |
           sudo mkdir -p "${GOPATH}/src/github.com/aliyun"
           chmod +rwx scripts/version_check.sh
+      - name: Field Check
+        run: |
           sudo bash scripts/version_check.sh

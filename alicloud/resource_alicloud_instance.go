@@ -106,7 +106,7 @@ func resourceAliyunInstance() *schema.Resource {
 			},
 			"internet_max_bandwidth_in": {
 				Type:             schema.TypeInt,
-				Optional:         true,
+				Required:         true,
 				Computed:         true,
 				DiffSuppressFunc: ecsInternetDiffSuppressFunc,
 				Deprecated:       "The attribute is invalid and no any affect for the instance. So it has been deprecated from version v1.121.2.",
