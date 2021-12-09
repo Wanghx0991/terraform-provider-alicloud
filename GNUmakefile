@@ -101,7 +101,8 @@ linux:
 dependency:
 	rm -rf "${PrevPath}"
 	mkdir -p "${GOPATH}/src/github.com/aliyun"
-	echo "${GOPATH}"
+	go env
+	echo "echo = ${GOPATH}"
 	git clone "https://github.com/aliyun/terraform-provider-alicloud" "${PrevPath}"
 	pushd ${PrevPath}
 	go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
