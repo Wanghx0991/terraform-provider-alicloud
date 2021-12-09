@@ -2,7 +2,7 @@ TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=alicloud
-PrevPath="${GOPATH}/src/github.com/aliyun/terraform-provider-alicloud-prev"
+PrevPath=${GOPATH}/src/github.com/aliyun/terraform-provider-alicloud-prev
 
 default: build
 
@@ -99,9 +99,9 @@ linux:
 	rm -rf bin/terraform-provider-alicloud
 
 dependency:
-	rm -rf "${PrevPath}"
-	mkdir -p "${GOPATH}/src/github.com/aliyun"
-	git clone "https://github.com/aliyun/terraform-provider-alicloud" "${PrevPath}"
+	rm -rf ${PrevPath}
+	mkdir -p ${GOPATH}/src/github.com/aliyun
+	git clone "https://github.com/aliyun/terraform-provider-alicloud" ${PrevPath}
 	go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
 	go mod edit -replace github.com/aliyun/terraform-provider-alicloud-prev="${PrevPath}"
 	go mod tidy
