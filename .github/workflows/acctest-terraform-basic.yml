@@ -28,10 +28,10 @@ jobs:
           sudo git clone "https://github.com/aliyun/terraform-provider-alicloud" /root/go/src/github.com/aliyun/terraform-provider-alicloud-prev
           sudo go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
           sudo go mod edit -replace github.com/aliyun/terraform-provider-alicloud-prev=/root/go/src/github.com/aliyun/terraform-provider-alicloud-prev
-          go mod tidy
-          go mod vendor
-          go get golang.org/x/tools/cmd/goimports
-          go mod tidy
+          sudo go mod tidy
+          sudo go mod vendor
+          sudo go get golang.org/x/tools/cmd/goimports
+          sudo go mod tidy
 
       - name: vet
         run: |
