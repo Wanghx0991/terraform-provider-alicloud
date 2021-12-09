@@ -60,7 +60,7 @@ func resourceAlicloudDnsCreate(d *schema.ResourceData, meta interface{}) error {
 	request.RegionId = client.RegionId
 	request.DomainName = d.Get("name").(string)
 	request.ResourceGroupId = d.Get("resource_group_id").(string)
-	fmt.Println("1111211121")
+	fmt.Println("11112111121")
 	raw, err := client.WithDnsClient(func(dnsClient *alidns.Client) (interface{}, error) {
 		return dnsClient.AddDomain(request)
 	})

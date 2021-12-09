@@ -53,7 +53,12 @@ jobs:
       - name: terrafmt
         run: |
           export PATH=$PATH:$(go env GOPATH)/bin
-          sudo make dependency
+          sudo mkdir -p "/root/go/src/github.com/aliyun"
+          git clone "https://github.com/aliyun/terraform-provider-alicloud" /root/go/src/github.com/aliyun/terraform-provider-alicloud-prev"
+          go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
+          go mod edit -replace github.com/aliyun/terraform-provider-alicloud-prev="${PrevPath}"
+          go mod tidy
+          go mod vendor
           go get -t github.com/katbyte/terrafmt
           terrafmt diff ./website --check --pattern '*.markdown'
 
