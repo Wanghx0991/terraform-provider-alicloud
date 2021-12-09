@@ -37,10 +37,10 @@ do
             continue
         fi
         resourceName=$(echo ${fileName} | grep -Eo "alicloud_[a-z_]*")
-        echo "The ResourceName = ${resourceName}"
+        echo -e "\033[33mThe ResourceName = ${resourceName}"
         ls -al
         go test -v ./scripts/version_test.go -resource="${resourceName}"
-        if [[ "$?" == "0" ]]; then
+        if [[ "$?" == "1" ]]; then
           echo -e "\033[31m ${resourceName}: Compatibility Error! Please Check out the correct Schema type \033[0m"
           error=true
         fi
@@ -49,8 +49,8 @@ do
 done
 
 
-if [[ "$?" == "1" ]]; then
-  echo -e "\033[31mDoc :${doc}: Please input the exact link. Currently it is https://help.aliyun.com/. \033[0m"
+if $error; then
   exit 1
 fi
+
 exit 0
