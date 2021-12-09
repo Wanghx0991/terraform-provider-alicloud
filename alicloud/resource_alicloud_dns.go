@@ -34,7 +34,7 @@ func resourceAlicloudDns() *schema.Resource {
 			},
 			"group_id": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"dns_server": {
 				Type:     schema.TypeSet,

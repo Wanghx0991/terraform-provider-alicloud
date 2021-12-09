@@ -52,7 +52,6 @@ func TestFieldCheck(t *testing.T) {
 	}
 }
 
-
 //func TestCheck(t *testing.T) {
 //	flag.Parse()
 //	if len(*resourceName) == 0 {

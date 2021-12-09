@@ -2,6 +2,7 @@ TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=alicloud
+PrevPath="${GOPATH}/src/github.com/aliyun/terraform-provider-alicloud-prev"
 
 default: build
 
@@ -74,7 +75,9 @@ copy:
 clean:
 	rm -rf bin/*
 
-mac:
+mac: dependency
+	go mod tidy
+	go mod vendor
 	GOOS=darwin GOARCH=amd64 go build -o bin/terraform-provider-alicloud
 	tar czvf bin/terraform-provider-alicloud_darwin-amd64.tgz bin/terraform-provider-alicloud
 	rm -rf bin/terraform-provider-alicloud
@@ -82,7 +85,7 @@ mac:
 windowscopy:
 	tar -xvf bin/terraform-provider-alicloud_windows-amd64.tgz && mv bin/terraform-provider-alicloud $(shell dirname `which terraform`)
     
-windows:
+windows: dependency
 	GOOS=windows GOARCH=amd64 go build -o bin/terraform-provider-alicloud.exe
 	tar czvf bin/terraform-provider-alicloud_windows-amd64.tgz bin/terraform-provider-alicloud.exe
 	rm -rf bin/terraform-provider-alicloud.exe
@@ -94,3 +97,12 @@ linux:
 	GOOS=linux GOARCH=amd64 go build -o bin/terraform-provider-alicloud
 	tar czvf bin/terraform-provider-alicloud_linux-amd64.tgz bin/terraform-provider-alicloud
 	rm -rf bin/terraform-provider-alicloud
+
+dependency:
+	rm -rf "${PrevPath}"
+	git clone "https://github.com/aliyun/terraform-provider-alicloud" "${PrevPath}"
+	pushd "${PrevPath}"
+	go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
+	go mod edit -replace github.com/aliyun/terraform-provider-alicloud-prev="${PrevPath}"
+	go mod tidy
+	go mod vendor
