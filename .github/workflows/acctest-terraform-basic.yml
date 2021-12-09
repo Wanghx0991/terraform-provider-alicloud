@@ -12,8 +12,7 @@ on:
       - alicloud/*.go
 
 jobs:
-  build:
-#    name: Build
+#  Build:
 #    runs-on: ubuntu-latest
 #    steps:
 #      - uses: actions/checkout@v2
