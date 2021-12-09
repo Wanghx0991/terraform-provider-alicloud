@@ -42,7 +42,7 @@ func resourceAliyunInstance() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"availability_zone": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 				ForceNew: true,
 				Computed: true,
 			},
@@ -60,7 +60,7 @@ func resourceAliyunInstance() *schema.Resource {
 
 			"credit_specification": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 				Computed: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					string(CreditSpecificationStandard),
@@ -76,7 +76,7 @@ func resourceAliyunInstance() *schema.Resource {
 
 			"allocate_public_ip": {
 				Type:       schema.TypeBool,
-				Optional:   true,
+				ForceNew:   true,
 				Deprecated: "Field 'allocate_public_ip' has been deprecated from provider version 1.6.1. Setting 'internet_max_bandwidth_out' larger than 0 will allocate public ip for instance.",
 			},
 
