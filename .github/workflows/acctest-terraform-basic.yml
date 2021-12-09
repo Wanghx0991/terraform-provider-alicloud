@@ -35,19 +35,19 @@ jobs:
 
       - name: vet
         run: |
-          make vet
+          sudo make vet
 
       - name: fmt
         run: |
-          make fmt
+          sudo make fmt
 
       - name: test
         run: |
-          make test
+          sudo make test
 
       - name: fmtcheck
         run: |
-          make fmtcheck
+          sudo make fmtcheck
 
 
 

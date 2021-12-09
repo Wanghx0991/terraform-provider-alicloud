@@ -60,6 +60,7 @@ jobs:
           sudo go mod tidy
           sudo go mod vendor
           sudo go get -t github.com/katbyte/terrafmt
+          sudo go mod vendor
           terrafmt diff ./website --check --pattern '*.markdown'
 
   basic-check:
