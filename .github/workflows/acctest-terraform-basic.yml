@@ -28,6 +28,7 @@ jobs:
           export PrevPath=${GOPATH}/src/github.com/aliyun/terraform-provider-alicloud-prev
           echo "current = $(pwd)"
           echo "GOPATH = ${GOPATH}"
+          echo "GOPATH = ${PrevPath}"
           echo "==="
           sudo make dependency
           go get golang.org/x/tools/cmd/goimports
