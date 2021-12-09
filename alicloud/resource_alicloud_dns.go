@@ -1,6 +1,7 @@
 package alicloud
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -59,7 +60,7 @@ func resourceAlicloudDnsCreate(d *schema.ResourceData, meta interface{}) error {
 	request.RegionId = client.RegionId
 	request.DomainName = d.Get("name").(string)
 	request.ResourceGroupId = d.Get("resource_group_id").(string)
-
+	fmt.Println("1111")
 	raw, err := client.WithDnsClient(func(dnsClient *alidns.Client) (interface{}, error) {
 		return dnsClient.AddDomain(request)
 	})

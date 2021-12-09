@@ -52,6 +52,7 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
       - name: terrafmt
         run: |
+          sudo make dependency
           export PATH=$PATH:$(go env GOPATH)/bin
           go get -t github.com/katbyte/terrafmt
           terrafmt diff ./website --check --pattern '*.markdown'
