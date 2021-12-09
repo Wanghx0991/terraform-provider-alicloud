@@ -100,9 +100,7 @@ linux:
 
 dependency:
 	rm -rf "${PrevPath}"
-	if [ ! -d "${GOPATH}/src/github.com/aliyun" ]; then
-	    mkdir -p "${GOPATH}/src/github.com/aliyun"
-	fi
+	mkdir -p "${GOPATH}/src/github.com/aliyun"
 	git clone "https://github.com/aliyun/terraform-provider-alicloud" "${PrevPath}"
 	pushd ${PrevPath}
 	go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
