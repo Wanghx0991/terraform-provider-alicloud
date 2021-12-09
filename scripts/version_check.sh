@@ -38,7 +38,6 @@ do
         fi
         resourceName=$(echo ${fileName} | grep -Eo "alicloud_[a-z_]*")
         echo -e "\033[33mThe ResourceName = ${resourceName}"
-        ls -al
         go test -v ./scripts/version_test.go -resource="${resourceName}"
         if [[ "$?" == "1" ]]; then
           echo -e "\033[31m ${resourceName}: Compatibility Error! Please Check out the correct Schema type \033[0m"
