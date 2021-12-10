@@ -23,7 +23,6 @@ do
           echo -e "\033[31m ${resourceName}: Compatibility Error! Please check out the correct schema type \033[0m"
           error=true
         fi
-
     fi
 done
 
