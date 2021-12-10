@@ -45,7 +45,7 @@ func resourceAlicloudCloudSsoUser() *schema.Resource {
 			},
 			"first_name": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringLenBetween(0, 64),
 			},
 			"last_name": {
