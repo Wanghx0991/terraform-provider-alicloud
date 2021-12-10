@@ -2,6 +2,7 @@ module github.com/aliyun/terraform-provider-alicloud
 
 require (
 	github.com/PaesslerAG/jsonpath v0.1.1
+	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/agiledragon/gomonkey/v2 v2.3.1
 	github.com/alibabacloud-go/cs-20151215/v2 v2.4.4
 	github.com/alibabacloud-go/darabonba-openapi v0.1.5
@@ -21,15 +22,23 @@ require (
 	github.com/deckarep/golang-set v1.7.1
 	github.com/denverdino/aliyungo v0.0.0-20211122042034-c78a9788662a
 	github.com/google/uuid v1.1.2
+	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.1
+	github.com/hashicorp/go-version v1.2.1 // indirect
+	github.com/hashicorp/hcl/v2 v2.6.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk v1.4.0
 	github.com/hashicorp/vault v0.10.4
+	github.com/imdario/mergo v0.3.9 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
-	github.com/katbyte/terrafmt v0.3.0 // indirect
+	github.com/mitchellh/cli v1.1.1 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/pkg/errors v0.9.1
+	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/sirupsen/logrus v1.8.1
+	github.com/spf13/afero v1.4.1 // indirect
 	github.com/stretchr/testify v1.7.0
+	github.com/zclconf/go-cty v1.5.1 // indirect
 	golang.org/x/net v0.0.0-20210226101413-39120d07d75e
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/api v0.21.0-rc.0
