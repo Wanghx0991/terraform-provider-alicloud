@@ -16,9 +16,17 @@ do
             continue
         fi
         resourceName=$(echo ${fileName} | grep -Eo "alicloud_[a-z_]*") || exit 1
-        echo -e "\033[33mThe ResourceName = ${resourceName}"
-        go test -v ./scripts/field_check_test.go -resource="${resourceName}"
-        if [[ "$?" == "1" ]]; then
+        echo -e "\033[33mThe ResourceName = ${resourceName}"q
+        delta=$(git diff HEAD~ HEAD --color | cat)
+        echo $delta | grep "+*ForceNew"
+        if [[ "$?" == "0" ]]; then
+          echo -e $delta
+          echo -e "\033[31m ${resourceName}: Compatibility Error! Please check out the correct schema type \033[0m"
+          error=true
+        fi
+        echo $delta | grep "+*ForceNew"
+        if [[ "$?" == "0" ]]; then
+          echo -e $delta
           echo -e "\033[31m ${resourceName}: Compatibility Error! Please check out the correct schema type \033[0m"
           error=true
         fi

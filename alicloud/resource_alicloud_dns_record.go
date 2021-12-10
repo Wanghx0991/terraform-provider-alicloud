@@ -50,12 +50,12 @@ func resourceAlicloudDnsRecord() *schema.Resource {
 			},
 			"priority": {
 				Type:             schema.TypeInt,
-				Optional:         true,
+				Required:         true,
 				DiffSuppressFunc: dnsPriorityDiffSuppressFunc,
 			},
 			"routing": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 				Default:  "default",
 			},
 			"status": {
