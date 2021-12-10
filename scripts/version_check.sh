@@ -36,7 +36,7 @@ do
             echo -e "\033[33m[SKIPPED]\033[0m skipping the file $fileName, continue..."
             continue
         fi
-        resourceName=$(echo ${fileName} | grep -Eo "alicloud_[a-z_]*")
+        resourceName=$(echo ${fileName} | grep -Eo "alicloud_[a-z_]*") || exit 1
         echo -e "\033[33mThe ResourceName = ${resourceName}"
         go test -v ./scripts/version_test.go -resource="${resourceName}"
         if [[ "$?" == "1" ]]; then
