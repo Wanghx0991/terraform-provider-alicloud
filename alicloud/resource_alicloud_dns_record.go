@@ -45,7 +45,7 @@ func resourceAlicloudDnsRecord() *schema.Resource {
 			},
 			"ttl": {
 				Type:     schema.TypeInt,
-				Optional: true,
+				ForceNew: true,
 				Default:  600,
 			},
 			"priority": {
