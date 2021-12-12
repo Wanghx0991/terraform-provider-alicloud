@@ -20,7 +20,6 @@ require (
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/deckarep/golang-set v1.7.1
 	github.com/denverdino/aliyungo v0.0.0-20211122042034-c78a9788662a
-	github.com/dlclark/regexp2 v1.4.0
 	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
 	github.com/gogap/errors v0.0.0-20210818113853-edfbba0ddea9 // indirect
 	github.com/gogap/stack v0.0.0-20150131034635-fef68dddd4f8 // indirect

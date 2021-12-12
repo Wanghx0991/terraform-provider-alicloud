@@ -180,9 +180,6 @@ github.com/denverdino/aliyungo/common
 github.com/denverdino/aliyungo/cs
 github.com/denverdino/aliyungo/ecs
 github.com/denverdino/aliyungo/util
-# github.com/dlclark/regexp2 v1.4.0
-github.com/dlclark/regexp2
-github.com/dlclark/regexp2/syntax
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
 # github.com/go-kit/kit v0.10.0
