@@ -151,10 +151,3 @@ func parseField(hunk diffparser.DiffRange,length int) map[string]map[string]inte
 	}
 	return raw
 }
-
-func TestName(t *testing.T) {
-	schemaRegex := regexp.MustCompile("^\\t*ValidateFunc: ?validation.StringInSlice\\(\\[\\]string\\{([a-z\\-A-Z_,\"\\s]*)")
-	content := "\t\t\t\tValidateFunc: validation.StringInSlice([]string{\"all\", \"download\", \"off\", \"upload\"}, false),"
-	fieldNameMatched := schemaRegex.FindAllStringSubmatch(content, -1)
-	fmt.Println(fieldNameMatched)
-}
