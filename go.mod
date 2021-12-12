@@ -29,6 +29,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0
+	github.com/waigani/diffparser v0.0.0-20190828052634-7391f219313d
 	golang.org/x/net v0.0.0-20210226101413-39120d07d75e
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/api v0.21.0-rc.0
