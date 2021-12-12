@@ -3,7 +3,7 @@ package scripts
 import (
 	"flag"
 	"fmt"
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/waigani/diffparser"
 	"io/ioutil"
 	"regexp"
@@ -13,6 +13,17 @@ import (
 )
 
 var fileName = flag.String("file_name", "", "the file to check diff")
+func init() {
+	customFormatter := new(log.TextFormatter)
+	customFormatter.FullTimestamp = true
+	customFormatter.TimestampFormat = "2006-01-02 15:04:05"
+	customFormatter.DisableTimestamp = false
+	customFormatter.DisableColors = false
+	customFormatter.ForceColors = true
+	log.SetFormatter(customFormatter)
+	//log.SetOutput(os.Stdout)
+	log.SetLevel(log.DebugLevel)
+}
 
 func TestFieldCompatibilityCheck(t *testing.T) {
 	flag.Parse()
@@ -21,16 +32,18 @@ func TestFieldCompatibilityCheck(t *testing.T) {
 	}
 	byt, _ := ioutil.ReadFile(*fileName)
 	diff, _ := diffparser.Parse(string(byt))
+	res := false
 	for _, file := range diff.Files {
 		fmt.Printf("FileName = %s\n", file.NewName)
 		for _, hunk := range file.Hunks {
 			if hunk != nil {
 				prev,current := parseHunk(*hunk)
-				fmt.Printf("the prev = %#v\n\n the current = %#v\n\n",prev,current)
-				res := CompatibilityRule(prev,current)
-				fmt.Println(res)
+				res = CompatibilityRule(prev,current)
 			}
 		}
+	}
+	if res{
+		t.Fatal("Incompatible changes has occurred")
 	}
 }
 
@@ -41,20 +54,20 @@ func CompatibilityRule(prev,current map[string]map[string]interface{}) (res bool
 		_,exist2:=current[filedName]["Required"]
 		if exist1&&exist2{
 			res = true
-			logrus.Errorf("Incompatible changes has occurred: Please Check Out The Field %v: Optional/Required.",filedName)
+			log.Errorf("Incompatible changes has occurred: Please Check Out The Field %v: Optional/Required.",filedName)
 		}
 		// Type changed
 		_,exist1 = obj["Type"]
 		_,exist2 =current[filedName]["Type"]
 		if exist1&&exist2{
 			res = true
-			logrus.Errorf("Incompatible changes has occurred: Please Check Out The Field %v Type.",filedName)
+			log.Errorf("Incompatible changes has occurred: Please Check Out The Field %v Type.",filedName)
 		}
 
 		_,exist2 =current[filedName]["ForceNew"]
 		if exist2{
 			res = true
-			logrus.Errorf("Incompatible changes has occurred: Please Check Out The Field %v: ForceNew.",filedName)
+			log.Errorf("Incompatible changes has occurred: Please Check Out The Field %v: ForceNew.",filedName)
 		}
 
 		// type string: valid values
@@ -62,7 +75,7 @@ func CompatibilityRule(prev,current map[string]map[string]interface{}) (res bool
 		validateArrCurrent,exist2 :=current[filedName]["ValidateFuncString"]
 		if exist1&&exist2&&len(validateArrPrev.([]string))>len(validateArrCurrent.([]string)){
 			res = true
-			logrus.Errorf("Incompatible changes has occurred: Please Check Out The Field %v valid values. the prev valid values: %v, the current valid values: %v",filedName,validateArrPrev,validateArrCurrent)
+			log.Errorf("Incompatible changes has occurred: Please Check Out The Field %v valid values. the prev valid values: %v, the current valid values: %v",filedName,validateArrPrev,validateArrCurrent)
 		}
 
 

@@ -1,29 +1,8 @@
 #!/bin/bash
 
 CurrentPath="$(pwd)"
-PrevPath="${GOPATH}/src/github.com/aliyun/terraform-provider-alicloud-prev"
 
-
-rm -rf "${PrevPath}"
-if [ ! -d "${GOPATH}/src/github.com/aliyun" ]; then
-  mkdir -p "${GOPATH}/src/github.com/aliyun"
-fi
-
-
-function removed() {
-  go mod edit -dropreplace=github.com/aliyun/terraform-provider-alicloud-prev
-  go mod edit -droprequire=github.com/aliyun/terraform-provider-alicloud-prev
-}
-
-trap removed EXIT
-
-git clone "https://github.com/aliyun/terraform-provider-alicloud" "${PrevPath}"
 pushd "${CurrentPath}"
-
-go mod edit -require=github.com/aliyun/terraform-provider-alicloud-prev@v0.0.0
-go mod edit -replace github.com/aliyun/terraform-provider-alicloud-prev="${PrevPath}"
-
-go mod tidy
 
 
 error=false
@@ -38,12 +17,12 @@ do
         fi
         resourceName=$(echo ${fileName} | grep -Eo "alicloud_[a-z_]*") || exit 1
         echo -e "\033[33mThe ResourceName = ${resourceName}"
-        go test -v ./scripts/field_check_test.go -resource="${resourceName}"
-        if [[ "$?" == "1" ]]; then
-          echo -e "\033[31m ${resourceName}: Compatibility Error! Please check out the correct schema type \033[0m"
+        git diff HEAD^ HEAD  > git_diff.diff
+        go test -v ./scripts/git_diff_test.go -run=TestFieldCompatibilityCheck -file_name="../git_diff.diff"
+        if [[ "$?" != "0" ]]; then
+          echo -e "\033[31m ${resourceName}: Compatibility Error! Please check out the correct schema \033[0m"
           error=true
         fi
-
     fi
 done
 
