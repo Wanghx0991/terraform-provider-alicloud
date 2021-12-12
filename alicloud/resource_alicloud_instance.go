@@ -42,7 +42,7 @@ func resourceAliyunInstance() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"availability_zone": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 				ForceNew: true,
 				Computed: true,
 			},
@@ -89,11 +89,11 @@ func resourceAliyunInstance() *schema.Resource {
 
 			"resource_group_id": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"description": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringLenBetween(2, 256),
 			},
 
@@ -106,7 +106,7 @@ func resourceAliyunInstance() *schema.Resource {
 			},
 			"internet_max_bandwidth_in": {
 				Type:             schema.TypeInt,
-				Optional:         true,
+				Required:         true,
 				Computed:         true,
 				DiffSuppressFunc: ecsInternetDiffSuppressFunc,
 				Deprecated:       "The attribute is invalid and no any affect for the instance. So it has been deprecated from version v1.121.2.",
