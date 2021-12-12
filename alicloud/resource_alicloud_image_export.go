@@ -32,7 +32,7 @@ func resourceAliCloudImageExport() *schema.Resource {
 			},
 			"oss_prefix": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 				ForceNew: true,
 			},
 		},

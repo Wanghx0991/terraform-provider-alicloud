@@ -113,6 +113,8 @@ github.com/aliyun/credentials-go/credentials/response
 github.com/aliyun/credentials-go/credentials/utils
 # github.com/aliyun/fc-go-sdk v0.0.0-20200925033337-c013428cbe21
 github.com/aliyun/fc-go-sdk
+# github.com/aliyun/terraform-provider-alicloud-prev v0.0.0 => /Users/wanghx/go/src/github.com/aliyun/terraform-provider-alicloud-prev
+github.com/aliyun/terraform-provider-alicloud-prev/alicloud
 # github.com/andybalholm/brotli v1.0.1
 github.com/andybalholm/brotli
 # github.com/apparentlymart/go-cidr v1.0.1
@@ -422,6 +424,8 @@ github.com/valyala/fasthttp/stackless
 # github.com/vmihailenco/msgpack v4.0.1+incompatible
 github.com/vmihailenco/msgpack
 github.com/vmihailenco/msgpack/codes
+# github.com/waigani/diffparser v0.0.0-20190828052634-7391f219313d
+github.com/waigani/diffparser
 # github.com/zclconf/go-cty v1.1.0
 github.com/zclconf/go-cty/cty
 github.com/zclconf/go-cty/cty/convert
