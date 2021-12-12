@@ -34,6 +34,7 @@ type ErrCode interface {
 	Context() ErrorContext
 	FullError() error
 	Append(err ...interface{}) ErrCode
+	WithMessage(extraMsg string) ErrCode
 	WithContext(k string, v interface{}) ErrCode
 	Marshal() ([]byte, error)
 }
@@ -88,7 +89,7 @@ func (p *errorCode) Namespace() string {
 }
 
 func (p *errorCode) Error() string {
-	msg := p.err.Message
+	msg := fmt.Sprintf("%s, Id: %s#%d:%s", p.err.Message, p.Namespace(), p.Code(), p.Id())
 
 	if len(p.errors) > 0 {
 		if msg != "" {
@@ -155,8 +156,26 @@ func (p *errorCode) Append(err ...interface{}) ErrCode {
 	return p
 }
 
+func (p *errorCode) WithMessage(extraMsg string) ErrCode {
+	p.err.Message = fmt.Sprintf("%s: %s", p.err.Message, extraMsg)
+	return p
+}
+
 func (p *errorCode) WithContext(key string, value interface{}) ErrCode {
-	p.context[key] = value
+
+	if value != nil {
+		switch val := value.(type) {
+		case error:
+			{
+				p.context[key] = val.Error()
+			}
+		default:
+			p.context[key] = value
+		}
+	} else {
+		p.context[key] = value
+	}
+
 	return p
 }
 
