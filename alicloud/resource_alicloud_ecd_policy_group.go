@@ -76,7 +76,7 @@ func resourceAlicloudEcdPolicyGroup() *schema.Resource {
 			},
 			"clipboard": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validation.StringInSlice([]string{"off", "read", "readwrite"}, false),
 			},
@@ -100,10 +100,10 @@ func resourceAlicloudEcdPolicyGroup() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validation.StringInSlice([]string{"readwrite", "off", "read"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"readwrite", "off"}, false),
 			},
 			"policy_group_name": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Optional: true,
 			},
 			"status": {

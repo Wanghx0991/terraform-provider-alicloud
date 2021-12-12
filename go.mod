@@ -17,7 +17,6 @@ require (
 	github.com/aliyun/aliyun-tablestore-go-sdk v4.1.3+incompatible
 	github.com/aliyun/credentials-go v1.1.2
 	github.com/aliyun/fc-go-sdk v0.0.0-20200925033337-c013428cbe21
-	github.com/aliyun/terraform-provider-alicloud-prev v0.0.0
 	github.com/deckarep/golang-set v1.7.1
 	github.com/denverdino/aliyungo v0.0.0-20211122042034-c78a9788662a
 	github.com/google/uuid v1.1.2
@@ -39,5 +38,3 @@ require (
 )
 
 go 1.13
-
-replace github.com/aliyun/terraform-provider-alicloud-prev => /Users/wanghx/go/src/github.com/aliyun/terraform-provider-alicloud-prev
