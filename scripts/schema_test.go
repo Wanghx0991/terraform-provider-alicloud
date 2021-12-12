@@ -1,19 +1,21 @@
 package scripts
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"github.com/aliyun/terraform-provider-alicloud/alicloud"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	log "github.com/sirupsen/logrus"
 	"github.com/waigani/diffparser"
 	"io/ioutil"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 	"testing"
 )
-
-var fileName = flag.String("file_name", "", "the file to check diff")
-
 func init() {
 	customFormatter := new(log.TextFormatter)
 	customFormatter.FullTimestamp = true
@@ -22,8 +24,40 @@ func init() {
 	customFormatter.DisableColors = false
 	customFormatter.ForceColors = true
 	log.SetFormatter(customFormatter)
-	//log.SetOutput(os.Stdout)
+	log.SetOutput(os.Stdout)
 	log.SetLevel(log.DebugLevel)
+}
+
+var (
+	resourceName = flag.String("resource", "", "the name of the terraform resource to diff")
+	fileName = flag.String("file_name", "", "the file to check diff")
+)
+
+type Resource struct {
+	Name       string
+	Arguments  map[string]interface{}
+	Attributes map[string]interface{}
+}
+
+
+func TestConsistency(t *testing.T) {
+	flag.Parse()
+	if len(*resourceName) == 0 {
+		log.Errorf("The Resource Name is Empty")
+		t.Fatal()
+	}
+	obj := alicloud.Provider().(*schema.Provider).ResourcesMap[*resourceName].Schema
+	objSchema := make(map[string]interface{},0)
+	objMd,err := parseResource(*resourceName)
+	if err != nil{
+		log.Error(err)
+		t.Fatal()
+	}
+	mergeMaps(objSchema,objMd.Attributes,objMd.Arguments)
+	if len(obj)+1 != len(objSchema){
+		log.Errorf("The Field Number of Schema is not consistent with the number in Document")
+		t.Fatal()
+	}
 }
 
 func TestFieldCompatibilityCheck(t *testing.T) {
@@ -44,7 +78,8 @@ func TestFieldCompatibilityCheck(t *testing.T) {
 			fmt.Printf("FileName = %s\n", file.NewName)
 			for _, hunk := range file.Hunks {
 				if hunk != nil {
-					prev, current := parseHunk(*hunk)
+					prev := ParseField(hunk.OrigRange, hunk.OrigRange.Length)
+					current := ParseField(hunk.NewRange, hunk.NewRange.Length)
 					res = CompatibilityRule(prev, current)
 				}
 			}
@@ -90,13 +125,9 @@ func CompatibilityRule(prev, current map[string]map[string]interface{}) (res boo
 	return
 }
 
-func parseHunk(hunk diffparser.DiffHunk) (map[string]map[string]interface{}, map[string]map[string]interface{}) {
-	prev := parseField(hunk.OrigRange, hunk.OrigRange.Length)
-	current := parseField(hunk.NewRange, hunk.NewRange.Length)
-	return prev, current
-}
 
-func parseField(hunk diffparser.DiffRange, length int) map[string]map[string]interface{} {
+
+func ParseField(hunk diffparser.DiffRange, length int) map[string]map[string]interface{} {
 	schemaRegex := regexp.MustCompile("^\\t*\"([a-zA-Z_]*)\"")
 	typeRegex := regexp.MustCompile("^\\t*Type:\\s+schema.([a-zA-Z]*)")
 	optionRegex := regexp.MustCompile("^\\t*Optional:\\s+([a-z]*),")
@@ -169,4 +200,118 @@ func parseField(hunk diffparser.DiffRange, length int) map[string]map[string]int
 		raw[schemaName] = temp
 	}
 	return raw
+}
+
+func parseResource(resourceName string) (*Resource, error) {
+	splitRes := strings.Split(resourceName, "alicloud_")
+	if len(splitRes) < 2 {
+		log.Errorf("the resource name parsed failed")
+		return nil, fmt.Errorf("the resource name parsed failed")
+	}
+	basePath := "../website/docs/r/"
+	filePath := strings.Join([]string{basePath, splitRes[1], ".html.markdown"}, "")
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Printf("Cannot open text file: %s, err: [%v]", filePath, err)
+		return nil, err
+	}
+	defer file.Close()
+
+	argsRegex := regexp.MustCompile("## Argument Reference")
+	attribRegex := regexp.MustCompile("## Attributes Reference")
+	secondLevelRegex := regexp.MustCompile("^\\#+")
+	argumentsFieldRegex := regexp.MustCompile("^\\* `([a-zA-Z_0-9]*)`[ ]*-? ?(\\(.*\\)) ?(.*)")
+	attributeFieldRegex := regexp.MustCompile("^\\* `([a-zA-Z_0-9]*)`[ ]*-?(.*)")
+
+	name := filepath.Base(filePath)
+	re := regexp.MustCompile("[a-zA-Z_]*")
+	resourceName = "alicloud_" + re.FindString(name)
+	result := &Resource{Name: resourceName, Arguments: map[string]interface{}{}, Attributes: map[string]interface{}{}}
+	log.Infof("The ResourceName = %s\n", resourceName)
+
+	scanner := bufio.NewScanner(file)
+	argumentFlag := false
+	attrFlag := false
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if argsRegex.MatchString(line) {
+			argumentFlag = true
+			continue
+		}
+		if attribRegex.MatchString(line) {
+			attrFlag = true
+			fmt.Printf("%s\n", line)
+			continue
+		}
+		if argumentFlag {
+			if secondLevelRegex.MatchString(line) {
+				argumentFlag = false
+				continue
+			}
+			argumentsMatched := argumentsFieldRegex.FindAllStringSubmatch(line, 1)
+			for _, argumentMatched := range argumentsMatched {
+				Field := parseMatchLine(argumentMatched, true)
+				if v, exist := Field["Name"]; exist {
+					log.Infof("field = %v\n", v)
+					//result.Arguments = append(result.Arguments, Field)
+					result.Arguments[v.(string)]=Field
+				}
+			}
+		}
+
+		if attrFlag {
+			if secondLevelRegex.MatchString(line) {
+				attrFlag = false
+				continue
+			}
+			attributesMatched := attributeFieldRegex.FindAllStringSubmatch(line, 1)
+			for _, attributeParsed := range attributesMatched {
+				Field := parseMatchLine(attributeParsed, false)
+				if v, exist := Field["Name"]; exist {
+					log.Infof("field = %v\n", Field["Name"])
+					result.Attributes[v.(string)] = Field
+					//result.Attributes = append(result.Attributes, Field)
+				}
+			}
+		}
+	}
+
+	return result, nil
+}
+
+func parseMatchLine(words []string, argumentFlag bool) map[string]interface{} {
+	result := make(map[string]interface{}, 0)
+	if argumentFlag && len(words) >= 4 {
+		result["Name"] = words[1]
+		result["Description"] = words[3]
+		if strings.Contains(words[2], "Optional") {
+			result["Optional"] = true
+		}
+		if strings.Contains(words[2], "Required") {
+			result["Required"] = true
+		}
+		if strings.Contains(words[2], "ForceNew") {
+			result["ForceNew"] = true
+		}
+		return result
+	}
+	if !argumentFlag && len(words) >= 3 {
+		result["Name"] = words[1]
+		result["Description"] = words[2]
+		return result
+	}
+	return nil
+}
+
+
+
+func mergeMaps(Dst map[string]interface{},maps ...map[string]interface{}) map[string]interface{} {
+	for _, m := range maps {
+		for k, v := range m {
+			Dst[k] = v
+		}
+	}
+	return Dst
 }

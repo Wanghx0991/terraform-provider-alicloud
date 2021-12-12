@@ -23,6 +23,8 @@ do
           echo -e "\033[31m ${resourceName}: Compatibility Error! Please check out the correct schema \033[0m"
           error=true
         fi
+
+        go test -v ./scripts/git_diff_test.go -run=TestFieldCompatibilityCheck -file_name="../git_diff.diff"
     fi
 done
 
