@@ -82,7 +82,7 @@ func resourceAlicloudEcdPolicyGroup() *schema.Resource {
 			},
 			"domain_list": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"html_access": {
 				Type:         schema.TypeString,
@@ -92,12 +92,12 @@ func resourceAlicloudEcdPolicyGroup() *schema.Resource {
 			},
 			"html_file_transfer": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				ForceNew:     true,
 				Computed:     true,
-				ValidateFunc: validation.StringInSlice([]string{"all", "download", "off", "upload"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"all", "download", "off"}, false),
 			},
 			"local_drive": {
-				Type:         schema.TypeString,
+				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validation.StringInSlice([]string{"readwrite", "off", "read"}, false),
