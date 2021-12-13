@@ -47,7 +47,7 @@ func resourceAlicloudAlbListener() *schema.Resource {
 			},
 			"access_log_tracing_config": {
 				Type:     schema.TypeSet,
-				Optional: true,
+				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

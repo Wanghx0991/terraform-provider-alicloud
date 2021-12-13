@@ -56,7 +56,7 @@ func resourceAlicloudAlbAcl() *schema.Resource {
 			},
 			"dry_run": {
 				Type:     schema.TypeBool,
-				Optional: true,
+				Required: true,
 			},
 			"resource_group_id": {
 				Type:     schema.TypeString,

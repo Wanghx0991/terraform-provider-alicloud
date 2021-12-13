@@ -34,7 +34,7 @@ func resourceAlicloudEcsSnapshot() *schema.Resource {
 			},
 			"description": {
 				Type:     schema.TypeString,
-				Optional: true,
+				ForceNew: true,
 			},
 			"disk_id": {
 				Type:     schema.TypeString,

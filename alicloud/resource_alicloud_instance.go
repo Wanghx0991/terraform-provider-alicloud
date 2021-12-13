@@ -76,7 +76,7 @@ func resourceAliyunInstance() *schema.Resource {
 
 			"allocate_public_ip": {
 				Type:       schema.TypeBool,
-				Optional:   true,
+				Required:   true,
 				Deprecated: "Field 'allocate_public_ip' has been deprecated from provider version 1.6.1. Setting 'internet_max_bandwidth_out' larger than 0 will allocate public ip for instance.",
 			},
 
