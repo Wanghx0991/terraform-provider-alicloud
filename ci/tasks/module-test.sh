@@ -37,6 +37,11 @@ terraform version
 tar zxvf aliyun-cli/aliyun-cli-linux-3.0.99-amd64.tgz -C /usr/bin
 
 aliyun oss cp oss://terraform-ci/ProviderVersion/terraform_test_linux.tgz ./terraform_test_linux.tgz --access-key-id ${ALICLOUD_ACCESS_KEY} --access-key-secret ${ALICLOUD_SECRET_KEY} --region cn-beijing
+if [[ "$?" == "1" ]]; then
+  echo -e "\033[31 error \033[0m"
+  exit 1
+fi
+
 
 tar zxvf  terraform_test_linux.tgz && mv ./terraform_test /usr/bin
 terraform_test
