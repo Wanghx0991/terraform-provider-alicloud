@@ -89,11 +89,11 @@ func resourceAliyunInstance() *schema.Resource {
 
 			"resource_group_id": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"description": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringLenBetween(2, 256),
 			},
 

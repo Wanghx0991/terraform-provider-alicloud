@@ -12,38 +12,35 @@ on:
       - alicloud/*.go
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Go Version
-        uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8
-        with:
-          go-version: ^1.16
+    Build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: Set up Go Version
+          uses: actions/setup-go@v2
+          with:
+            go-version: '1.16.7'
 
-      - name: Get dependencies
-        run: |
-          go get golang.org/x/tools/cmd/goimports
-          go mod tidy
+        - name: Get dependencies
+          run: |
+            go get golang.org/x/tools/cmd/goimports
+            go mod tidy
 
-      - name: vet
-        run: |
-          make vet
+        - name: vet
+          run: |
+            make vet
 
-      - name: fmt
-        run: |
-          make fmt
+        - name: fmt
+          run: |
+            make fmt
 
-      - name: test
-        run: |
-          make test
+        - name: test
+          run: |
+            make test
 
-      - name: fmtcheck
-        run: |
-          make fmtcheck
-
-
+        - name: fmtcheck
+          run: |
+            make fmtcheck
 
   field-check:
     runs-on: ubuntu-latest
@@ -54,7 +51,9 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: '1.16.7'
-      - run: |
-          sudo mkdir -p "${GOPATH}/src/github.com/aliyun"
-          chmod +rwx scripts/version_check.sh
-          sudo bash scripts/version_check.sh
+      - name: grant permissions
+        run: |
+          chmod +rwx scripts/field_check.sh
+      - name: Field Check
+        run: |
+          sudo bash scripts/field_check.sh

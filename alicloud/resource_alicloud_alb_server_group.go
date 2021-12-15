@@ -131,7 +131,7 @@ func resourceAlicloudAlbServerGroup() *schema.Resource {
 			},
 			"servers": {
 				Type:     schema.TypeSet,
-				Optional: true,
+				Required: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"description": {
@@ -176,7 +176,7 @@ func resourceAlicloudAlbServerGroup() *schema.Resource {
 			},
 			"sticky_session_config": {
 				Type:     schema.TypeSet,
-				Optional: true,
+				Required: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

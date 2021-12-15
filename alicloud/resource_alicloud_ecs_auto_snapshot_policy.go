@@ -27,7 +27,7 @@ func resourceAlicloudEcsAutoSnapshotPolicy() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"copied_snapshots_retention_days": {
 				Type:     schema.TypeInt,
-				Optional: true,
+				Required: true,
 				Default:  -1,
 			},
 			"enable_cross_region_copy": {
