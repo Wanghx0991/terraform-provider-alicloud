@@ -37,7 +37,13 @@ apt-get update && apt-get install -y zip
 wget -qN https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
 unzip -o terraform_${terraform_version}_linux_amd64.zip -d /usr/bin
 terraform version
+ls -al aliyun-cli
 tar zxvf aliyun-cli/aliyun-cli-linux-3.0.99-amd64.tgz -C /usr/bin
+if [[ "$?" == "1" ]]; then
+  echo -e "\033[31 tar \033[0m"
+  exit 1
+fi
+
 
 aliyun oss cp oss://terraform-ci/ProviderVersion/terraform_test_linux.tgz ./terraform_test_linux.tgz --access-key-id ${ALICLOUD_ACCESS_KEY} --access-key-secret ${ALICLOUD_SECRET_KEY} --region cn-beijing
 if [[ "$?" == "1" ]]; then
