@@ -6,7 +6,7 @@ image_resource:
 
 inputs:
   - name: terraform-provider-alicloud
-  - name: aliyun-cli
+#  - name: aliyun-cli
 
 run:
   path: terraform-provider-alicloud/ci/tasks/build-package.sh
