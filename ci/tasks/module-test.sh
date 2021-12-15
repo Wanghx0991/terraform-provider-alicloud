@@ -38,7 +38,7 @@ wget -qN https://releases.hashicorp.com/terraform/${terraform_version}/terraform
 unzip -o terraform_${terraform_version}_linux_amd64.zip -d /usr/bin
 terraform version
 ls -al aliyun-cli
-tar zxvf aliyun-cli/aliyun-cli-linux-3.0.99-amd64.tgz -C /usr/bin
+tar zxvf aliyun-cli/aliyun-cli-linux*.tgz -C /usr/bin
 if [[ "$?" == "1" ]]; then
   echo -e "\033[31 tar \033[0m"
   exit 1
