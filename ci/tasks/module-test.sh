@@ -29,9 +29,6 @@ TF_NEXT_PROVIDER=$CURRENT_PATH/next-provider/terraform-provider-alicloud
 echo "TERRAFORM_SOURCE_PATH = ${TERRAFORM_SOURCE_PATH}"
 echo "TF_NEXT_PROVIDER = ${TF_NEXT_PROVIDER}"
 
-echo "AK= ${ALICLOUD_ACCESS_KEY}"
-echo "SK= ${ALICLOUD_SECRET_KEY}"
-
 
 apt-get update && apt-get install -y zip
 wget -qN https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
