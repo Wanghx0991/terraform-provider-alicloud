@@ -744,6 +744,7 @@ func resourceAliyunInstanceUpdate(d *schema.ResourceData, meta interface{}) erro
 		} else {
 			request.Type = "online"
 		}
+		fmt.Println("13132")
 		request.DiskId = resp.Disks.Disk[0].DiskId
 		_, err = client.WithEcsClient(func(ecsClient *ecs.Client) (interface{}, error) {
 			return ecsClient.ResizeDisk(request)
