@@ -10,8 +10,6 @@ shared:
     task: validate
     file: terraform-provider-alicloud/ci/tasks/service.yml
     params: &validate-params
-      ALICLOUD_ACCESS_KEY: {{alicloud_access_key}}
-      ALICLOUD_SECRET_KEY: {{alicloud_secret_key}}
       ALICLOUD_REGION: {{alicloud_region}}
   - &clone-provider
     get: terraform-provider-alicloud
@@ -25,12 +23,16 @@ jobs:
       - <<: *validate
         params:
           <<: *validate-params
+          ALICLOUD_ACCESS_KEY: {{alicloud_ak_sub_account}}
+          ALICLOUD_SECRET_KEY: {{alicloud_sk_sub_account}}
   - name: Internal Account
     plan:
       - <<: *clone-provider
       - <<: *validate
         params:
           <<: *validate-params
+          ALICLOUD_ACCESS_KEY: {{alicloud_ak_intl_account}}
+          ALICLOUD_SECRET_KEY: {{alicloud_sk_intl_account}}
 
 
 
