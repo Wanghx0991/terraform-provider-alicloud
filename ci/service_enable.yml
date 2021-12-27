@@ -3,7 +3,7 @@ groups:
   - name: All
     jobs:
       - Domestic Account
-      - internal Account
+      - Internal Account
 
 shared:
   - &validate
@@ -19,7 +19,13 @@ shared:
     trigger: true
 
 jobs:
-  - name: existed-resource-test
+  - name: Domestic Account
+    plan:
+      - <<: *clone-provider
+      - <<: *validate
+        params:
+          <<: *validate-params
+  - name: Internal Account
     plan:
       - <<: *clone-provider
       - <<: *validate
@@ -28,5 +34,9 @@ jobs:
 
 
 
-
-
+resources:
+  - name: terraform-provider-alicloud
+    type: git
+    source:
+      uri: https://github.com/Wanghx0991/terraform-provider-alicloud.git
+      branch: service_enable
