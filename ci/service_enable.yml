@@ -14,7 +14,7 @@ shared:
   - &clone-provider
     get: terraform-provider-alicloud
     resource: terraform-provider-alicloud
-    trigger: true
+    trigger: false
 
 jobs:
   - name: Domestic Account
