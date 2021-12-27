@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 : "${ALICLOUD_ACCESS_KEY:?}"
 : "${ALICLOUD_SECRET_KEY:?}"
