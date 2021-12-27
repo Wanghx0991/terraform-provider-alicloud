@@ -1,0 +1,32 @@
+---
+groups:
+  - name: All
+    jobs:
+      - Domestic Account
+      - internal Account
+
+shared:
+  - &validate
+    task: validate
+    file: terraform-provider-alicloud/ci/tasks/service.yml
+    params: &validate-params
+      ALICLOUD_ACCESS_KEY: {{alicloud_access_key}}
+      ALICLOUD_SECRET_KEY: {{alicloud_secret_key}}
+      ALICLOUD_REGION: {{alicloud_region}}
+  - &clone-provider
+    get: terraform-provider-alicloud
+    resource: terraform-provider-alicloud
+    trigger: true
+
+jobs:
+  - name: existed-resource-test
+    plan:
+      - <<: *clone-provider
+      - <<: *validate
+        params:
+          <<: *validate-params
+
+
+
+
+
