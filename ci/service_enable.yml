@@ -1,6 +1,6 @@
 ---
 groups:
-  - name: All
+  - name: Account Service Enabled
     jobs:
       - Domestic Account
 #      - Internal Account

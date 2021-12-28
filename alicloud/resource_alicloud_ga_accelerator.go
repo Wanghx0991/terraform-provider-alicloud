@@ -237,5 +237,6 @@ func resourceAlicloudGaAcceleratorUpdate(d *schema.ResourceData, meta interface{
 }
 func resourceAlicloudGaAcceleratorDelete(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[WARN] Cannot destroy resourceAlicloudGaAccelerator. Terraform will remove this resource from the state file, however resources may remain.")
+	//fmt.Printf("[WARN] Cannot destroy resourceAlicloudGaAccelerator. Terraform will remove this resource from the state file, however resources may remain.")
 	return nil
 }

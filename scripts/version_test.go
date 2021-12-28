@@ -2,12 +2,13 @@ package scripts
 
 import (
 	"flag"
+	"os"
+	"testing"
+
 	old "github.com/aliyun/terraform-provider-alicloud-prev/alicloud"
 	"github.com/aliyun/terraform-provider-alicloud/alicloud"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	log "github.com/sirupsen/logrus"
-	"os"
-	"testing"
 )
 
 func init() {
@@ -51,7 +52,6 @@ func TestFieldCheck(t *testing.T) {
 		}
 	}
 }
-
 
 //func TestCheck(t *testing.T) {
 //	flag.Parse()
