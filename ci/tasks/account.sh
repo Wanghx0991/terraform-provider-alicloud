@@ -15,8 +15,8 @@ echo "ALICLOUD_SECRET_KEY=${ALICLOUD_SECRET_KEY}"
 
 CURRENT_PATH=${PWD}
 TERRAFORM_SOURCE_PATH=$CURRENT_PATH/terraform-provider-alicloud
-
-serviceFiles=ls  $TERRAFORM_SOURCE_PATH/alicloud | grep 'data_[a-z_]*service.go'
+pushd $TERRAFORM_SOURCE_PATH
+serviceFiles=ls  ./alicloud | grep 'data_[a-z_]*service.go'
 
 cd terraform-provider-alicloud
 
