@@ -12,13 +12,13 @@ export ALICLOUD_REGION=${ALICLOUD_REGION}
 
 CURRENT_PATH=${PWD}
 TERRAFORM_SOURCE_PATH=$CURRENT_PATH/terraform-provider-alicloud
-pushd $TERRAFORM_SOURCE_PATH/alicloud
-serviceFiles="$(ls . | grep 'data_[a-z_]*service.go')"
+pushd $TERRAFORM_SOURCE_PATH
+serviceFiles="$(ls ./alicloud | grep 'data_[a-z_]*service.go')"
 
 for fileName in ${serviceFiles[@]};
 do
     fileName=(${fileName//\.go/_test\.go })
-    checkFuncs=$(grep "func TestAcc.*" "${fileName}")
+    checkFuncs=$(grep "func TestAcc.*" "./alicloud/${fileName}")
     echo -e "found the test funcs:\n${checkFuncs}\n"
     funcs=(${checkFuncs//"(t *testing.T) {"/ })
     for func in ${funcs[@]};
