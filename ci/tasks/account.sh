@@ -18,8 +18,6 @@ TERRAFORM_SOURCE_PATH=$CURRENT_PATH/terraform-provider-alicloud
 pushd $TERRAFORM_SOURCE_PATH
 serviceFiles="$(ls ./alicloud | grep 'data_[a-z_]*service.go')"
 
-cd terraform-provider-alicloud
-
 for fileName in ${serviceFiles[@]};
 do
     echo -e "\n\033[37mchecking diff file $fileName ... \033[0m"
