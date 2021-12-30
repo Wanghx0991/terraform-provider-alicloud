@@ -7,7 +7,7 @@ groups:
 shared:
   - &validate
     task: validate
-    file: terraform-provider-alicloud/ci/tasks/service.yml
+    file: terraform-provider-alicloud/ci/tasks/account.yml
     params: &validate-params
       ALICLOUD_REGION: {{alicloud_region}}
   - &clone-provider

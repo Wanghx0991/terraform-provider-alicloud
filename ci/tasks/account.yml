@@ -8,7 +8,8 @@ image_resource:
 inputs:
   - name: terraform-provider-alicloud
 run:
-  path: terraform-provider-alicloud/ci/tasks/account-service.sh
+  path: terraform-provider-alicloud/ci/tasks/account.sh
+
 params:
   ALICLOUD_ACCESS_KEY: ""
   ALICLOUD_SECRET_KEY: ""

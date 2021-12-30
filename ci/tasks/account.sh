@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 : "${ALICLOUD_ACCESS_KEY:?}"
 : "${ALICLOUD_SECRET_KEY:?}"
 : "${ALICLOUD_REGION:?}"
