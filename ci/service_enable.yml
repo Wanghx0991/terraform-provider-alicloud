@@ -33,4 +33,4 @@ resources:
     type: git
     source:
       uri: https://github.com/Wanghx0991/terraform-provider-alicloud.git
-      branch: banfen
+      branch: service_enable
