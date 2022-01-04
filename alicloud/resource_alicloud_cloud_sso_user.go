@@ -25,7 +25,8 @@ func resourceAlicloudCloudSsoUser() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"description": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringLenBetween(0, 1024),
 			},
 			"directory_id": {
@@ -35,7 +36,7 @@ func resourceAlicloudCloudSsoUser() *schema.Resource {
 			},
 			"display_name": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringLenBetween(0, 256),
 			},
 			"email": {
@@ -44,7 +45,7 @@ func resourceAlicloudCloudSsoUser() *schema.Resource {
 			},
 			"first_name": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringLenBetween(0, 64),
 			},
 			"last_name": {

@@ -24,7 +24,7 @@ func resourceAlicloudEcdPolicyGroup() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"authorize_access_policy_rules": {
 				Type:     schema.TypeSet,
-				Optional: true,
+				ForceNew: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cidr_ip": {
@@ -82,22 +82,22 @@ func resourceAlicloudEcdPolicyGroup() *schema.Resource {
 			},
 			"domain_list": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"html_access": {
-				Type:         schema.TypeString,
+				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validation.StringInSlice([]string{"off", "on"}, false),
 			},
 			"html_file_transfer": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				ForceNew:     true,
 				Computed:     true,
-				ValidateFunc: validation.StringInSlice([]string{"all", "download", "off", "upload"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"all", "download"}, false),
 			},
 			"local_drive": {
-				Type:         schema.TypeString,
+				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validation.StringInSlice([]string{"readwrite", "off", "read"}, false),

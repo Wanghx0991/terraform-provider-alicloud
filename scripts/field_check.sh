@@ -7,25 +7,20 @@ pushd "${CurrentPath}"
 
 error=false
 
-# Field compatibility test
-git diff HEAD^ HEAD  > diff.out || exit 1
-go test -v ./scripts/schema_test.go -run=TestFieldCompatibilityCheck -file_name="../diff.out"
-if [[ "$?" != "0" ]]; then
-  echo -e "\033[31m Compatibility Error! Please check out the correct schema \033[0m"
-  error=true
-fi
-
 diffFiles=$(git diff --name-only HEAD~ HEAD)
 for fileName in ${diffFiles[@]};
 do
     if [[ ${fileName} == "alicloud/resource_alicloud"* ]];then
         if [[ ${fileName} == *?_test.go ]]; then
+            echo -e "\033[33m[SKIPPED]\033[0m skipping the file $fileName, continue..."
             continue
         fi
         resourceName=$(echo ${fileName} | grep -Eo "alicloud_[a-z_]*") || exit 1
         echo -e "\033[33mThe ResourceName = ${resourceName}"
-        go test -v ./scripts/schema_test.go -run=TestConsistencyWithDocument -resource="${resourceName}"
+        git diff HEAD^ HEAD  > git_diff.diff
+        go test -v ./scripts/git_diff_test.go -run=TestFieldCompatibilityCheck -file_name="../git_diff.diff"
         if [[ "$?" != "0" ]]; then
+          echo -e "\033[31m ${resourceName}: Compatibility Error! Please check out the correct schema \033[0m"
           error=true
         fi
     fi

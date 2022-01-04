@@ -77,7 +77,7 @@ func resourceAliCloudReservedInstance() *schema.Resource {
 			},
 			"description": {
 				Type:     schema.TypeString,
-				Optional: true,
+				ForceNew: true,
 			},
 			"resource_group_id": {
 				Type:     schema.TypeString,

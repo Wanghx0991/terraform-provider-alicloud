@@ -30,6 +30,7 @@ func resourceAlicloudDRDSInstance() *schema.Resource {
 			"description": {
 				Type:         schema.TypeString,
 				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringLenBetween(1, 129),
 			},
 			"zone_id": {

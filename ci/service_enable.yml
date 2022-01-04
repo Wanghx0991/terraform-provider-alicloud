@@ -1,0 +1,44 @@
+---
+groups:
+  - name: All
+    jobs:
+      - Domestic Account
+      - Internal Account
+
+shared:
+  - &validate
+    task: validate
+    file: terraform-provider-alicloud/ci/tasks/service.yml
+    params: &validate-params
+      ALICLOUD_REGION: {{alicloud_region}}
+  - &clone-provider
+    get: terraform-provider-alicloud
+    resource: terraform-provider-alicloud
+    trigger: false
+
+jobs:
+  - name: Domestic Account
+    plan:
+      - <<: *clone-provider
+      - <<: *validate
+        params:
+          <<: *validate-params
+          ALICLOUD_ACCESS_KEY: {{alicloud_ak_sub_account}}
+          ALICLOUD_SECRET_KEY: {{alicloud_sk_sub_account}}
+  - name: Internal Account
+    plan:
+      - <<: *clone-provider
+      - <<: *validate
+        params:
+          <<: *validate-params
+          ALICLOUD_ACCESS_KEY: {{alicloud_ak_intl_account}}
+          ALICLOUD_SECRET_KEY: {{alicloud_sk_intl_account}}
+
+
+
+resources:
+  - name: terraform-provider-alicloud
+    type: git
+    source:
+      uri: https://github.com/Wanghx0991/terraform-provider-alicloud.git
+      branch: service_enable
