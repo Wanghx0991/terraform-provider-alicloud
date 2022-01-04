@@ -970,9 +970,9 @@ jobs:
   - name: SslCertificates
     plan:
       - <<: *clone-provider
-      - get: trigger
-        trigger: true
-        resource: 01Thu
+     # - get: trigger
+      #  trigger: true
+       # resource: 01Thu
       - aggregate:
           - *get-aliyun-cli
       - <<: *run
@@ -1576,8 +1576,8 @@ resources:
   - name: terraform-provider-alicloud
     type: git
     source:
-      uri: https://github.com/aliyun/terraform-provider-alicloud.git
-      branch: master
+      uri: https://github.com/wanghx0991/terraform-provider-alicloud.git
+      branch: holy_added
 
   - name: aliyun-cli
     type: s3
