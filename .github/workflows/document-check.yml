@@ -9,7 +9,7 @@ on:
         - opened
       paths:
         - .github/workflows/document-check.yml
-        - .go-version
+#        - .go-version
         - website/docs/**
 
 jobs:
