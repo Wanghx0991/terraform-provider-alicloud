@@ -1779,7 +1779,7 @@ resources:
     type: time
     source:
       start: 06:46 PM
-      stop: 07:00 PM
+      stop: 11:00 PM
       days: [Friday]
       location: {{time_location}}
 
