@@ -14,7 +14,7 @@ run:
 params:
   ALICLOUD_ACCESS_KEY:   ""
   ALICLOUD_SECRET_KEY:   ""
-  ALICLOUD_REGION:       ""
+  ALICLOUD_REGION:       "cn-shanghai-finance-1"
   ALICLOUD_ACCOUNT_ID:   ""
   ALICLOUD_ACCOUNT_SITE: "Domestic"
   TEST_CASE_CODE:        ""

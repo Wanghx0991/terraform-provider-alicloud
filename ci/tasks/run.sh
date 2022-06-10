@@ -45,6 +45,7 @@ export ALICLOUD_WAF_INSTANCE_ID=${ALICLOUD_WAF_INSTANCE_ID}
 export CHECKOUT_REGION=${CHECKOUT_REGION}
 #export DEBUG=terraform
 
+echo -e "Alicloud Region: ${ALICLOUD_REGION}"
 echo -e "Account Site: ${ALICLOUD_ACCOUNT_SITE}"
 
 export ALICLOUD_CMS_CONTACT_GROUP=tf-testAccCms
