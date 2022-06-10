@@ -1721,8 +1721,8 @@ resources:
   - name: terraform-provider-alicloud
     type: git
     source:
-      uri: https://github.com/aliyun/terraform-provider-alicloud.git
-      branch: master
+      uri: https://github.com/wanghx0991/terraform-provider-alicloud.git
+      branch: finance_test
 
   - name: aliyun-cli
     type: s3
@@ -1778,8 +1778,9 @@ resources:
   - name: 00Mon
     type: time
     source:
-      start: 00:00 AM
-      days: [Monday]
+      start: 06:46 PM
+      stop: 07:00 PM
+      days: [Friday]
       location: {{time_location}}
 
   - name: 00Thu
