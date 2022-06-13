@@ -648,9 +648,9 @@ jobs:
   - name: FC
     plan:
       - <<: *clone-provider
-      - get: trigger
-        trigger: true
-        resource: 14Thu
+      #- get: trigger
+      #  trigger: true
+       # resource: 14Thu
       - aggregate:
           - *get-aliyun-cli
       - <<: *run

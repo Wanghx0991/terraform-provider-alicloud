@@ -46,6 +46,7 @@ export CHECKOUT_REGION=${CHECKOUT_REGION}
 #export DEBUG=terraform
 
 echo -e "Alicloud Region: ${ALICLOUD_REGION}"
+echo -e "Alicloud AccessKey: ${ALICLOUD_ACCESS_KEY}"
 echo -e "Account Site: ${ALICLOUD_ACCOUNT_SITE}"
 
 export ALICLOUD_CMS_CONTACT_GROUP=tf-testAccCms
@@ -55,10 +56,10 @@ release_dir="$( cd ${my_dir} && cd ../.. && pwd )"
 
 source ${release_dir}/ci/tasks/utils.sh
 
-PIPELINE_NAME=${ALICLOUD_REGION}
-if [[ "${ALICLOUD_ACCOUNT_SITE}" = "International" ]]; then
-  PIPELINE_NAME="${ALICLOUD_REGION}-intl"
-fi
+#PIPELINE_NAME=${ALICLOUD_REGION}
+#if [[ "${ALICLOUD_ACCOUNT_SITE}" = "International" ]]; then
+#  PIPELINE_NAME="${ALICLOUD_REGION}-intl"
+#fi
 
 if [[ ${DEBUG} = true ]]; then
     export TF_DEBUG=TRUE
@@ -85,22 +86,22 @@ cp -rf $CURRENT_PATH/terraform-provider-alicloud ./
 
 cd terraform-provider-alicloud
 
-if [[ ${SWEEPER} = true ]]; then
-    echo -e "\n--------------- Running Sweeper Test Cases ---------------"
-    if [[ ${TEST_SWEEPER_CASE_CODE} == "alicloud_"* ]]; then
-        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true"
-        TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true -timeout=60m
-    else
-        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-allow-failures=true"
-        TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-allow-failures=true -timeout=60m
-    fi
-    if [[ ${ALICLOUD_REGION} == "eu-central-1" ]]; then
-        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=ap-southeast-1 -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true"
-        TF_ACC=1 go test ./alicloud -v  -sweep=ap-southeast-1 -sweep-allow-failures=true -timeout=60m
-    fi
-    echo -e "\n--------------- END ---------------"
-    exit 0
-fi
+#if [[ ${SWEEPER} = true ]]; then
+#    echo -e "\n--------------- Running Sweeper Test Cases ---------------"
+#    if [[ ${TEST_SWEEPER_CASE_CODE} == "alicloud_"* ]]; then
+#        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true"
+#        TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true -timeout=60m
+#    else
+#        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-allow-failures=true"
+#        TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-allow-failures=true -timeout=60m
+#    fi
+#    if [[ ${ALICLOUD_REGION} == "eu-central-1" ]]; then
+#        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=ap-southeast-1 -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true"
+#        TF_ACC=1 go test ./alicloud -v  -sweep=ap-southeast-1 -sweep-allow-failures=true -timeout=60m
+#    fi
+#    echo -e "\n--------------- END ---------------"
+#    exit 0
+#fi
 
 EXITCODE=0
 # Clear cache
