@@ -49,6 +49,136 @@ jobs:
           TEST_CASE_CODE: "Apigateway"
           SWEEPER_CODE: "alicloud_api_gateway"
 
+  - name: ADB
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "ADB"
+
+  - name: ALB
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "ALB"
+
+  - name: RAM
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "RAM"
+
+  - name: Ess
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "Ess"
+
+  - name: SLB
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "SLB"
+
+  - name: ROS
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "ROS"
+
+  - name: VPC
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "VPC"
+
+  - name: CR
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "CR"
+
+  - name: Rds
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "Rds"
+
+  - name: Amqp
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "Amqp"
+
+  - name: Ots
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "Ots"
+
+  - name: VPN
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "VPN"
+
+  - name: PolarDB
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "PolarDB"
+
 resources:
   - name: terraform-provider-alicloud
     type: git

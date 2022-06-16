@@ -121,7 +121,7 @@ func TestAccAlicloudADBDbCluster_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreCheckWithRegions(t, false, connectivity.AdbReserverUnSupportRegions)
+			testAccPreCheckWithRegions(t, true, connectivity.AdbReserverUnSupportRegions)
 		},
 
 		IDRefreshName: resourceId,

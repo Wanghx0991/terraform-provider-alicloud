@@ -161,6 +161,10 @@ do
     fi
 done
 
+echo "Remove the Provider"
+cd .. && rm -rf terraform-provider-alicloud
+echo "Remove Success"
+
 echo -e "--------------- END ---------------\n"
 
 if [[ $TOTAL_COUNT -lt 1 ]]; then

@@ -50,7 +50,7 @@ func TestAccAlicloudCRNamespacesDataSource(t *testing.T) {
 		fakeMapFunc:  fakeCRNamespacesMapFunc,
 	}
 	preCheck := func() {
-		testAccPreCheckWithRegions(t, false, connectivity.CRNoSupportedRegions)
+		testAccPreCheckWithRegions(t, true, connectivity.CRNoSupportedRegions)
 	}
 	crNamespacesCheckInfo.dataSourceTestCheckWithPreCheck(t, rand, preCheck, nameRegexConf)
 }
