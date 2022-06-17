@@ -2957,6 +2957,7 @@ func (client *AliyunClient) NewOnsproxyClient() (*rpc.Client, error) {
 	}
 	sdkConfig := client.teaSdkConfig
 	sdkConfig.SetEndpoint(endpoint)
+	sdkConfig.SetEndpoint("amqp-open.cn-shanghai-finance-1.aliyuncs.com")
 	conn, err := rpc.NewClient(&sdkConfig)
 	if err != nil {
 		return nil, fmt.Errorf("unable to initialize the %s client: %#v", productCode, err)

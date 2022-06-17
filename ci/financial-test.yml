@@ -220,6 +220,26 @@ jobs:
           <<: *run-params
           TEST_CASE_CODE: "Bastionhost"
 
+  - name: Ddoscoo
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "Ddoscoo"
+
+  - name: Ddosbgp
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "Ddosbgp"
+
 resources:
   - name: terraform-provider-alicloud
     type: git
