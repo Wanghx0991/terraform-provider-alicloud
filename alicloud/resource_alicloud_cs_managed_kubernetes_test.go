@@ -59,6 +59,7 @@ func TestAccAlicloudCSManagedKubernetes_basic(t *testing.T) {
 					"cluster_spec":                "ack.pro.small",
 					"resource_group_id":           "${data.alicloud_resource_manager_resource_groups.default.groups.0.id}",
 					"deletion_protection":         "true",
+					"enable_rrsa":                 "false",
 					"timezone":                    "Asia/Shanghai",
 					"os_type":                     "Linux",
 					"platform":                    "CentOS",
@@ -86,6 +87,7 @@ func TestAccAlicloudCSManagedKubernetes_basic(t *testing.T) {
 						"cluster_spec":                          "ack.pro.small",
 						"resource_group_id":                     CHECKSET,
 						"deletion_protection":                   "true",
+						"enable_rrsa":                           "false",
 						"timezone":                              "Asia/Shanghai",
 						"os_type":                               "Linux",
 						"platform":                              "CentOS",
@@ -145,6 +147,16 @@ func TestAccAlicloudCSManagedKubernetes_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheck(map[string]string{
 						"deletion_protection": "false",
+					}),
+				),
+			},
+			{
+				Config: testAccConfig(map[string]interface{}{
+					"enable_rrsa": "true",
+				}),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheck(map[string]string{
+						"enable_rrsa": "true",
 					}),
 				),
 			},
@@ -469,6 +481,39 @@ data "alicloud_instance_types" "default" {
 data "alicloud_resource_manager_resource_groups" "default" {}
 
 data "alicloud_kms_keys" "default" {}
+
+variable "roles" {
+  type = list(object({
+    name = string
+    policy_document = string
+    description = string
+    policy_name = string
+  }))
+  default = [
+    {
+      name = "AliyunCSManagedSecurityRole"
+      policy_document="{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"cs.aliyuncs.com\"]}}],\"Version\":\"1\"}"
+      description = "CS使用此角色来访问您在其他云产品中的资源。"
+      policy_name = "AliyunCSManagedSecurityRolePolicy"
+    }
+  ]
+}
+
+resource "alicloud_ram_role" "role" {
+    for_each    = {for r in var.roles:r.name => r}
+    name        = each.value.name
+    document    = each.value.policy_document
+    description = each.value.description
+    force       = true
+}
+
+resource "alicloud_ram_role_policy_attachment" "attach" {
+  for_each    = {for r in var.roles:r.name => r}
+  policy_name = each.value.policy_name
+  policy_type = "System"
+  role_name   = each.value.name
+  depends_on  = [alicloud_ram_role.role]
+}
 
 resource "alicloud_vpc" "default" {
   vpc_name = "${var.name}"

@@ -35,6 +35,9 @@ type ScalingGroup struct {
 	SystemDiskCategory         ecs.DiskCategory   `json:"system_disk_category"`
 	SystemDiskSize             int64              `json:"system_disk_size"`
 	SystemDiskPerformanceLevel string             `json:"system_disk_performance_level"`
+	SystemDiskEncryptAlgorithm string             `json:"system_disk_encrypt_algorithm"`
+	SystemDiskEncrypted        bool               `json:"system_disk_encrypted"`
+	SystemDiskKMSKeyId         string             `json:"system_disk_kms_key_id"`
 	DataDisks                  []NodePoolDataDisk `json:"data_disks"` //支持多个数据盘
 	Tags                       []Tag              `json:"tags"`
 	ImageId                    string             `json:"image_id"`
@@ -65,7 +68,7 @@ type ScalingGroup struct {
 	SupportIPv6 bool `json:"support_ipv6"`
 	// deploymentset
 	DeploymentSetId string `json:"deploymentset_id"`
-	DesiredSize *int64 `json:"desired_size,omitempty"`
+	DesiredSize     *int64 `json:"desired_size,omitempty"`
 }
 
 type AutoScaling struct {

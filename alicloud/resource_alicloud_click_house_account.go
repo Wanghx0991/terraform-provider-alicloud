@@ -61,7 +61,7 @@ func resourceAlicloudClickHouseAccount() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validation.StringInSlice([]string{"all", "readonly,modify"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"all", "readOnly,modify"}, false),
 			},
 			"ddl_authority": {
 				Type:     schema.TypeBool,
@@ -251,7 +251,7 @@ func resourceAlicloudClickHouseAccountUpdate(d *schema.ResourceData, meta interf
 	if d.HasChange("ddl_authority") {
 		update = true
 	}
-	if v, ok := d.GetOk("ddl_authority"); ok {
+	if v, ok := d.GetOkExists("ddl_authority"); ok {
 		request["DdlAuthority"] = v
 	}
 

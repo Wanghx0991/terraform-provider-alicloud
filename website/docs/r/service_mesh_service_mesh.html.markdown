@@ -58,9 +58,13 @@ The following arguments are supported:
 * `mesh_config` - (Optional) The configuration of the Service grid. See the following `Block mesh_config`.
 * `network` - (Required, ForceNew) The network configuration of the Service grid. See the following `Block network`.
 * `service_mesh_name` - (Optional, ForceNew) The name of the resource.
-* `version` - (Optional, ForceNew) The version of the resource. Valid values: `v1.8.6.52-g60741c97-aliyun` and `v1.9.7.31-g24cdcb43-aliyun`.
+* `version` - (Optional) The version of the resource. you can look up the version using `alicloud_service_mesh_versions`. **Note:** The `version` supports updating from v1.170.0, the relevant version can be obtained via `istio_operator_version` in `alicloud_service_mesh_service_meshes`.
 * `edition` - (Optional, ForceNew) The type  of the resource. Valid values: `Default` and `Pro`. `Default`:the standard. `Pro`:the Pro version.
 * `force` - (Optional) This parameter is used for resource destroy. Default value is `false`.
+* `cluster_spec` - (Optional,Available in v1.166.0+.) The service mesh instance specification. Valid values: `standard`,`enterprise`,`ultimate`.
+* `cluster_ids` - (Optional,Available in v1.166.0+.) The array of the cluster ids.
+* `extra_configuration` - (Optional, Available in v1.169.0+.) The configurations of additional features for the ASM instance. See the following `Block extra_configuration`.
+
 
 #### Block network
 
@@ -69,13 +73,20 @@ The network supports the following:
 * `vpc_id` - (Required) The ID of the VPC.
 * `vswitche_list` - (Required) The list of Virtual Switch.
 
+#### Block extra_configuration
+
+The extra_configuration supports the following:
+
+* `cr_aggregation_enabled` - (Optional, Available in v1.169.0+.) Indicates whether the Kubernetes API of clusters on the data plane is used to access Istio resources. A value of `true` indicates that the Kubernetes API is used.
+
+
 #### Block mesh_config
 
 The mesh_config supports the following: 
 
 * `access_log` - (Optional) The configuration of the access logging.
 * `audit` - (Optional) The configuration of the audit. See the following `Block audit`.
-* `customized_zipkin` - (Optional) Whether or not to enable the use of a custom zipkin.
+* `customized_zipkin` - (Optional) Whether to enable the use of a custom zipkin.
 * `enable_locality_lb` - (Optional) The enable locality lb.
 * `kiali` - (Optional) The configuration of the Kiali. See the following `Block kiali`.
 * `opa` - (Optional) The open-door policy of agent (OPA) plug-in information. See the following `Block opa`.

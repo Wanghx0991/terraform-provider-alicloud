@@ -40,6 +40,9 @@ var (
 		"alicloud_cs_serverless_kubernetes": {"private_zone", "create_v2_cluster"},
 		"alicloud_slb_listener":             {"lb_protocol", "instance_port", "lb_port"},
 		"alicloud_kvstore_instance":         {"connection_string"},
+		"alicloud_instance":                 {"subnet_id"},
+		"alicloud_hbr_ots_backup_plan":      {"vault_id"},
+		"alicloud_nat_gateway":              {"vswitch_id"},
 	}
 )
 

@@ -102,6 +102,11 @@ The following arguments are supported:
 * `period` - (Optional) The period. Valid values: `Month`, `Year`.
 
 -> **NOTE:** If you set the payment_type parameter to Subscription, you must specify the period parameter.
+* `deletion_protection` - (Optional, Available in 1.167.0+) The switch of delete protection. Valid values:
+  - true: delete protect.
+  - false: no delete protect.
+
+-> **NOTE:** `deletion_protection` is valid only when attribute `payment_type` is set to `PayAsYouGo`, supported engine type: **MySQL**, **PostgresSQL**, **MariaDB**, **MSSQL**.
 * `acl` - (Optional, Computed) This parameter is only supported by the RDS PostgreSQL cloud disk version. This parameter indicates the authentication method. It is allowed only when the public key of the client certificate authority is enabled. Valid values: `cert` and `perfer` and `verify-ca` and `verify-full (supported by RDS PostgreSQL above 12)`.
 * `auto_upgrade_minor_version` - (Optional, Computed) How to upgrade the minor version of the instance. Valid values:
   * **Auto**: automatically upgrade the minor version.
@@ -182,6 +187,9 @@ The following arguments are supported:
 * `engine` - (Optional, Computed, ForceNew) Database type. Value options: MySQL, SQLServer, PostgreSQL, and PPAS.
 * `parameters` - (Optional) Set of parameters needs to be set after DB instance was launched. Available parameters can refer to the latest docs [View database parameter templates](https://www.alibabacloud.com/help/doc-detail/26284.htm).
 * `force_restart` - (Optional) Set it to true to make some parameter efficient when modifying them. Default to false.
+* `tcp_connection_type` - (Optional, Available in 1.171.0+) The availability check method of the instance. Valid values:
+  - **SHORT**: Alibaba Cloud uses short-lived connections to check the availability of the instance.
+  - **LONG**: Alibaba Cloud uses persistent connections to check the availability of the instance.
 * `pg_hba_conf` - (Optional, Available in 1.155.0+) The configuration of [AD domain](https://www.alibabacloud.com/help/en/doc-detail/349288.htm) (documented below).
 
 #### Block pg_hba_conf

@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"time"
 
-	roacs "github.com/alibabacloud-go/cs-20151215/v2/client"
+	roacs "github.com/alibabacloud-go/cs-20151215/v3/client"
 	"github.com/alibabacloud-go/tea/tea"
 
 	util "github.com/alibabacloud-go/tea-utils/service"
@@ -86,6 +86,10 @@ func resourceAlicloudCSServerlessKubernetes() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
+			},
+			"enable_rrsa": {
+				Type:     schema.TypeBool,
+				Optional: true,
 			},
 			"private_zone": {
 				Type:          schema.TypeBool,
@@ -353,6 +357,10 @@ func resourceAlicloudCSServerlessKubernetesCreate(d *schema.ResourceData, meta i
 		args.ClusterSpec = spec.(string)
 	}
 
+	if enableRRSA, ok := d.GetOk("enable_rrsa"); ok {
+		args.EnableRRSA = enableRRSA.(bool)
+	}
+
 	//set tags
 	if len(tags) > 0 {
 		args.Tags = tags
@@ -420,6 +428,7 @@ func resourceAlicloudCSServerlessKubernetesRead(d *schema.ResourceData, meta int
 	d.Set("vswitch_ids", vswitchIds)
 	d.Set("security_group_id", object.SecurityGroupId)
 	d.Set("deletion_protection", object.DeletionProtection)
+	d.Set("enable_rrsa", object.EnableRRSA)
 	d.Set("version", object.CurrentVersion)
 	d.Set("resource_group_id", object.ResourceGroupId)
 	d.Set("cluster_spec", object.ClusterSpec)
@@ -557,9 +566,10 @@ func modifyKubernetesCluster(d *schema.ResourceData, meta interface{}) error {
 	csService := CsService{client}
 
 	var modifyClusterRequest cs.ModifyClusterArgs
-	if d.HasChange("deletion_protection") {
+	if d.HasChange("deletion_protection") || d.HasChange("enable_rrsa") {
 		update = true
 		modifyClusterRequest.DeletionProtection = d.Get("deletion_protection").(bool)
+		modifyClusterRequest.EnableRRSA = d.Get("enable_rrsa").(bool)
 	}
 
 	if update {
@@ -590,6 +600,7 @@ func modifyKubernetesCluster(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 	d.SetPartial("deletion_protection")
+	d.SetPartial("enable_rrsa")
 
 	return nil
 }

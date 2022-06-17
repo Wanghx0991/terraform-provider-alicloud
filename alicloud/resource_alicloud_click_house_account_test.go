@@ -140,17 +140,16 @@ func TestAccAlicloudClickHouseAccount_basic1(t *testing.T) {
 					}),
 				),
 			},
-			// todo : There is a problem with the OpenApi set the parameter with "readonly,modify", return with parameter "all"
-			//{
-			//	Config: testAccConfig(map[string]interface{}{
-			//		"dml_authority": "readonly,modify",
-			//	}),
-			//	Check: resource.ComposeTestCheckFunc(
-			//		testAccCheck(map[string]string{
-			//			"dml_authority": "readonly,modify",
-			//		}),
-			//	),
-			//},
+			{
+				Config: testAccConfig(map[string]interface{}{
+					"dml_authority": "readOnly,modify",
+				}),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheck(map[string]string{
+						"dml_authority": "readOnly,modify",
+					}),
+				),
+			},
 			{
 				Config: testAccConfig(map[string]interface{}{
 					"ddl_authority": "true",
@@ -176,14 +175,14 @@ func TestAccAlicloudClickHouseAccount_basic1(t *testing.T) {
 					"allow_databases":    "db1",
 					"dml_authority":      "all",
 					"allow_dictionaries": "dt1",
-					"ddl_authority":      "true",
+					"ddl_authority":      "false",
 				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheck(map[string]string{
 						"allow_databases":    "db1",
 						"dml_authority":      "all",
 						"allow_dictionaries": "dt1",
-						"ddl_authority":      "true",
+						"ddl_authority":      "false",
 					}),
 				),
 			},

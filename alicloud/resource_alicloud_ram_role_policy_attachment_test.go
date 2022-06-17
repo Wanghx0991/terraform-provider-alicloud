@@ -21,7 +21,7 @@ func TestAccAlicloudRAMRolePolicyAttachment_basic(t *testing.T) {
 	rac := resourceAttrCheckInit(rc, ra)
 
 	rand := acctest.RandIntRange(1000000, 9999999)
-	name := fmt.Sprintf("tf-testAcc%sRamRolePolicyAttachmentConfig-%d", defaultRegionToTest, rand)
+	name := fmt.Sprintf("tf-testAcc%sRamRole-%d", defaultRegionToTest, rand)
 	testAccCheck := rac.resourceAttrMapUpdateSet()
 	testAccConfig := resourceTestAccConfigFunc(resourceId, name, resourceRamRolePolicyAttachmentConfigDependence)
 

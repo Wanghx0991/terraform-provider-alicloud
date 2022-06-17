@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 )
 
-func TestAccAlicloudVpcBgpPeersDataSource(t *testing.T) {
+func TestAccAlicloudVPCBgpPeersDataSource(t *testing.T) {
 	checkoutSupportedRegions(t, true, connectivity.VbrSupportRegions)
 	rand := acctest.RandIntRange(1, 2999)
 	idsConf := dataSourceTestAccConfig{
@@ -74,7 +74,7 @@ func TestAccAlicloudVpcBgpPeersDataSource(t *testing.T) {
 			"peers.0.id":              CHECKSET,
 			"peers.0.bgp_peer_id":     CHECKSET,
 			"peers.0.bgp_peer_name":   "",
-			"peers.0.bgp_status":      "",
+			"peers.0.bgp_status":      "Connect",
 			"peers.0.description":     "",
 			"peers.0.enable_bfd":      "true",
 			"peers.0.hold":            CHECKSET,

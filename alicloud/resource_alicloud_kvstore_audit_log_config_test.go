@@ -35,7 +35,7 @@ func TestAccAlicloudKVStoreAuditLogConfig_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreCheckPrePaidResources(t)
+			//testAccPreCheckPrePaidResources(t)
 		},
 
 		IDRefreshName: resourceId,

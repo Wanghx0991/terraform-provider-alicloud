@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccAlicloudSlbAttachment_basic(t *testing.T) {
+func TestAccAlicloudSLBAttachment_basic(t *testing.T) {
 
 	var v *slb.DescribeLoadBalancerAttributeResponse
 	resourceId := "alicloud_slb_attachment.default"
@@ -101,7 +101,7 @@ func TestAccAlicloudSlbAttachment_basic(t *testing.T) {
 	})
 }
 
-func TestAccAlicloudSlbAttachment_multi(t *testing.T) {
+func TestAccAlicloudSLBAttachment_multi(t *testing.T) {
 
 	var v *slb.DescribeLoadBalancerAttributeResponse
 	resourceId := "alicloud_slb_attachment.default.9"
@@ -138,7 +138,7 @@ func TestAccAlicloudSlbAttachment_multi(t *testing.T) {
 	})
 }
 
-func TestAccAlicloudSlbAttachment_classic_basic(t *testing.T) {
+func TestAccAlicloudSLBAttachment_classic_basic(t *testing.T) {
 
 	var v *slb.DescribeLoadBalancerAttributeResponse
 	resourceId := "alicloud_slb_attachment.default"
@@ -229,8 +229,8 @@ variable "name" {
   default = "%s"
 }
 data "alicloud_instance_types" "default" {
-  cpu_core_count    = 1
-  memory_size       = 2
+  #cpu_core_count    = 1
+  #memory_size       = 2
   availability_zone = data.alicloud_slb_zones.default.zones.0.id
 }
 data "alicloud_instance_types" "new" {
@@ -312,8 +312,8 @@ variable "name" {
   default = "%s"
 }
 data "alicloud_instance_types" "default" {
-  cpu_core_count    = 1
-  memory_size       = 2
+  #cpu_core_count    = 1
+  #memory_size       = 2
   availability_zone = data.alicloud_slb_zones.default.zones.0.id
 }
 data "alicloud_images" "default" {
@@ -367,8 +367,8 @@ variable "name" {
   default = "%s"
 }
 data "alicloud_instance_types" "default" {
-  cpu_core_count    = 1
-  memory_size       = 2
+  #cpu_core_count    = 1
+  #memory_size       = 2
   availability_zone = data.alicloud_slb_zones.default.zones.0.id
 }
 data "alicloud_instance_types" "new" {

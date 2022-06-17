@@ -2,6 +2,7 @@ package alicloud
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"regexp"
 	"strings"
@@ -88,6 +89,7 @@ type resourceAttr struct {
 }
 
 func resourceAttrInit(resourceId string, checkMap map[string]string) *resourceAttr {
+	fmt.Printf("Current Region = %s\n", os.Getenv("ALICLOUD_REGION"))
 	if checkMap == nil {
 		checkMap = make(map[string]string)
 	}
@@ -1138,7 +1140,7 @@ data "alicloud_emr_instance_types" "local_disk" {
     cluster_type = data.alicloud_emr_main_versions.default.main_versions.0.cluster_types.0
     support_local_storage = true
     instance_charge_type = "PostPaid"
-    support_node_type = ["CORE"]
+    support_node_type = ["MASTER","CORE"]
 }
 
 data "alicloud_emr_instance_types" "cloud_disk" {

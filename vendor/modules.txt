@@ -19,15 +19,17 @@ github.com/agext/levenshtein
 # github.com/agiledragon/gomonkey/v2 v2.3.1
 github.com/agiledragon/gomonkey/v2
 github.com/agiledragon/gomonkey/v2/creflect
-# github.com/alibabacloud-go/cs-20151215/v2 v2.4.4
-github.com/alibabacloud-go/cs-20151215/v2/client
-# github.com/alibabacloud-go/darabonba-openapi v0.1.5
+# github.com/alibabacloud-go/alibabacloud-gateway-spi v0.0.4
+github.com/alibabacloud-go/alibabacloud-gateway-spi/client
+# github.com/alibabacloud-go/cs-20151215/v3 v3.0.13-0.20220507113239-654e91033291
+github.com/alibabacloud-go/cs-20151215/v3/client
+# github.com/alibabacloud-go/darabonba-openapi v0.1.19-0.20220507083948-2c7e1f6567c1
 github.com/alibabacloud-go/darabonba-openapi/client
 # github.com/alibabacloud-go/debug v0.0.0-20190504072949-9472017b5c68
 github.com/alibabacloud-go/debug/debug
 # github.com/alibabacloud-go/endpoint-util v1.1.0
 github.com/alibabacloud-go/endpoint-util/service
-# github.com/alibabacloud-go/openapi-util v0.0.7
+# github.com/alibabacloud-go/openapi-util v0.0.11
 github.com/alibabacloud-go/openapi-util/service
 # github.com/alibabacloud-go/tea v1.1.17
 github.com/alibabacloud-go/tea/tea
@@ -40,8 +42,10 @@ github.com/alibabacloud-go/tea-roa-utils/service
 github.com/alibabacloud-go/tea-rpc/client
 # github.com/alibabacloud-go/tea-rpc-utils v1.1.2
 github.com/alibabacloud-go/tea-rpc-utils/service
-# github.com/alibabacloud-go/tea-utils v1.3.9
+# github.com/alibabacloud-go/tea-utils v1.4.3
 github.com/alibabacloud-go/tea-utils/service
+# github.com/alibabacloud-go/tea-xml v1.1.2
+github.com/alibabacloud-go/tea-xml/service
 # github.com/aliyun/alibaba-cloud-sdk-go v1.61.1538
 github.com/aliyun/alibaba-cloud-sdk-go/sdk
 github.com/aliyun/alibaba-cloud-sdk-go/sdk/auth
@@ -96,7 +100,7 @@ github.com/aliyun/alibaba-cloud-sdk-go/services/yundun_dbaudit
 github.com/aliyun/aliyun-datahub-sdk-go/datahub
 github.com/aliyun/aliyun-datahub-sdk-go/datahub/pbmodel
 github.com/aliyun/aliyun-datahub-sdk-go/datahub/util
-# github.com/aliyun/aliyun-log-go-sdk v0.1.28-0.20220211074227-7b7d575ad8d3
+# github.com/aliyun/aliyun-log-go-sdk v0.1.30-0.20220407081210-a0934880522a
 github.com/aliyun/aliyun-log-go-sdk
 # github.com/aliyun/aliyun-mns-go-sdk v0.0.0-20210305050620-d1b5875bda58
 github.com/aliyun/aliyun-mns-go-sdk
@@ -111,7 +115,7 @@ github.com/aliyun/credentials-go/credentials
 github.com/aliyun/credentials-go/credentials/request
 github.com/aliyun/credentials-go/credentials/response
 github.com/aliyun/credentials-go/credentials/utils
-# github.com/aliyun/fc-go-sdk v0.0.0-20200925033337-c013428cbe21
+# github.com/aliyun/fc-go-sdk v0.0.0-20210528065454-8211fa9cbd72
 github.com/aliyun/fc-go-sdk
 # github.com/andybalholm/brotli v1.0.1
 github.com/andybalholm/brotli
@@ -167,13 +171,16 @@ github.com/bgentry/go-netrc/netrc
 github.com/bgentry/speakeasy
 # github.com/cenkalti/backoff v2.2.1+incompatible
 github.com/cenkalti/backoff
+# github.com/clbanning/mxj/v2 v2.5.5
+github.com/clbanning/mxj/v2
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/deckarep/golang-set v1.8.0
 github.com/deckarep/golang-set
-# github.com/denverdino/aliyungo v0.0.0-20220321085828-46dabbd9e212
+# github.com/denverdino/aliyungo v0.0.0-20220531124911-7183b75c63d4
 github.com/denverdino/aliyungo/cdn
 github.com/denverdino/aliyungo/common
+github.com/denverdino/aliyungo/common/utils
 github.com/denverdino/aliyungo/cs
 github.com/denverdino/aliyungo/ecs
 github.com/denverdino/aliyungo/util
@@ -383,6 +390,10 @@ github.com/modern-go/concurrent
 github.com/modern-go/reflect2
 # github.com/oklog/run v1.0.0
 github.com/oklog/run
+# github.com/opentracing/opentracing-go v1.2.0
+github.com/opentracing/opentracing-go
+github.com/opentracing/opentracing-go/ext
+github.com/opentracing/opentracing-go/log
 # github.com/pierrec/lz4 v2.6.1+incompatible
 github.com/pierrec/lz4
 github.com/pierrec/lz4/internal/xxh32
@@ -404,7 +415,7 @@ github.com/spf13/afero
 github.com/spf13/afero/mem
 # github.com/spf13/pflag v1.0.5
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.7.0
+# github.com/stretchr/testify v1.7.1
 github.com/stretchr/testify/assert
 # github.com/tjfoc/gmsm v1.3.2
 github.com/tjfoc/gmsm/sm3
@@ -502,7 +513,7 @@ golang.org/x/sys/unix
 golang.org/x/sys/windows
 # golang.org/x/term v0.0.0-20210220032956-6a3ed077a48d
 golang.org/x/term
-# golang.org/x/text v0.3.5
+# golang.org/x/text v0.3.7
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi

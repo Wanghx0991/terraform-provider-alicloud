@@ -20,7 +20,7 @@ groups:
       # OSS
       - Oss
       # VPC
-      - Vpc
+      - VPC
       - EIP
       - Elasticsearch
       - Cddc
@@ -30,10 +30,10 @@ groups:
       - ECD
       - CommonBandwidth
       - Cen
-      - Vpn
+      - VPN
       - SslVpn
       # SLB
-      - Slb
+      - SLB
       # Database
       # Rds
       - ALB
@@ -52,8 +52,8 @@ groups:
       - Datahub
       # CDN
       - CDN
-      # Dcdn
-      - Dcdn
+      # DCDN
+      - DCDN
       # Api Gateway
       - Apigateway
       # Mns
@@ -66,8 +66,8 @@ groups:
       - NAS
       # Ots
       - Ots
-      # Kms
-      - Kms
+      # KMS
+      - KMS
       # Sls
       - Log
       # Actiontrail
@@ -95,8 +95,8 @@ groups:
       - GraphDatabase
       - ADB
       - Maxcompute
-      - Dms
-      - Waf
+      - DMS
+      - WAF
       - Edas
       - ResourceManager
       - Ecs
@@ -104,7 +104,7 @@ groups:
       - Alidns
       - MSE
       - Fnf
-      - Ros
+      - ROS
       - Privatelink
       - Tsdb
       - Eci
@@ -115,6 +115,7 @@ groups:
       - DirectMail
       - SAS
       - DFS
+      - DBFS
       - Ehpc
       - IMP
       - Ga
@@ -126,6 +127,7 @@ groups:
       - ExpressConnect
       - ServiceMesh
       - ClickHouse
+      - CloudSSO
       - Sweeper-1
       - Sweeper-2
       - Sweeper-3
@@ -154,7 +156,7 @@ groups:
       # Function Compute
       - FC
       - Fnf
-      - Ros
+      - ROS
       - Eci
       - OOS
       - Sweeper-1
@@ -172,8 +174,8 @@ groups:
       - Oss
       # CDN
       - CDN
-      # Dcdn
-      - Dcdn
+      # DCDN
+      - DCDN
       # Ots
       - Ots
       - Sweeper-1
@@ -197,7 +199,7 @@ groups:
       - HBase
       - GraphDatabase
       - ADB
-      - Dms
+      - DMS
       - Tsdb
       - Sweeper-1
       - Sweeper-2
@@ -209,7 +211,7 @@ groups:
   - name: Networking
     jobs:
       # VPC
-      - Vpc
+      - VPC
       - EIP
       - Cddc
       - ARMS
@@ -217,10 +219,10 @@ groups:
       - Lindorm
       - CommonBandwidth
       - Cen
-      - Vpn
+      - VPN
       - SslVpn
       # SLB
-      - Slb
+      - SLB
       # Pvtz
       - Pvtz
       # Cloud Connect network
@@ -265,8 +267,8 @@ groups:
     jobs:
       # RAM
       - RAM
-      # Kms
-      - Kms
+      # KMS
+      - KMS
       # Actiontrail
       - Actiontrail
       # Cms
@@ -317,7 +319,7 @@ groups:
       - Ddosbgp
       - YundunDbaudit
       - Bastionhost
-      - Waf
+      - WAF
       - Sweeper-1
       - Sweeper-2
       - Sweeper-3
@@ -646,9 +648,9 @@ jobs:
   - name: FC
     plan:
       - <<: *clone-provider
-      - get: trigger
-        trigger: true
-        resource: 14Thu
+      #- get: trigger
+      #  trigger: true
+       # resource: 14Thu
       - aggregate:
           - *get-aliyun-cli
       - <<: *run
@@ -670,7 +672,7 @@ jobs:
           <<: *run-params
           TEST_CASE_CODE: "DataWorks"
 
-  - name: Kms
+  - name: KMS
     plan:
       - <<: *clone-provider
       - get: trigger
@@ -681,7 +683,7 @@ jobs:
       - <<: *run
         params:
           <<: *run-params
-          TEST_CASE_CODE: "Kms"
+          TEST_CASE_CODE: "KMS"
 
   - name: Log
     plan:
@@ -874,7 +876,7 @@ jobs:
           <<: *run-params
           TEST_CASE_CODE: "Lindorm"
 
-  - name: Slb
+  - name: SLB
     plan:
       - <<: *clone-provider
       - get: trigger
@@ -885,7 +887,7 @@ jobs:
       - <<: *run
         params:
           <<: *run-params
-          TEST_CASE_CODE: "Slb"
+          TEST_CASE_CODE: "SLB"
           SWEEPER_CODE: "alicloud_slb_load_balancer"
 
   - name: SslVpn
@@ -901,7 +903,7 @@ jobs:
           <<: *run-params
           TEST_CASE_CODE: "SslVpn"
 
-  - name: Vpc
+  - name: VPC
     plan:
       - <<: *clone-provider
       - get: trigger
@@ -912,10 +914,10 @@ jobs:
       - <<: *run
         params:
           <<: *run-params
-          TEST_CASE_CODE: "Vpc"
+          TEST_CASE_CODE: "VPC"
           SWEEPER_CODE: "alicloud_vpc"
 
-  - name: Vpn
+  - name: VPN
     plan:
       - <<: *clone-provider
       - get: trigger
@@ -926,7 +928,7 @@ jobs:
       - <<: *run
         params:
           <<: *run-params
-          TEST_CASE_CODE: "Vpn"
+          TEST_CASE_CODE: "VPN"
 
   - name: Mns
     plan:
@@ -1240,7 +1242,7 @@ jobs:
           <<: *run-params
           TEST_CASE_CODE: "Maxcompute"
 
-  - name: Dms
+  - name: DMS
     plan:
       - <<: *clone-provider
       - get: trigger
@@ -1251,9 +1253,9 @@ jobs:
       - <<: *run
         params:
           <<: *run-params
-          TEST_CASE_CODE: "Dms"
+          TEST_CASE_CODE: "DMS"
 
-  - name: Waf
+  - name: WAF
     plan:
       - <<: *clone-provider
       - get: trigger
@@ -1264,7 +1266,7 @@ jobs:
       - <<: *run
         params:
           <<: *run-params
-          TEST_CASE_CODE: "Waf"
+          TEST_CASE_CODE: "WAF"
 
   - name: Edas
     plan:
@@ -1295,9 +1297,9 @@ jobs:
   - name: Ecs
     plan:
       - <<: *clone-provider
-      - get: trigger
-        trigger: true
-        resource: 0730Thu
+#      - get: trigger
+#        trigger: true
+#        resource: 0730Thu
       - aggregate:
           - *get-aliyun-cli
       - <<: *run
@@ -1305,7 +1307,7 @@ jobs:
           <<: *run-params
           TEST_CASE_CODE: "Ecs"
 
-  - name: Dcdn
+  - name: DCDN
     plan:
       - <<: *clone-provider
       - get: trigger
@@ -1316,7 +1318,7 @@ jobs:
       - <<: *run
         params:
           <<: *run-params
-          TEST_CASE_CODE: "Dcdn"
+          TEST_CASE_CODE: "DCDN"
 
   - name: GraphDatabase
     plan:
@@ -1383,7 +1385,7 @@ jobs:
           <<: *run-params
           TEST_CASE_CODE: "Fnf"
 
-  - name: Ros
+  - name: ROS
     plan:
       - <<: *clone-provider
       - get: trigger
@@ -1394,7 +1396,7 @@ jobs:
       - <<: *run
         params:
           <<: *run-params
-          TEST_CASE_CODE: "Ros"
+          TEST_CASE_CODE: "ROS"
 
   - name: Privatelink
     plan:
@@ -1670,6 +1672,32 @@ jobs:
           <<: *run-params
           TEST_CASE_CODE: "ClickHouse"
 
+  - name: DBFS
+    plan:
+      - <<: *clone-provider
+      - get: trigger
+        trigger: true
+        resource: 18Thu
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "DBFS"
+
+  - name: CloudSSO
+    plan:
+      - <<: *clone-provider
+      - get: trigger
+        trigger: true
+        resource: 0030Thu
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "DBFS"
+
   - name: SweeperAfter
     plan:
       - get: terraform-provider-alicloud
@@ -1677,8 +1705,8 @@ jobs:
         trigger: true
         passed: [
             HBR, Ess, CS, FC, Ecs,
-            Vpc, EIP, Cddc, ARMS, Scdn, Amqp, CommonBandwidth,
-            Slb, ALB, KVStore, DRDS, Apigateway, Ots, Elasticsearch, Vpn, SslVpn, MongoDB, SAE, EventBridge
+            VPC, EIP, Cddc, ARMS, Scdn, Amqp, CommonBandwidth,
+            SLB, ALB, KVStore, DRDS, Apigateway, Ots, Elasticsearch, VPN, SslVpn, MongoDB, SAE, EventBridge
         ]
       - aggregate:
           - *get-aliyun-cli
@@ -1693,8 +1721,8 @@ resources:
   - name: terraform-provider-alicloud
     type: git
     source:
-      uri: https://github.com/aliyun/terraform-provider-alicloud.git
-      branch: master
+      uri: https://github.com/wanghx0991/terraform-provider-alicloud.git
+      branch: finance_test
 
   - name: aliyun-cli
     type: s3
@@ -1750,8 +1778,9 @@ resources:
   - name: 00Mon
     type: time
     source:
-      start: 00:00 AM
-      days: [Monday]
+      start: 06:46 PM
+      stop: 11:00 PM
+      days: [Friday]
       location: {{time_location}}
 
   - name: 00Thu

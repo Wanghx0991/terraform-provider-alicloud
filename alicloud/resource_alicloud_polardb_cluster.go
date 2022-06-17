@@ -163,7 +163,7 @@ func resourceAlicloudPolarDBCluster() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"value": &schema.Schema{
+						"value": {
 							Type:     schema.TypeString,
 							Required: true,
 						},
@@ -189,6 +189,17 @@ func resourceAlicloudPolarDBCluster() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Computed: true,
 				Optional: true,
+			},
+			"deletion_lock": {
+				Type:         schema.TypeInt,
+				ValidateFunc: validation.IntInSlice([]int{0, 1}),
+				Optional:     true,
+			},
+			"backup_retention_policy_on_cluster_deletion": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validation.StringInSlice([]string{"ALL", "LATEST", "NONE"}, false),
 			},
 
 			"tags": tagsSchema(),
@@ -333,7 +344,7 @@ func resourceAlicloudPolarDBClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("db_cluster_ip_array") {
 
-		if err := polarDBService.ModifyDBAccessWhitelistSecurityIps(d); err != nil {
+		if err := polarDBService.ModifyDBClusterAccessWhitelist(d); err != nil {
 			return WrapError(err)
 		}
 		d.SetPartial("db_cluster_ip_array")
@@ -514,7 +525,7 @@ func resourceAlicloudPolarDBClusterUpdate(d *schema.ResourceData, meta interface
 		}
 		addDebug(request.GetActionName(), raw, request.RpcRequest, request)
 		// wait cluster status change from Creating to running
-		stateConf := BuildStateConf([]string{"ClassChanging"}, []string{"Running"}, d.Timeout(schema.TimeoutCreate), 5*time.Minute, polarDBService.PolarDBClusterStateRefreshFunc(d.Id(), []string{"Deleting"}))
+		stateConf := BuildStateConf([]string{"ClassChanging", "ClassChanged"}, []string{"Running"}, d.Timeout(schema.TimeoutCreate), 5*time.Minute, polarDBService.PolarDBClusterStateRefreshFunc(d.Id(), []string{"Deleting"}))
 		if _, err := stateConf.WaitForState(); err != nil {
 			return WrapErrorf(err, IdMsg, d.Id())
 		}
@@ -537,6 +548,36 @@ func resourceAlicloudPolarDBClusterUpdate(d *schema.ResourceData, meta interface
 		d.SetPartial("description")
 	}
 
+	if !d.IsNewResource() && d.HasChange("deletion_lock") {
+		if v, ok := d.GetOk("pay_type"); ok && v.(string) == string(PrePaid) {
+			return nil
+		}
+		action := "ModifyDBClusterDeletion"
+		protection := d.Get("deletion_lock").(int)
+		request := map[string]interface{}{
+			"DBClusterId": d.Id(),
+			"Protection":  protection == 1,
+		}
+		wait := incrementalWait(3*time.Second, 3*time.Second)
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			response, err := conn.DoRequest(StringPointer(action), nil, StringPointer("POST"), StringPointer("2017-08-01"), StringPointer("AK"), nil, request, &util.RuntimeOptions{})
+			if err != nil {
+				if NeedRetry(err) {
+					wait()
+					return resource.RetryableError(err)
+				}
+				addDebug(action, response, request)
+			}
+			return nil
+		})
+		if err != nil {
+			if IsExpectedErrors(err, []string{"InvalidDBCluster.NotFound"}) {
+				return nil
+			}
+			return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, ProviderERROR)
+		}
+		d.SetPartial("deletion_lock")
+	}
 	d.Partial(false)
 	return resourceAlicloudPolarDBClusterRead(d, meta)
 }
@@ -563,24 +604,29 @@ func resourceAlicloudPolarDBClusterRead(d *schema.ResourceData, meta interface{}
 		return WrapError(err)
 	}
 
-	dbClusterIPArrayName := "default"
-	if v, ok := d.GetOk("db_cluster_ip_array_name"); ok {
-		dbClusterIPArrayName = v.(string)
-	}
-
-	if err = polarDBService.DBClusterIPArrays(d, "db_cluster_ip_array", dbClusterIPArrayName); err != nil {
-		return WrapError(err)
-	}
-
-	ips, err := polarDBService.DescribeDBSecurityIps(d.Id(), dbClusterIPArrayName)
+	whiteList, err := polarDBService.DescribeDBClusterAccessWhitelist(d.Id())
 	if err != nil {
 		return WrapError(err)
 	}
-
-	d.Set("security_ips", ips)
+	defaultSecurityIps := make([]string, 0)
+	dbClusterIPArrays := make([]map[string]interface{}, 0)
+	for _, white := range whiteList.Items.DBClusterIPArray {
+		if white.DBClusterIPArrayAttribute == "hidden" {
+			continue
+		}
+		dbClusterIPArrays = append(dbClusterIPArrays, map[string]interface{}{
+			"db_cluster_ip_array_name": white.DBClusterIPArrayName,
+			"security_ips":             convertPolarDBIpsSetToString(white.SecurityIps),
+		})
+		if white.DBClusterIPArrayName == "default" {
+			defaultSecurityIps = convertPolarDBIpsSetToString(white.SecurityIps)
+		}
+	}
+	d.Set("db_cluster_ip_array", dbClusterIPArrays)
+	d.Set("security_ips", defaultSecurityIps)
 
 	//describe endpoints
-	if len(ips) == 1 && strings.HasPrefix(ips[0], LOCAL_HOST_IP) {
+	if len(defaultSecurityIps) == 1 && strings.HasPrefix(defaultSecurityIps[0], LOCAL_HOST_IP) {
 		d.Set("connection_string", "")
 	} else {
 		endpoints, err := polarDBService.DescribePolarDBInstanceNetInfo(d.Id())
@@ -605,6 +651,7 @@ func resourceAlicloudPolarDBClusterRead(d *schema.ResourceData, meta interface{}
 	d.Set("db_node_class", cluster.DBNodeClass)
 	d.Set("db_node_count", len(clusterAttribute.DBNodes))
 	d.Set("resource_group_id", clusterAttribute.ResourceGroupId)
+	d.Set("deletion_lock", clusterAttribute.DeletionLock)
 	tags, err := polarDBService.DescribeTags(d.Id(), "cluster")
 	if err != nil {
 		return WrapError(err)
@@ -683,6 +730,9 @@ func resourceAlicloudPolarDBClusterDelete(d *schema.ResourceData, meta interface
 	request := polardb.CreateDeleteDBClusterRequest()
 	request.RegionId = client.RegionId
 	request.DBClusterId = d.Id()
+	if v, ok := d.GetOk("backup_retention_policy_on_cluster_deletion"); ok && v.(string) != "" {
+		request.BackupRetentionPolicyOnClusterDeletion = v.(string)
+	}
 	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
 		raw, err := client.WithPolarDBClient(func(polarDBClient *polardb.Client) (interface{}, error) {
 			return polarDBClient.DeleteDBCluster(request)

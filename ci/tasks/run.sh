@@ -45,6 +45,8 @@ export ALICLOUD_WAF_INSTANCE_ID=${ALICLOUD_WAF_INSTANCE_ID}
 export CHECKOUT_REGION=${CHECKOUT_REGION}
 #export DEBUG=terraform
 
+echo -e "Alicloud Region: ${ALICLOUD_REGION}"
+echo -e "Alicloud AccessKey: ${ALICLOUD_ACCESS_KEY}"
 echo -e "Account Site: ${ALICLOUD_ACCOUNT_SITE}"
 
 export ALICLOUD_CMS_CONTACT_GROUP=tf-testAccCms
@@ -54,10 +56,10 @@ release_dir="$( cd ${my_dir} && cd ../.. && pwd )"
 
 source ${release_dir}/ci/tasks/utils.sh
 
-PIPELINE_NAME=${ALICLOUD_REGION}
-if [[ "${ALICLOUD_ACCOUNT_SITE}" = "International" ]]; then
-  PIPELINE_NAME="${ALICLOUD_REGION}-intl"
-fi
+#PIPELINE_NAME=${ALICLOUD_REGION}
+#if [[ "${ALICLOUD_ACCOUNT_SITE}" = "International" ]]; then
+#  PIPELINE_NAME="${ALICLOUD_REGION}-intl"
+#fi
 
 if [[ ${DEBUG} = true ]]; then
     export TF_DEBUG=TRUE
@@ -71,39 +73,39 @@ go version
 cd $GOPATH
 mkdir -p src/github.com/aliyun
 cd src/github.com/aliyun
-if [[ ${ALICLOUD_REGION} == "cn-"* ]]; then
-  echo -e "Downloading ${provider}.tgz ..."
-  aliyun oss cp oss://${BUCKET_NAME}/${provider}.tgz ${provider}.tgz -f --access-key-id ${ALICLOUD_ACCESS_KEY} --access-key-secret ${ALICLOUD_SECRET_KEY} --region ${BUCKET_REGION}
-  echo -e "Unpacking ${provider}.tgz ..."
-  aliyun oss ls oss://${BUCKET_NAME}/${provider}.tgz --access-key-id ${ALICLOUD_ACCESS_KEY} --access-key-secret ${ALICLOUD_SECRET_KEY} --region ${BUCKET_REGION}
-  tar -xzf ${provider}.tgz
-  rm -rf ${provider}.tgz
-else
-  cp -rf $CURRENT_PATH/terraform-provider-alicloud ./
-fi
+#if [[ ${ALICLOUD_REGION} == "cn-"* ]]; then
+#  echo -e "Downloading ${provider}.tgz ..."
+#  aliyun oss cp oss://${BUCKET_NAME}/${provider}.tgz ${provider}.tgz -f --access-key-id ${ALICLOUD_ACCESS_KEY} --access-key-secret ${ALICLOUD_SECRET_KEY} --region ${BUCKET_REGION}
+#  echo -e "Unpacking ${provider}.tgz ..."
+#  aliyun oss ls oss://${BUCKET_NAME}/${provider}.tgz --access-key-id ${ALICLOUD_ACCESS_KEY} --access-key-secret ${ALICLOUD_SECRET_KEY} --region ${BUCKET_REGION}
+#  tar -xzf ${provider}.tgz
+#  rm -rf ${provider}.tgz
+#else
+cp -rf $CURRENT_PATH/terraform-provider-alicloud ./
+#fi
 
 cd terraform-provider-alicloud
 
-if [[ ${SWEEPER} = true ]]; then
-    echo -e "\n--------------- Running Sweeper Test Cases ---------------"
-    if [[ ${TEST_SWEEPER_CASE_CODE} == "alicloud_"* ]]; then
-        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true"
-        TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true -timeout=60m
-    else
-        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-allow-failures=true"
-        TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-allow-failures=true -timeout=60m
-    fi
-    if [[ ${ALICLOUD_REGION} == "eu-central-1" ]]; then
-        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=ap-southeast-1 -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true"
-        TF_ACC=1 go test ./alicloud -v  -sweep=ap-southeast-1 -sweep-allow-failures=true -timeout=60m
-    fi
-    echo -e "\n--------------- END ---------------"
-    exit 0
-fi
+#if [[ ${SWEEPER} = true ]]; then
+#    echo -e "\n--------------- Running Sweeper Test Cases ---------------"
+#    if [[ ${TEST_SWEEPER_CASE_CODE} == "alicloud_"* ]]; then
+#        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true"
+#        TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true -timeout=60m
+#    else
+#        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-allow-failures=true"
+#        TF_ACC=1 go test ./alicloud -v  -sweep=${ALICLOUD_REGION} -sweep-allow-failures=true -timeout=60m
+#    fi
+#    if [[ ${ALICLOUD_REGION} == "eu-central-1" ]]; then
+#        echo -e "TF_ACC=1 go test ./alicloud -v  -sweep=ap-southeast-1 -sweep-run=${TEST_SWEEPER_CASE_CODE} -sweep-allow-failures=true"
+#        TF_ACC=1 go test ./alicloud -v  -sweep=ap-southeast-1 -sweep-allow-failures=true -timeout=60m
+#    fi
+#    echo -e "\n--------------- END ---------------"
+#    exit 0
+#fi
 
 EXITCODE=0
 # Clear cache
-go clean -cache -modcache -i -r
+#go clean -cache -modcache -i -r
 ## Run test cases and restore the log
 RESULT="---  Terraform-${TEST_CASE_CODE}-CI-Test Result ($3) --- \n  Region       Total     Failed     Skipped     Passed     \n"
 
@@ -158,6 +160,10 @@ do
       echo -e "$LINE"
     fi
 done
+
+echo "Remove the Provider"
+cd .. && rm -rf terraform-provider-alicloud
+echo "Remove Success"
 
 echo -e "--------------- END ---------------\n"
 

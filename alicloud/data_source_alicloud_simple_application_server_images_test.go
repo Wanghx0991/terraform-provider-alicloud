@@ -65,7 +65,7 @@ func TestAccAlicloudSimpleApplicationServerImagesDataSource(t *testing.T) {
 		fakeMapFunc:  fakeDataAlicloudSimpleApplicationServerImagesSourceNameMapFunc,
 	}
 	preCheck := func() {
-		testAccPreCheckWithRegions(t, false, connectivity.SimpleApplicationServerNotSupportRegions)
+		testAccPreCheckWithRegions(t, true, connectivity.SimpleApplicationServerNotSupportRegions)
 	}
 	alicloudSimpleApplicationServerImageCheckInfo.dataSourceTestCheckWithPreCheck(t, rand, preCheck, nameRegexConf, instanceImageTypeConf, platformConf, allConf)
 }

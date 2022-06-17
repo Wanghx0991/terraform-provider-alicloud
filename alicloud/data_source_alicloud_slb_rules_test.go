@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestAccAlicloudSlbRulesDataSource_basic(t *testing.T) {
+func TestAccAlicloudSLBRulesDataSource_basic(t *testing.T) {
 	basicConf := dataSourceTestAccConfig{
 		existConfig: testAccCheckAlicloudSlbRulesDataSourceConfig(map[string]string{
 			"load_balancer_id": `"${alicloud_slb_rule.default.load_balancer_id}"`,
@@ -55,7 +55,7 @@ func TestAccAlicloudSlbRulesDataSource_basic(t *testing.T) {
 		}),
 	}
 
-	var existDnsRecordsMapFunc = func(rand int) map[string]string {
+	var existSLBRulesMapFunc = func(rand int) map[string]string {
 		return map[string]string{
 			"slb_rules.#":                 "1",
 			"ids.#":                       "1",
@@ -68,7 +68,7 @@ func TestAccAlicloudSlbRulesDataSource_basic(t *testing.T) {
 		}
 	}
 
-	var fakeDnsRecordsMapFunc = func(rand int) map[string]string {
+	var fakeSLBRulesMapFunc = func(rand int) map[string]string {
 		return map[string]string{
 			"slb_rules.#": "0",
 			"ids.#":       "0",
@@ -78,8 +78,8 @@ func TestAccAlicloudSlbRulesDataSource_basic(t *testing.T) {
 
 	var slbRulesCheckInfo = dataSourceAttr{
 		resourceId:   "data.alicloud_slb_rules.default",
-		existMapFunc: existDnsRecordsMapFunc,
-		fakeMapFunc:  fakeDnsRecordsMapFunc,
+		existMapFunc: existSLBRulesMapFunc,
+		fakeMapFunc:  fakeSLBRulesMapFunc,
 	}
 
 	slbRulesCheckInfo.dataSourceTestCheck(t, -1, basicConf, nameRegexConf, idsConf, allConf)

@@ -172,12 +172,12 @@ resource "alicloud_vpn_connection" "default" {
         ike_local_id = "testalice1"
         }
     ]
-	ipsec_config = [{
+	ipsec_config = {
         ipsec_pfs = "group2"
         ipsec_enc_alg = "aes"
         ipsec_auth_alg = "sha1"
         ipsec_lifetime = 86400
-    }]
+    }
 }
 
 `, name)

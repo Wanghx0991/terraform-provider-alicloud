@@ -309,7 +309,32 @@ func resourceAlicloudServiceMeshServiceMesh() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
-				ForceNew: true,
+			},
+			"cluster_spec": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validation.StringInSlice([]string{"standard", "enterprise", "ultimate"}, false),
+			},
+			"cluster_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"extra_configuration": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				MaxItems: 1,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cr_aggregation_enabled": {
+							Type:     schema.TypeBool,
+							Computed: true,
+							Optional: true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -464,6 +489,9 @@ func resourceAlicloudServiceMeshServiceMeshCreate(d *schema.ResourceData, meta i
 			}
 		}
 	}
+	if v, ok := d.GetOk("cluster_spec"); ok {
+		request["ClusterSpec"] = v
+	}
 
 	wait := incrementalWait(3*time.Second, 5*time.Second)
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
@@ -585,6 +613,18 @@ func resourceAlicloudServiceMeshServiceMeshRead(d *schema.ResourceData, meta int
 					}
 					meshConfigMap["pilot"] = pilotSli
 
+					extraConfigSli := make([]map[string]interface{}, 0)
+					if raw, ok := meshConfigArg["ExtraConfiguration"]; ok {
+						if extraConfigArg, ok := raw.(map[string]interface{}); ok && len(extraConfigArg) > 0 {
+							extraConfigMap := make(map[string]interface{})
+							if v, ok := extraConfigArg["CRAggregationConfiguration"].(map[string]interface{}); ok {
+								extraConfigMap["cr_aggregation_enabled"] = v["Enabled"]
+								extraConfigSli = append(extraConfigSli, extraConfigMap)
+							}
+						}
+					}
+					d.Set("extra_configuration", extraConfigSli)
+
 					proxySli := make([]map[string]interface{}, 0)
 					if proxy, ok := meshConfigArg["Proxy"]; ok {
 						if proxyArg, ok := proxy.(map[string]interface{}); ok && len(proxyArg) > 0 {
@@ -633,6 +673,13 @@ func resourceAlicloudServiceMeshServiceMeshRead(d *schema.ResourceData, meta int
 	}
 	d.Set("status", object["ServiceMeshInfo"].(map[string]interface{})["State"])
 	d.Set("version", object["ServiceMeshInfo"].(map[string]interface{})["Version"])
+
+	d.Set("cluster_spec", object["ClusterSpec"])
+	clusters := make([]interface{}, 0)
+	if v, ok := object["Clusters"].([]interface{}); ok {
+		clusters = append(clusters, v...)
+	}
+	d.Set("cluster_ids", clusters)
 	return nil
 }
 func resourceAlicloudServiceMeshServiceMeshUpdate(d *schema.ResourceData, meta interface{}) error {
@@ -640,7 +687,10 @@ func resourceAlicloudServiceMeshServiceMeshUpdate(d *schema.ResourceData, meta i
 	servicemeshService := ServicemeshService{client}
 	var response map[string]interface{}
 	d.Partial(true)
-
+	conn, err := client.NewServicemeshClient()
+	if err != nil {
+		return WrapError(err)
+	}
 	update := false
 	updateMeshFeatureReq := map[string]interface{}{
 		"ServiceMeshId": d.Id(),
@@ -786,12 +836,15 @@ func resourceAlicloudServiceMeshServiceMeshUpdate(d *schema.ResourceData, meta i
 			}
 		}
 	}
+	if !d.IsNewResource() && d.HasChange("cluster_spec") {
+		update = true
+		if v, ok := d.GetOk("cluster_spec"); ok {
+			updateMeshFeatureReq["ClusterSpec"] = v
+		}
+	}
+
 	if update {
 		action := "UpdateMeshFeature"
-		conn, err := client.NewServicemeshClient()
-		if err != nil {
-			return WrapError(err)
-		}
 		wait := incrementalWait(3*time.Second, 3*time.Second)
 		err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("POST"), StringPointer("2020-01-11"), StringPointer("AK"), nil, updateMeshFeatureReq, &util.RuntimeOptions{})
@@ -813,7 +866,148 @@ func resourceAlicloudServiceMeshServiceMeshUpdate(d *schema.ResourceData, meta i
 			return WrapErrorf(err, IdMsg, d.Id())
 		}
 	}
+
+	update = false
+	UpdateMeshCRAggregationReq := map[string]interface{}{
+		"ServiceMeshId": d.Id(),
+	}
+	if d.HasChange("extra_configuration") {
+		update = true
+		if extraConfig, ok := d.GetOk("extra_configuration"); ok {
+			for _, extraConfigMap := range extraConfig.(*schema.Set).List() {
+				if extraConfigArg, ok := extraConfigMap.(map[string]interface{}); ok {
+					if v, ok := extraConfigArg["cr_aggregation_enabled"]; ok {
+						UpdateMeshCRAggregationReq["Enabled"] = v
+					}
+				}
+			}
+		}
+	}
+	if update {
+		action := "UpdateMeshCRAggregation"
+		wait := incrementalWait(3*time.Second, 3*time.Second)
+		err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2020-01-11"), StringPointer("AK"), UpdateMeshCRAggregationReq, nil, &util.RuntimeOptions{})
+			if err != nil {
+				if NeedRetry(err) {
+					wait()
+					return resource.RetryableError(err)
+				}
+				return resource.NonRetryableError(err)
+			}
+			return nil
+		})
+		addDebug(action, response, updateMeshFeatureReq)
+		if err != nil {
+			return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, AlibabaCloudSdkGoERROR)
+		}
+		stateConf := BuildStateConf([]string{}, []string{"running"}, d.Timeout(schema.TimeoutUpdate), 5*time.Second, servicemeshService.ServiceMeshServiceMeshStateRefreshFunc(d.Id(), []string{}))
+		if _, err := stateConf.WaitForState(); err != nil {
+			return WrapErrorf(err, IdMsg, d.Id())
+		}
+	}
+
+	update = false
+	if !d.IsNewResource() && d.HasChange("version") {
+		update = true
+	}
+	UpgradeEditionReq := map[string]interface{}{
+		"ServiceMeshId": d.Id(),
+	}
+	if v, ok := d.GetOk("version"); ok {
+		UpgradeEditionReq["ExpectedVersion"] = v
+	}
+	if update {
+		action := "UpgradeMeshEditionPartially"
+		wait := incrementalWait(3*time.Second, 3*time.Second)
+		err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("GET"), StringPointer("2020-01-11"), StringPointer("AK"), UpgradeEditionReq, nil, &util.RuntimeOptions{})
+			if err != nil {
+				if NeedRetry(err) {
+					wait()
+					return resource.RetryableError(err)
+				}
+				return resource.NonRetryableError(err)
+			}
+			return nil
+		})
+		addDebug(action, response, updateMeshFeatureReq)
+		if err != nil {
+			return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, AlibabaCloudSdkGoERROR)
+		}
+		stateConf := BuildStateConf([]string{}, []string{"running"}, d.Timeout(schema.TimeoutUpdate), 5*time.Second, servicemeshService.ServiceMeshServiceMeshStateRefreshFunc(d.Id(), []string{}))
+		if _, err := stateConf.WaitForState(); err != nil {
+			return WrapErrorf(err, IdMsg, d.Id())
+		}
+	}
+
+	if d.HasChange("cluster_ids") {
+		oraw, nraw := d.GetChange("cluster_ids")
+		removed := oraw.(*schema.Set).Difference(nraw.(*schema.Set)).List()
+		created := nraw.(*schema.Set).Difference(oraw.(*schema.Set)).List()
+		if len(removed) > 0 {
+			for _, item := range removed {
+				removeClusterReq := map[string]interface{}{
+					"ServiceMeshId": d.Id(),
+				}
+				removeClusterReq["ClusterId"] = item
+				action := "RemoveClusterFromServiceMesh"
+				runtime := util.RuntimeOptions{}
+				runtime.SetAutoretry(true)
+				wait := incrementalWait(3*time.Second, 5*time.Second)
+				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+					response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("POST"), StringPointer("2020-01-11"), StringPointer("AK"), nil, removeClusterReq, &util.RuntimeOptions{})
+					if err != nil {
+						if NeedRetry(err) {
+							wait()
+							return resource.RetryableError(err)
+						}
+						return resource.NonRetryableError(err)
+					}
+					return nil
+				})
+				addDebug(action, response, removeClusterReq)
+				if err != nil {
+					return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, AlibabaCloudSdkGoERROR)
+				}
+			}
+		}
+
+		if len(created) > 0 {
+			for _, item := range created {
+				addClusterReq := map[string]interface{}{
+					"ServiceMeshId": d.Id(),
+				}
+				addClusterReq["ClusterId"] = item
+				action := "AddClusterIntoServiceMesh"
+				runtime := util.RuntimeOptions{}
+				runtime.SetAutoretry(true)
+				wait := incrementalWait(3*time.Second, 5*time.Second)
+				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+					response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("POST"), StringPointer("2020-01-11"), StringPointer("AK"), nil, addClusterReq, &runtime)
+					if err != nil {
+						if NeedRetry(err) {
+							wait()
+							return resource.RetryableError(err)
+						}
+						return resource.NonRetryableError(err)
+					}
+					return nil
+				})
+				addDebug(action, response, addClusterReq)
+				if err != nil {
+					return WrapErrorf(err, DefaultErrorMsg, d.Id(), action, AlibabaCloudSdkGoERROR)
+				}
+			}
+		}
+	}
+
 	d.Partial(false)
+
+	stateConf := BuildStateConf([]string{}, []string{"running"}, d.Timeout(schema.TimeoutCreate), 5*time.Second, servicemeshService.ServiceMeshServiceMeshStateRefreshFunc(d.Id(), []string{}))
+	if _, err := stateConf.WaitForState(); err != nil {
+		return WrapErrorf(err, IdMsg, d.Id())
+	}
 	return resourceAlicloudServiceMeshServiceMeshRead(d, meta)
 }
 func resourceAlicloudServiceMeshServiceMeshDelete(d *schema.ResourceData, meta interface{}) error {

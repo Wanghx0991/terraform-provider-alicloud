@@ -31,7 +31,7 @@ func TestAccAlicloudOtsInstanceAttachmentBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreCheckWithRegions(t, false, connectivity.OtsCapacityNoSupportedRegions)
+			testAccPreCheckWithRegions(t, true, connectivity.OtsCapacityNoSupportedRegions)
 		},
 		// module name
 		IDRefreshName: resourceId,
@@ -76,7 +76,7 @@ func TestAccAlicloudOtsInstanceAttachmentHighPerformance(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreCheckWithRegions(t, false, connectivity.OtsHighPerformanceNoSupportedRegions)
+			testAccPreCheckWithRegions(t, true, connectivity.OtsHighPerformanceNoSupportedRegions)
 		},
 		// module name
 		IDRefreshName: resourceId,

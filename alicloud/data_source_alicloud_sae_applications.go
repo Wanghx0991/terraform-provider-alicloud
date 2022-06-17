@@ -203,6 +203,30 @@ func dataSourceAlicloudSaeApplications() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"oss_mount_details": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"bucket_name": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"bucket_path": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"mount_path": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"read_only": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+								},
+							},
+						},
 						"package_type": {
 							Type:     schema.TypeString,
 							Computed: true,
@@ -285,6 +309,10 @@ func dataSourceAlicloudSaeApplications() *schema.Resource {
 						},
 						"web_container": {
 							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"tags": {
+							Type:     schema.TypeMap,
 							Computed: true,
 						},
 					},
@@ -401,6 +429,18 @@ func dataSourceAlicloudSaeApplicationsRead(d *schema.ResourceData, meta interfac
 			"application_id":  fmt.Sprint(object["AppId"]),
 			"namespace_id":    object["NamespaceId"],
 		}
+		tags := make(map[string]interface{})
+		t, _ := jsonpath.Get("$.Tags", object)
+		if t != nil {
+			for _, t := range t.([]interface{}) {
+				key := t.(map[string]interface{})["Key"].(string)
+				value := t.(map[string]interface{})["Value"].(string)
+				if !ignoredTags(key, value) {
+					tags[key] = value
+				}
+			}
+		}
+		mapping["tags"] = tags
 		ids = append(ids, fmt.Sprint(mapping["id"]))
 		if detailedEnabled := d.Get("enable_details"); !detailedEnabled.(bool) {
 			s = append(s, mapping)
@@ -439,7 +479,21 @@ func dataSourceAlicloudSaeApplicationsRead(d *schema.ResourceData, meta interfac
 		mapping["nas_id"] = getResp["NasId"]
 		mapping["oss_ak_id"] = getResp["OssAkId"]
 		mapping["oss_ak_secret"] = getResp["OssAkSecret"]
-		mapping["oss_mount_descs"] = getResp["OssMountDescs"]
+		ossMountDescs := make([]map[string]interface{}, 0)
+		if raw, exist := getResp["OssMountDescs"]; exist {
+			for _, mountDescRaw := range raw.([]interface{}) {
+				obj := mountDescRaw.(map[string]interface{})
+				ossMountDescs = append(ossMountDescs, map[string]interface{}{
+					"bucket_name": obj["bucketName"],
+					"bucket_path": obj["bucketPath"],
+					"mount_path":  obj["mountPath"],
+					"read_only":   obj["Boolean"],
+				})
+			}
+		}
+		mapping["oss_mount_details"] = ossMountDescs
+		desc, _ := convertListMapToJsonString(ossMountDescs)
+		mapping["oss_mount_descs"] = desc
 		mapping["package_type"] = getResp["PackageType"]
 		mapping["package_url"] = getResp["PackageUrl"]
 		mapping["package_version"] = getResp["PackageVersion"]

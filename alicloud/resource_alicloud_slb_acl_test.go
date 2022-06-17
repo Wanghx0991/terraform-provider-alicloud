@@ -106,7 +106,7 @@ func testSweepSlbAcl(region string) error {
 	return nil
 }
 
-func TestAccAlicloudSlbAcl_basic0(t *testing.T) {
+func TestAccAlicloudSLBAcl_basic0(t *testing.T) {
 	var v map[string]interface{}
 	resourceId := "alicloud_slb_acl.default"
 	ra := resourceAttrInit(resourceId, nil)
@@ -222,7 +222,7 @@ func TestAccAlicloudSlbAcl_basic0(t *testing.T) {
 	})
 }
 
-func TestAccAlicloudSlbAcl_basic1(t *testing.T) {
+func TestAccAlicloudSLBAcl_basic1(t *testing.T) {
 	var v map[string]interface{}
 	resourceId := "alicloud_slb_acl.default"
 	ra := resourceAttrInit(resourceId, nil)
@@ -266,6 +266,67 @@ func TestAccAlicloudSlbAcl_basic1(t *testing.T) {
 					testAccCheck(map[string]string{
 						"name":              name,
 						"ip_version":        "ipv4",
+						"entry_list.#":      "2",
+						"tags.%":            "2",
+						"tags.Created":      "TF",
+						"tags.For":          "acceptance test123",
+						"resource_group_id": CHECKSET,
+					}),
+				),
+			},
+			{
+				ResourceName:      resourceId,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccAlicloudSLBAcl_basic_ipv6(t *testing.T) {
+	var v map[string]interface{}
+	resourceId := "alicloud_slb_acl.default"
+	ra := resourceAttrInit(resourceId, nil)
+	rc := resourceCheckInitWithDescribeMethod(resourceId, &v, func() interface{} {
+		return &SlbService{testAccProvider.Meta().(*connectivity.AliyunClient)}
+	}, "DescribeSlbAcl")
+	rac := resourceAttrCheckInit(rc, ra)
+	testAccCheck := rac.resourceAttrMapUpdateSet()
+	rand := acctest.RandIntRange(10000, 99999)
+	name := fmt.Sprintf("tf-testAccSlbAcl%d", rand)
+	testAccConfig := resourceTestAccConfigFunc(resourceId, name, AlicloudSLBAclBasicDependence0)
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		IDRefreshName: resourceId,
+		Providers:     testAccProviders,
+		CheckDestroy:  rac.checkResourceDestroy(),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccConfig(map[string]interface{}{
+					"name":       "${var.name}",
+					"ip_version": "ipv6",
+					"entry_list": []map[string]interface{}{
+						{
+							"entry":   "1082:0:0:7::a/128",
+							"comment": "first",
+						},
+						{
+							"entry":   "1082:0:0:8::a/128",
+							"comment": "second",
+						},
+					},
+					"tags": map[string]string{
+						"Created": "TF",
+						"For":     "acceptance test123",
+					},
+					"resource_group_id": "${data.alicloud_resource_manager_resource_groups.default.ids.0}",
+				}),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheck(map[string]string{
+						"name":              name,
+						"ip_version":        "ipv6",
 						"entry_list.#":      "2",
 						"tags.%":            "2",
 						"tags.Created":      "TF",

@@ -2,10 +2,11 @@ package alicloud
 
 import (
 	"fmt"
-	"github.com/PaesslerAG/jsonpath"
-	util "github.com/alibabacloud-go/tea-utils/service"
 	"regexp"
 	"time"
+
+	"github.com/PaesslerAG/jsonpath"
+	util "github.com/alibabacloud-go/tea-utils/service"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
@@ -216,7 +217,7 @@ func dataSourceAlicloudBastionhostInstancesRead(d *schema.ResourceData, meta int
 		}
 		mapping["tags"] = tagsToMap(getResp2)
 
-		ids = append(ids, fmt.Sprint(mapping["InstanceId"]))
+		ids = append(ids, fmt.Sprint(mapping["id"]))
 		names = append(names, object["Description"])
 		s = append(s, mapping)
 	}

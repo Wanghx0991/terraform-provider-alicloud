@@ -64,7 +64,7 @@ func TestAccAlicloudOtsInstanceAttachmentsDataSourceBasic(t *testing.T) {
 		fakeMapFunc:  fakeOtsInstanceAttachmentsMapFunc,
 	}
 	preCheck := func() {
-		testAccPreCheckWithRegions(t, false, connectivity.OtsCapacityNoSupportedRegions)
+		testAccPreCheckWithRegions(t, true, connectivity.OtsCapacityNoSupportedRegions)
 	}
 	otsInstanceAttachmentsCheckInfo.dataSourceTestCheckWithPreCheck(t, rand, preCheck, instanceNameConf, allConf)
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 )
 
-func TestAccAlicloudSlbCACertificatesDataSource_basic(t *testing.T) {
+func TestAccAlicloudSLBCACertificatesDataSource_basic(t *testing.T) {
 	rand := acctest.RandInt()
 	nameRegexConf := dataSourceTestAccConfig{
 		existConfig: testAccCheckAlicloudSlbCaCertificatesDataSourceConfig(rand, map[string]string{
@@ -64,7 +64,7 @@ func TestAccAlicloudSlbCACertificatesDataSource_basic(t *testing.T) {
 		}),
 	}
 
-	var existDnsRecordsMapFunc = func(rand int) map[string]string {
+	var existSLBCACertificatesMapFunc = func(rand int) map[string]string {
 		return map[string]string{
 			"certificates.#":                     "1",
 			"ids.#":                              "1",
@@ -84,7 +84,7 @@ func TestAccAlicloudSlbCACertificatesDataSource_basic(t *testing.T) {
 		}
 	}
 
-	var fakeDnsRecordsMapFunc = func(rand int) map[string]string {
+	var fakeSLBCACertificatesMapFunc = func(rand int) map[string]string {
 		return map[string]string{
 			"certificates.#": "0",
 			"ids.#":          "0",
@@ -94,8 +94,8 @@ func TestAccAlicloudSlbCACertificatesDataSource_basic(t *testing.T) {
 
 	var slbCaCertificatesCheckInfo = dataSourceAttr{
 		resourceId:   "data.alicloud_slb_ca_certificates.default",
-		existMapFunc: existDnsRecordsMapFunc,
-		fakeMapFunc:  fakeDnsRecordsMapFunc,
+		existMapFunc: existSLBCACertificatesMapFunc,
+		fakeMapFunc:  fakeSLBCACertificatesMapFunc,
 	}
 
 	slbCaCertificatesCheckInfo.dataSourceTestCheck(t, rand, nameRegexConf, tagsConf, idsConf, resourceGroupIdConf, allConf)

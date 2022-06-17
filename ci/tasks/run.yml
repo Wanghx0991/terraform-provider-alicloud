@@ -14,7 +14,7 @@ run:
 params:
   ALICLOUD_ACCESS_KEY:   ""
   ALICLOUD_SECRET_KEY:   ""
-  ALICLOUD_REGION:       ""
+  ALICLOUD_REGION:       "cn-shanghai-finance-1"
   ALICLOUD_ACCOUNT_ID:   ""
   ALICLOUD_ACCOUNT_SITE: "Domestic"
   TEST_CASE_CODE:        ""
@@ -24,7 +24,7 @@ params:
   ACCESS_USER_NAME:      ""
   ACCESS_PASSWORD:       ""
   DING_TALK_TOKEN:       ""
-  BUCKET_NAME:           "terraform-provider-ci"
+  BUCKET_NAME:           "terraform-provider-ci-finance"
   BUCKET_REGION:         "cn-beijing"
   ALICLOUD_RESOURCE_GROUP_ID : ""
   ALICLOUD_WAF_INSTANCE_ID: ""

@@ -61,7 +61,7 @@ var ramPolicyForUserMap = map[string]string{
 func testAccRamUserPolicyAttachmentConfig(rand int) string {
 	return fmt.Sprintf(`
 	variable "name" {
-	  default = "tf-testAcc%sRamUserPolicyAttachmentConfig-%d"
+	  default = "tf-testAcc%sRamUserPolicy-%d"
 	}
 	resource "alicloud_ram_policy" "default" {
 	  name = "${var.name}"

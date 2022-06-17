@@ -5,10 +5,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/aliyun/terraform-provider-alicloud/alicloud/connectivity"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 )
 
 func TestAccAlicloudEciZonesDataSource(t *testing.T) {
+	checkoutSupportedRegions(t, true, connectivity.EciContainerGroupRegions)
 	rand := acctest.RandIntRange(1000000, 9999999)
 
 	allConf := dataSourceTestAccConfig{

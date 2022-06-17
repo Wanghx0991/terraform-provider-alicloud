@@ -112,6 +112,10 @@ func resourceAlicloudExpressConnectVirtualBorderRouter() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validation.IntBetween(0, 2999),
 			},
+			"route_table_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -165,7 +169,7 @@ func resourceAlicloudExpressConnectVirtualBorderRouterCreate(d *schema.ResourceD
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		response, err = conn.DoRequest(StringPointer(action), nil, StringPointer("POST"), StringPointer("2016-04-28"), StringPointer("AK"), nil, request, &runtime)
 		if err != nil {
-			if NeedRetry(err) {
+			if NeedRetry(err) || IsExpectedErrors(err, []string{"TaskConflict"}) {
 				wait()
 				return resource.RetryableError(err)
 			}
@@ -218,6 +222,7 @@ func resourceAlicloudExpressConnectVirtualBorderRouterRead(d *schema.ResourceDat
 	if v, ok := object["VlanId"]; ok && fmt.Sprint(v) != "0" {
 		d.Set("vlan_id", formatInt(v))
 	}
+	d.Set("route_table_id", object["RouteTableId"])
 	return nil
 }
 func resourceAlicloudExpressConnectVirtualBorderRouterUpdate(d *schema.ResourceData, meta interface{}) error {

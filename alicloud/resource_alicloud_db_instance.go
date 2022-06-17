@@ -138,6 +138,7 @@ func resourceAlicloudDBInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validation.StringLenBetween(8, 64),
+				Computed:     true,
 			},
 
 			"port": {
@@ -448,6 +449,22 @@ func resourceAlicloudDBInstance() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"deletion_protection": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"db_is_ignore_case": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
+			"tcp_connection_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validation.StringInSlice([]string{"SHORT", "LONG"}, false),
+			},
 		},
 	}
 }
@@ -504,6 +521,21 @@ func resourceAlicloudDBInstanceUpdate(d *schema.ResourceData, meta interface{}) 
 			return WrapError(err)
 		}
 	}
+
+	if d.HasChange("deletion_protection") && d.Get("instance_charge_type") == string(Postpaid) {
+		err := rdsService.ModifyDBInstanceDeletionProtection(d, "deletion_protection")
+		if err != nil {
+			return WrapError(err)
+		}
+	}
+
+	if d.HasChange("tcp_connection_type") {
+		err := rdsService.ModifyHADiagnoseConfig(d, "tcp_connection_type")
+		if err != nil {
+			return WrapError(err)
+		}
+	}
+
 	if err := rdsService.setInstanceTags(d); err != nil {
 		return WrapError(err)
 	}
@@ -913,6 +945,62 @@ func resourceAlicloudDBInstanceUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
+	connectUpdate := false
+	connectAction := "ModifyDBInstanceConnectionString"
+	connectRequest := map[string]interface{}{
+		"DBInstanceId": d.Id(),
+		"RegionId":     client.RegionId,
+		"SourceIp":     client.SourceIp,
+	}
+	if d.HasChange("port") {
+		connectUpdate = true
+	}
+	if d.HasChange("connection_string_prefix") {
+		connectUpdate = true
+	}
+	if connectUpdate {
+		instance, err := rdsService.DescribeDBInstance(d.Id())
+		if err != nil {
+			return err
+		}
+		connectionStringPrefix := strings.Split(instance["ConnectionString"].(string), ".")[0]
+
+		connectRequest["CurrentConnectionString"] = instance["ConnectionString"]
+		connectRequest["Port"] = instance["Port"]
+		connectRequest["ConnectionStringPrefix"] = connectionStringPrefix
+		if v, ok := d.GetOk("port"); ok && v != instance["Port"] {
+			connectRequest["Port"] = v
+		}
+		if v, ok := d.GetOk("connection_string_prefix"); ok && v != connectionStringPrefix {
+			connectRequest["ConnectionStringPrefix"] = v
+		}
+		var response map[string]interface{}
+		wait := incrementalWait(3*time.Second, 3*time.Second)
+		err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			response, err = conn.DoRequest(StringPointer(connectAction), nil, StringPointer("POST"), StringPointer("2014-08-15"), StringPointer("AK"), nil, connectRequest, &util.RuntimeOptions{})
+			if err != nil {
+				if NeedRetry(err) {
+					wait()
+					return resource.RetryableError(err)
+				}
+				return resource.NonRetryableError(err)
+			}
+			return nil
+		})
+
+		if err != nil {
+			return WrapErrorf(err, DefaultErrorMsg, d.Id(), connectAction, AlibabaCloudSdkGoERROR)
+		}
+		addDebug(connectAction, response, connectRequest)
+		d.SetPartial("port")
+		d.SetPartial("connection_string")
+		// wait instance status is running after modifying
+		stateConf := BuildStateConf([]string{}, []string{"Running"}, d.Timeout(schema.TimeoutUpdate), 3*time.Minute, rdsService.RdsDBInstanceStateRefreshFunc(d.Id(), []string{"Deleting"}))
+		if _, err := stateConf.WaitForState(); err != nil {
+			return WrapErrorf(err, IdMsg, d.Id())
+		}
+	}
+
 	if d.IsNewResource() {
 		d.Partial(false)
 		return resourceAlicloudDBInstanceRead(d, meta)
@@ -1123,56 +1211,6 @@ func resourceAlicloudDBInstanceUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
-	connectUpdate := false
-	connectAction := "ModifyDBInstanceConnectionString"
-	connectRequest := map[string]interface{}{
-		"DBInstanceId": d.Id(),
-		"RegionId":     client.RegionId,
-		"SourceIp":     client.SourceIp,
-	}
-	if d.HasChange("port") {
-		connectUpdate = true
-	}
-	if d.HasChange("connection_string_prefix") {
-		connectUpdate = true
-	}
-	if connectUpdate {
-		if v, ok := d.GetOk("port"); ok && v.(string) != "" {
-			connectRequest["Port"] = v
-		}
-		if v, ok := d.GetOk("connection_string_prefix"); ok && v.(string) != "" {
-			connectRequest["ConnectionStringPrefix"] = v
-		} else {
-			connectRequest["ConnectionStringPrefix"] = strings.Split(d.Get("connection_string").(string), ".")[0]
-		}
-		connectRequest["CurrentConnectionString"] = d.Get("connection_string")
-		var response map[string]interface{}
-		wait := incrementalWait(3*time.Second, 3*time.Second)
-		err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
-			response, err = conn.DoRequest(StringPointer(connectAction), nil, StringPointer("POST"), StringPointer("2014-08-15"), StringPointer("AK"), nil, connectRequest, &util.RuntimeOptions{})
-			if err != nil {
-				if NeedRetry(err) {
-					wait()
-					return resource.RetryableError(err)
-				}
-				return resource.NonRetryableError(err)
-			}
-			return nil
-		})
-
-		if err != nil {
-			return WrapErrorf(err, DefaultErrorMsg, d.Id(), netAction, AlibabaCloudSdkGoERROR)
-		}
-		addDebug(connectAction, response, connectRequest)
-		d.SetPartial("port")
-		d.SetPartial("connection_string")
-		// wait instance status is running after modifying
-		stateConf := BuildStateConf([]string{}, []string{"Running"}, d.Timeout(schema.TimeoutUpdate), 3*time.Minute, rdsService.RdsDBInstanceStateRefreshFunc(d.Id(), []string{"Deleting"}))
-		if _, err := stateConf.WaitForState(); err != nil {
-			return WrapErrorf(err, IdMsg, d.Id())
-		}
-	}
-
 	if d.HasChange("upgrade_db_instance_kernel_version") {
 		action := "UpgradeDBInstanceKernelVersion"
 		request := map[string]interface{}{
@@ -1307,10 +1345,12 @@ func resourceAlicloudDBInstanceRead(d *schema.ResourceData, meta interface{}) er
 	d.Set("vswitch_id", instance["VSwitchId"])
 	d.Set("private_ip_address", privateIpAddress)
 	d.Set("connection_string", instance["ConnectionString"])
+	d.Set("connection_string_prefix", strings.Split(instance["ConnectionString"].(string), ".")[0])
 	d.Set("instance_name", instance["DBInstanceDescription"])
 	d.Set("maintain_time", instance["MaintainTime"])
 	d.Set("auto_upgrade_minor_version", instance["AutoUpgradeMinorVersion"])
 	d.Set("target_minor_version", instance["CurrentKernelVersion"])
+	d.Set("deletion_protection", instance["DeletionProtection"])
 	slaveZones := instance["SlaveZones"].(map[string]interface{})["SlaveZone"].([]interface{})
 	if len(slaveZones) == 2 {
 		d.Set("zone_id_slave_a", slaveZones[0].(map[string]interface{})["ZoneId"])
@@ -1407,6 +1447,13 @@ func resourceAlicloudDBInstanceRead(d *schema.ResourceData, meta interface{}) er
 	}
 	d.Set("ha_config", res["HAConfig"])
 	d.Set("manual_ha_time", res["ManualHATime"])
+
+	res, err = rdsService.DescribeHADiagnoseConfig(d.Id())
+	if err != nil {
+		return WrapError(err)
+	}
+	d.Set("tcp_connection_type", res["TcpConnectionType"])
+
 	return nil
 }
 
@@ -1563,6 +1610,9 @@ func buildDBCreateRequest(d *schema.ResourceData, meta interface{}) (map[string]
 
 	if v, ok := d.GetOk("db_time_zone"); ok {
 		request["DBTimeZone"] = v
+	}
+	if v, ok := d.GetOk("db_is_ignore_case"); ok {
+		request["DBIsIgnoreCase"] = v
 	}
 
 	uuid, err := uuid.GenerateUUID()

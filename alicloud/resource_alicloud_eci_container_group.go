@@ -498,6 +498,38 @@ func resourceAlicloudEciContainerGroup() *schema.Resource {
 					},
 				},
 			},
+			"auto_match_image_cache": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"plain_http_registry": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"insecure_registry": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"internet_ip": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"intranet_ip": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"auto_create_eip": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"eip_bandwidth": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+			"eip_instance_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -746,6 +778,28 @@ func resourceAlicloudEciContainerGroupCreate(d *schema.ResourceData, meta interf
 		}
 		request["ImageRegistryCredential"] = imageRegisryCredentialMaps
 	}
+
+	if v, ok := d.GetOk("auto_match_image_cache"); ok {
+		request["AutoMatchImageCache"] = v
+	}
+	if v, ok := d.GetOkExists("auto_create_eip"); ok {
+		request["AutoCreateEip"] = v
+	}
+	if v, ok := d.GetOkExists("eip_bandwidth"); ok {
+		request["EipBandwidth"] = v
+	}
+	if v, ok := d.GetOk("eip_instance_id"); ok {
+		request["EipInstanceId"] = v
+	}
+
+	if v, ok := d.GetOk("plain_http_registry"); ok {
+		request["PlainHttpRegistry"] = v
+	}
+
+	if v, ok := d.GetOk("insecure_registry"); ok {
+		request["InsecureRegistry"] = v
+	}
+
 	runtime := util.RuntimeOptions{}
 	runtime.SetAutoretry(true)
 	request["ClientToken"] = buildClientToken("CreateContainerGroup")
@@ -776,6 +830,8 @@ func resourceAlicloudEciContainerGroupRead(d *schema.ResourceData, meta interfac
 		return WrapError(err)
 	}
 	d.Set("container_group_name", object["ContainerGroupName"])
+	d.Set("internet_ip", object["InternetIp"])
+	d.Set("intranet_ip", object["IntranetIp"])
 
 	containers := make([]map[string]interface{}, 0)
 	if containersList, ok := object["Containers"].([]interface{}); ok {
