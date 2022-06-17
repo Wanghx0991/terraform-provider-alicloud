@@ -179,6 +179,47 @@ jobs:
           <<: *run-params
           TEST_CASE_CODE: "PolarDB"
 
+  - name: Edas
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "Edas"
+
+  - name: KVStore
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "KVStore"
+
+  - name: Oss
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "Oss"
+          ALICLOUD_REGION: "cn-shanghai-finance-1-pub"
+
+  - name: Bastionhost
+    plan:
+      - <<: *clone-provider
+      - aggregate:
+          - *get-aliyun-cli
+      - <<: *run
+        params:
+          <<: *run-params
+          TEST_CASE_CODE: "Bastionhost"
+
 resources:
   - name: terraform-provider-alicloud
     type: git

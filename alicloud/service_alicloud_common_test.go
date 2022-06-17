@@ -89,7 +89,7 @@ type resourceAttr struct {
 }
 
 func resourceAttrInit(resourceId string, checkMap map[string]string) *resourceAttr {
-	fmt.Printf("Current Region = %s", os.Getenv("ALICLOUD_REGION"))
+	fmt.Printf("Current Region = %s\n", os.Getenv("ALICLOUD_REGION"))
 	if checkMap == nil {
 		checkMap = make(map[string]string)
 	}

@@ -295,8 +295,8 @@ variable "name" {
   default = "%s"
 }
 data "alicloud_instance_types" "default" {
-  cpu_core_count    = 1
-  memory_size       = 2
+  #cpu_core_count    = 1
+  #memory_size       = 2
   availability_zone = data.alicloud_slb_zones.default.zones.0.id
 }
 data "alicloud_instance_types" "new" {

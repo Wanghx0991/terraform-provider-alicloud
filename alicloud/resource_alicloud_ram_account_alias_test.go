@@ -73,7 +73,7 @@ func testSweepAccountAliases(region string) error {
 }
 
 func TestAccAlicloudRAMAccountAlias_basic(t *testing.T) {
-	randInt := acctest.RandIntRange(1000, 9999)
+	randInt := acctest.RandIntRange(100, 999)
 	var v *ram.GetAccountAliasResponse
 	resourceId := "alicloud_ram_account_alias.default"
 	ra := resourceAttrInit(resourceId, nil)
@@ -99,7 +99,7 @@ func TestAccAlicloudRAMAccountAlias_basic(t *testing.T) {
 				Config: testAccRamAccountAliasConfig(randInt),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheck(map[string]string{
-						"account_alias": fmt.Sprintf("tf-testacc%s%d", defaultRegionToTest, randInt),
+						"account_alias": fmt.Sprintf("tf-testacc%d", randInt),
 					}),
 				),
 			},
@@ -115,8 +115,8 @@ func TestAccAlicloudRAMAccountAlias_basic(t *testing.T) {
 func testAccRamAccountAliasConfig(rand int) string {
 	return fmt.Sprintf(`
 	resource "alicloud_ram_account_alias" "default" {
-	  account_alias = "tf-testacc%s%d"
-	}`, defaultRegionToTest, rand)
+	  account_alias = "tf-testacc%d"
+	}`, rand)
 }
 
 func testAccCheckRamAccountAliasDestroy(s *terraform.State) error {
