@@ -46,7 +46,7 @@ func resourceAlicloudEcdRamDirectory() *schema.Resource {
 			},
 			"ram_directory_name": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.All(validation.StringDoesNotMatch(regexp.MustCompile(`(^http://.*)|(^https://.*)`), "It cannot begin with \"http://\", \"https://\"."), validation.StringMatch(regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_:-]{1,254}$`), "It must be `2` to `255` characters in length, The name must start with a letter, and can contain letters, digits, colons (:), underscores (_), and hyphens (-).")),
 			},
