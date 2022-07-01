@@ -100,6 +100,7 @@ func TestFieldCompatibilityCheck(t *testing.T) {
 	}
 	if res {
 		t.Fatal("incompatible changes occurred")
+		os.Exit(1)
 	}
 }
 
